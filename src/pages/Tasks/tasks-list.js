@@ -56,7 +56,7 @@ const TasksList = (props) => {
                 </DropdownToggle>
                 <DropdownMenu>
                   {
-                    systems.map(system => {
+                    systems && systems.map(system => {
                       return (<DropdownItem onClick={() => setChosenSystem({name: system.name, systemID: system.systemID})}>{system.name}</DropdownItem>)
                     })
                   }

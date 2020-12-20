@@ -74,7 +74,7 @@ const Dashboard = (props) => {
                   <i className="mdi mdi-chevron-down"></i>
                 </DropdownToggle>
                 <DropdownMenu>
-                  {systems.map(system => {
+                  {systems && systems.map(system => {
                     return(<DropdownItem onClick={() => setSystem({name: system.name, systemID: system.systemID})}>{system.name}</DropdownItem>)
                   })}
                 </DropdownMenu>
