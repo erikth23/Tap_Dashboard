@@ -3,7 +3,7 @@ import axios from 'axios';
 import useSWR from 'swr';
 
 export function useSystems(email) {
-  let {data, error} = useSWR(`/systems/getSystemByAdmin/${email}`, () => axios.post(process.env.REACT_APP_APIURL_DEV + '/systems/getSystemByAdmin', {adminEmail: email}).then(res => {
+  let {data, error} = useSWR(`/systems/getSystemByAdmin/${email}`, () => axios.post(process.env.REACT_APP_APIURL + '/systems/getSystemByAdmin', {adminEmail: email}).then(res => {
     return res.data;
   }));
 
@@ -15,7 +15,7 @@ export function useSystems(email) {
 }
 
 export function useRooms(systemID) {
-  let {data, error} = useSWR(`/rooms/getRooms/${systemID}`, () => axios.post(process.env.REACT_APP_APIURL_DEV + '/rooms/getRooms', {systemID: systemID}).then(res => {
+  let {data, error} = useSWR(`/rooms/getRooms/${systemID}`, () => axios.post(process.env.REACT_APP_APIURL + '/rooms/getRooms', {systemID: systemID}).then(res => {
 		return res.data.rooms.sort((a, b) => {
 			return a._id > b._id ? 1 : -1
 		});
