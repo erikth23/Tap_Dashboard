@@ -23,9 +23,6 @@ import {loginUser, apiError} from '../../store/actions';
 import profile from "../../assets/images/profile-img.png";
 import logo from "../../assets/images/logo.svg";
 
-const proxy = "https://cors-anywhere.herokuapp.com/";
-const ENDPOINT = "https://peaceful-temple-88406.herokuapp.com/"
-
 const Login = (props) => {
 
   let history = useHistory();

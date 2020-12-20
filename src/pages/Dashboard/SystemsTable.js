@@ -1,11 +1,19 @@
-import axios from 'axios'
 import React, {useState, useEffect} from 'react';
 import {Card, CardBody, CardTitle} from 'reactstrap'
 
+import {useSystems} from '../../helpers/hooks';
+
 const SystemTable = (props) => {
 
-  return (
-    <React.Fragment>
+  let user = JSON.parse(localStorage.getItem("authUser"));
+  const {systems, error, isLoading} = useSystems(user.email);
+
+  if (isLoading) {
+    return (<React.Fragment>
+      <div>Loading Data</div>
+    </React.Fragment>)
+  } else {
+    return (<React.Fragment>
       <Card>
         <CardTitle className="m-4">
           Systems
@@ -24,21 +32,21 @@ const SystemTable = (props) => {
               </thead>
               <tbody>
                 {
-                  props.systems.map((system, key) =>
-                    <tr>
-                      <td>{system.name}</td>
-                      <td>{system.adminEmail}</td>
-                      <td>{system.rooms.length}</td>
-                      <td>{system.sensors.length}</td>
-                    </tr>)
+                  systems.map((system, key) => <tr>
+                    <td>{system.name}</td>
+                    <td>{system.adminEmail}</td>
+                    <td>{system.rooms.length}</td>
+                    <td>{system.sensors.length}</td>
+                    <td>{system.tasks.filter(task => task.status != "COMPLETED").length}</td>
+                  </tr>)
                 }
               </tbody>
             </table>
           </div>
         </CardBody>
       </Card>
-    </React.Fragment>
-  )
+    </React.Fragment>)
+  }
 }
 
 export default SystemTable;
