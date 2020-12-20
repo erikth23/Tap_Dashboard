@@ -32,7 +32,7 @@ const SystemTable = (props) => {
               </thead>
               <tbody>
                 {
-                  systems.map((system, key) => <tr>
+                  systems && systems.map((system, key) => <tr>
                     <td>{system.name}</td>
                     <td>{system.adminEmail}</td>
                     <td>{system.rooms.length}</td>
