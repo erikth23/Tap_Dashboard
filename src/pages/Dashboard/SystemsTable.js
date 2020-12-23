@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Card, CardBody, CardTitle} from 'reactstrap'
+import {Card, CardBody, CardTitle, Spinner} from 'reactstrap'
 
 import {useSystems} from '../../helpers/hooks';
 
@@ -10,7 +10,7 @@ const SystemTable = (props) => {
 
   if (isLoading) {
     return (<React.Fragment>
-      <div>Loading Data</div>
+      <Spinner className="mr-2" color="primary" />
     </React.Fragment>)
   } else {
     return (<React.Fragment>

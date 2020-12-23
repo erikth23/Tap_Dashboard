@@ -18,6 +18,7 @@ import {
   ModalBody,
   ModalFooter,
   Media,
+  Spinner,
   Table
 } from "reactstrap";
 import {Link} from "react-router-dom";
@@ -57,7 +58,7 @@ const Dashboard = (props) => {
 
   if (isLoading) {
     return (<React.Fragment>
-      <div>Loading Data</div>
+      <Spinner className="mr-2" color="primary" />
     </React.Fragment>)
   } else {
     return (<React.Fragment>

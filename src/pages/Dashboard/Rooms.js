@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {Spinner} from 'reactstrap';
 
 import {useRooms} from '../../helpers/hooks';
 
@@ -22,7 +23,7 @@ const Rooms = (props) => {
 
   if (isLoading) {
     return (<React.Fragment>
-      <div>Loading Data</div>
+      <Spinner className="mr-2" color="primary" />
     </React.Fragment>)
   } else {
     return (<React.Fragment>

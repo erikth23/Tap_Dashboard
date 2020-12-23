@@ -3,8 +3,8 @@ import axios from 'axios';
 import useSWR from 'swr';
 
 export function useSystems(email) {
-  let {data, error} = useSWR(`/systems/getSystemByAdmin/${email}`, () => axios.post(process.env.REACT_APP_APIURL + '/systems/getSystemByAdmin', {adminEmail: email}).then(res => {
-    return res.data;
+  let {data, error} = useSWR(`/systems/getSystemByAdmin/${email}`, () => axios.post(process.env.REACT_APP_APIURL + '/systems/getSystemByAdmin', {owner: email}).then(res => {
+		return res.data.systems;
   }));
 
   return {

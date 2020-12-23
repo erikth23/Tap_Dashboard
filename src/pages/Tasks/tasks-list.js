@@ -11,7 +11,8 @@ import {
   DropdownMenu,
   DropdownItem,
   DropdownToggle,
-  ButtonDropdown
+  ButtonDropdown,
+  Spinner
 } from "reactstrap";
 //Import Breadcrumb
 import Breadcrumbs from '../../components/Common/Breadcrumb';
@@ -36,7 +37,7 @@ const TasksList = (props) => {
 
   if (isLoading) {
     return (<React.Fragment>
-      <div>Loading Data</div>
+      <Spinner className="mr-2" color="primary" />
     </React.Fragment>)
   } else {
     return (<React.Fragment>
