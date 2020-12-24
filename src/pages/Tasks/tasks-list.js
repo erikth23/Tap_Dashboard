@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import {
   Row,
@@ -19,7 +19,7 @@ import Breadcrumbs from '../../components/Common/Breadcrumb';
 
 import ReactApexChart from 'react-apexcharts';
 
-import {useSystems} from '../../helpers/hooks';
+import {useSystems, useTasks} from '../../helpers/hooks';
 
 const NOT_TAKEN = "NOT_TAKEN";
 const IN_PROGRESS = "IN_PROGRESS";
@@ -31,11 +31,18 @@ const TasksList = (props) => {
   const [systemDropIsOpen, setSystemDropIsOpen] = useState(false);
   const [chosenSystem, setChosenSystem] = useState({});
   let user = JSON.parse(localStorage.getItem("authUser"));
-  const {systems, error, isLoading} = useSystems(user.email);
+  const {systems, error: errorSystem, isLoading: isLoadingSystem} = useSystems(user.email);
+  const {tasks, error: errorTasks, isLoading: isLoadingTasks} = useTasks(chosenSystem.id)
   var today = new Date();
   today.setHours(0,0,0,0);
 
-  if (isLoading) {
+  useEffect(() => {
+    if (systems && !chosenSystem.name) {
+      setChosenSystem({name: systems[0].name, id: systems[0]._id});
+    }
+  }, [systems])
+
+  if (isLoadingSystem || isLoadingTasks) {
     return (<React.Fragment>
       <Spinner className="mr-2" color="primary" />
     </React.Fragment>)
@@ -48,17 +55,13 @@ const TasksList = (props) => {
             <Col className='mb-4' sm={6}>
               <Dropdown isOpen={systemDropIsOpen} toggle={() => setSystemDropIsOpen(!systemDropIsOpen)}>
                 <DropdownToggle className="btn btn-secondary" caret="caret">
-                  {
-                    chosenSystem.name
-                      ? chosenSystem.name
-                      : 'System'
-                  }{" "}
+                  {chosenSystem.name}{" "}
                   <i className="mdi mdi-chevron-down"></i>
                 </DropdownToggle>
                 <DropdownMenu>
                   {
                     systems && systems.map(system => {
-                      return (<DropdownItem onClick={() => setChosenSystem({name: system.name, systemID: system.systemID})}>{system.name}</DropdownItem>)
+                      return (<DropdownItem onClick={() => setChosenSystem({name: system.name, id: system._id})}>{system.name}</DropdownItem>)
                     })
                   }
                 </DropdownMenu>
@@ -75,7 +78,7 @@ const TasksList = (props) => {
                     <table className="table table-nowrap table-centered mb-0">
                       <tbody>
                         {
-                          chosenSystem.systemID && systems.find(system => system.systemID == chosenSystem.systemID).tasks.filter(task => task.status == NOT_TAKEN).map(task => {
+                          tasks && tasks.filter(task => task.status == NOT_TAKEN).map(task => {
                           return(
                           <tr>
                             <td>
@@ -101,7 +104,7 @@ const TasksList = (props) => {
                     <table className="table table-nowrap table-centered mb-0">
                       <tbody>
                         {
-                          chosenSystem.systemID && systems.find(system => system.systemID == chosenSystem.systemID).tasks.filter(task => task.status == STUCK).map(task => {
+                          tasks && tasks.filter(task => task.status == STUCK).map(task => {
                           return(
                           <tr>
                             <td>
@@ -127,7 +130,7 @@ const TasksList = (props) => {
                     <table className="table table-nowrap table-centered mb-0">
                       <tbody>
                         {
-                          chosenSystem.systemID && systems.find(system => system.systemID == chosenSystem.systemID).tasks.filter(task => task.status == IN_PROGRESS).map(task => {
+                          tasks && tasks.filter(task => task.status == IN_PROGRESS).map(task => {
                           return(
                           <tr>
                             <td>
@@ -153,7 +156,7 @@ const TasksList = (props) => {
                     <table className="table table-nowrap table-centered mb-0">
                       <tbody>
                         {
-                          chosenSystem.systemID && systems.find(system => system.systemID == chosenSystem.systemID).tasks.filter(task => task.status == COMPLETED).filter(task => task.createdAt > today).map(task => {
+                          tasks && tasks.filter(task => task.status == COMPLETED).filter(task => task.createdAt > today).map(task => {
                           return(
                           <tr>
                             <td>

@@ -52,13 +52,19 @@ const Dashboard = (props) => {
 
   const [modal, setmodal] = useState(false);
   const [systemDropIsOpen, setSystemDropIsOpen] = useState(false);
-  const [system, setSystem] = useState({});
+  const [chosenSystem, setChosenSystem] = useState({});
   let user = JSON.parse(localStorage.getItem("authUser"));
   const {systems, error, isLoading} = useSystems(user.email);
 
+  useEffect(() => {
+    if (systems && !chosenSystem.name) {
+      setChosenSystem({name: systems[0].name, id: systems[0]._id});
+    }
+  }, [systems])
+
   if (isLoading) {
     return (<React.Fragment>
-      <Spinner className="mr-2" color="primary" />
+      <Spinner className="mr-2" color="primary"/>
     </React.Fragment>)
   } else {
     return (<React.Fragment>
@@ -70,14 +76,16 @@ const Dashboard = (props) => {
           <Row>
             <Col className='mb-4' sm={6}>
               <Dropdown isOpen={systemDropIsOpen} toggle={() => setSystemDropIsOpen(!systemDropIsOpen)}>
-                <DropdownToggle className="btn btn-secondary" caret>
-                  {system.name ? system.name : 'System'}{" "}
+                <DropdownToggle className="btn btn-secondary" caret="caret">
+                  {chosenSystem.name}{" "}
                   <i className="mdi mdi-chevron-down"></i>
                 </DropdownToggle>
                 <DropdownMenu>
-                  {systems && systems.map(system => {
-                    return(<DropdownItem onClick={() => setSystem({name: system.name, systemID: system.systemID})}>{system.name}</DropdownItem>)
-                  })}
+                  {
+                    systems && systems.map(system => {
+                      return (<DropdownItem onClick={() => setChosenSystem({name: system.name, id: system._id})}>{system.name}</DropdownItem>)
+                    })
+                  }
                 </DropdownMenu>
               </Dropdown>
             </Col>
@@ -98,7 +106,7 @@ const Dashboard = (props) => {
                     </div>
                   </div>
                   <div className="clearfix"></div>
-                  <Rooms/>
+                  
                 </CardBody>
               </Card>
             </Col>
@@ -130,7 +138,7 @@ const Dashboard = (props) => {
 
           <Row>
             <Col lg="12">
-              <TaskTable systems={systems} systemID={system.systemID}/>
+              <TaskTable systemID={chosenSystem.id}/>
             </Col>
           </Row>
         </Container>

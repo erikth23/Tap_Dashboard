@@ -30,7 +30,7 @@ const Systems = (props) => {
 
   useEffect(() => {
     if (systems && !chosenSystem.name) {
-      setChosenSystem({name: systems[0].name, id: systems[0].systemID});
+      setChosenSystem({name: systems[0].name, id: systems[0]._id});
     }
   }, [systems])
 
@@ -53,7 +53,7 @@ const Systems = (props) => {
                 <DropdownMenu>
                   {
                     systems && systems.map(system => {
-                      return (<DropdownItem onClick={() => setChosenSystem({name: system.name, id: system.systemID})}>{system.name}</DropdownItem>)
+                      return (<DropdownItem onClick={() => setChosenSystem({name: system.name, id: system._id})}>{system.name}</DropdownItem>)
                     })
                   }
                 </DropdownMenu>
@@ -81,7 +81,7 @@ const Systems = (props) => {
                       </thead>
                       <tbody>
                         {
-                          chosenSystem.id && systems.find(system => system.systemID == chosenSystem.id).users.map(user => {
+                          chosenSystem.id && systems.find(system => system._id == chosenSystem.id).users.map(user => {
                             return (<tr>
                               <td>{user._user.firstName + ' ' + user._user.lastName}</td>
                               <td>{user._user.email}</td>

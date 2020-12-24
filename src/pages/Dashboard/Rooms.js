@@ -19,24 +19,18 @@ const Rooms = (props) => {
       'dirty', 'btn-outline-danger'
     ]
   ])
-  const {rooms, isError, isLoading} = useRooms('uCC71TCZddvWGXWxtXK9E');
 
-  if (isLoading) {
-    return (<React.Fragment>
-      <Spinner className="mr-2" color="primary" />
-    </React.Fragment>)
-  } else {
-    return (<React.Fragment>
-      <div className="m-3">
-        {
-          rooms.map((room, key) => <button className={`btn-lg btn-room ${statusToClass.get(room.status)}`}>
-            {room._id}
-          </button>)
-        }
-      </div>
-    </React.Fragment>)
-  }
+  return (<React.Fragment>
+    <div className="m-3">
+
+    </div>
+  </React.Fragment>)
 
 }
+// {
+//   props.rooms && props.rooms.map((room, key) => <button className={`btn-lg btn-room ${statusToClass.get(room.status)}`}>
+//     {room._id}
+//   </button>)
+// }
 
 export default Rooms;

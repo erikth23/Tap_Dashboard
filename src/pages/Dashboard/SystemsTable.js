@@ -36,8 +36,6 @@ const SystemTable = (props) => {
                     <td>{system.name}</td>
                     <td>{system.adminEmail}</td>
                     <td>{system.rooms.length}</td>
-                    <td>{system.sensors.length}</td>
-                    <td>{system.tasks.filter(task => task.status != "COMPLETED").length}</td>
                   </tr>)
                 }
               </tbody>

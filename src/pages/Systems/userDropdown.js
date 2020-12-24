@@ -11,7 +11,7 @@ const UserDropdown = (props) => {
   const [role, setRole] = useState(props.user.role);
   let user = JSON.parse(localStorage.getItem("authUser"));
 
-  const changeRole = (role) => {
+  const changeRole = async (role) => {
     setRole(role);
     let request = {
       systemID: props.systemID,
@@ -19,12 +19,12 @@ const UserDropdown = (props) => {
       userID: props.user._user._id,
       newRole: role
     }
-    axios.post(process.env.REACT_APP_APIURL + '/systems/changeUserRole', request).then(res => {
-			props.user.role = role;
-		}).catch(error => {
-			setRole(ADMINISTRATOR)
-      console.log(error);
+    const result = await axios.post(process.env.REACT_APP_APIURL_DEV + '/systems/changeUserRole', request).catch(error => {
+      return error;
     })
+    if(!result.status) {
+      setRole(props.user.role);
+    }
   }
 
   return (<Dropdown isOpen={isDropOpen} toggle={() => setIsDropOpen(!isDropOpen)}>
