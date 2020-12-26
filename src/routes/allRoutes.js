@@ -1,17 +1,13 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 
-//Pages Component
-import Chat from "../pages/Chat/Chat";
 
 // Profile
 import UserProfile from "../pages/Authentication/user-profile";
 
-// Pages Calendar
-import Calendar from "../pages/Calendar/index";
-
 //Tasks
 import TasksList from "../pages/Tasks/tasks-list";
+import AddTask from "../pages/Tasks/addTask";
 
 // Authentication related pages
 import Login from "../pages/Authentication/Login";
@@ -49,6 +45,7 @@ const userRoutes = [
 	{ path: "/tasks", component: TasksList},
 	{ path: "/systems", component: Systems},
 	{ path: "/systems-addUser", component: AddUser},
+	{ path: "/tasks-addTask", component: AddTask},
 
 	// this route should be at the end of all other routes
 	{ path: "/", exact: true, component: () => <Redirect to="/dashboard" /> }

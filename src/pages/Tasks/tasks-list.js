@@ -32,7 +32,7 @@ const TasksList = (props) => {
   const [chosenSystem, setChosenSystem] = useState({});
   let user = JSON.parse(localStorage.getItem("authUser"));
   const {systems, error: errorSystem, isLoading: isLoadingSystem} = useSystems(user.email);
-  const {tasks, error: errorTasks, isLoading: isLoadingTasks} = useTasks(chosenSystem.id)
+  const {tasks, error: errorTasks, isLoading: isLoadingTasks} = useTasks(chosenSystem.id);
   var today = new Date();
   today.setHours(0,0,0,0);
 

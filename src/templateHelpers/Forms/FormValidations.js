@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import { Row, Col, Card, CardBody, FormGroup, Button, CardTitle, CardSubtitle, Label, Input ,Container, CustomInput } from "reactstrap";
 import { AvForm, AvField, AvInput } from "availity-reactstrap-validation";
 
@@ -58,7 +57,7 @@ const FormValidations = (props) => {
   }
 
     return (
-       
+
       <React.Fragment>
         <div className="page-content">
           <Container fluid={true}>
@@ -156,8 +155,8 @@ const FormValidations = (props) => {
                                         </AvForm>
                                     </CardBody>
                                 </Card>
-                            </Col> 
-        
+                            </Col>
+
                             <Col xl="6">
                                 <Card>
                                     <CardBody>
@@ -169,11 +168,11 @@ const FormValidations = (props) => {
                                                     <FormGroup className="position-relative">
                                                         <Label htmlFor="validationTooltip01">First name</Label>
                                                         <Input type="text" className="form-control" id="validationTooltip01" placeholder="First name" onChange={(event) => changeHandeler(event,"validate1")}/>
-                                                        
+
                                                         <div className={fnm === true ? "valid-tooltip" : "invalid-tooltip"} name="validate" id="validate1">
                                                             {fnm === true ? "Looks good!" : "Please Enter Valid First Name"}
                                                         </div>
-                                                                                                                
+
                                                     </FormGroup>
                                                 </Col>
                                                 <Col md="4">
@@ -224,7 +223,7 @@ const FormValidations = (props) => {
                                         </form>
                                     </CardBody>
                                 </Card>
-                            </Col> 
+                            </Col>
                         </Row>
             <Row>
               <Col lg={6}>
