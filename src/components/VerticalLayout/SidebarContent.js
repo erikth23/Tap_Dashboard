@@ -72,16 +72,24 @@ const SidebarContent = (props) => {
           </Link>
         </li>
         <li>
-          <Link to="/tasks" className="waves-effect">
+          <Link to="/#" className="has-arrow waves-effect">
             <i className="bx bx-task"></i>
             <span>{props.t('Tasks')}</span>
           </Link>
+          <ul className="sub-menu" aria-expanded="true">
+              <li><Link to="/tasks">{props.t('View Tasks') }</Link></li>
+              <li><Link to="/tasks-addTask">{props.t('Add Task') }</Link></li>
+          </ul>
         </li>
         <li>
-          <Link to="/systems" className="waves-effect">
+          <Link to="/#" className="has-arrow waves-effect">
             <i className="bx bx-vector"></i>
             <span>{props.t('Systems')}</span>
           </Link>
+          <ul className="sub-menu" aria-expanded="true">
+              <li><Link to="/systems">{props.t('View Systems') }</Link></li>
+              <li><Link to="/systems-addUser">{props.t('Add User') }</Link></li>
+          </ul>
         </li>
       </ul>
     </div>

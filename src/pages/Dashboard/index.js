@@ -52,17 +52,21 @@ const Dashboard = (props) => {
 
   const [modal, setmodal] = useState(false);
   const [systemDropIsOpen, setSystemDropIsOpen] = useState(false);
-  const [chosenSystem, setChosenSystem] = useState({});
+  const [chosenSystem, setChosenSystem] = useState();
   let user = JSON.parse(localStorage.getItem("authUser"));
   const {systems, error, isLoading} = useSystems(user.email);
 
   useEffect(() => {
-    if (systems && !chosenSystem.name) {
-      setChosenSystem({name: systems[0].name, id: systems[0]._id});
+    if (systems && !chosenSystem) {
+      setChosenSystem(systems[0]);
     }
   }, [systems])
 
-  if (isLoading) {
+  useEffect(() => {
+    console.log(chosenSystem);
+  }, [chosenSystem])
+
+  if (isLoading || !chosenSystem) {
     return (<React.Fragment>
       <Spinner className="mr-2" color="primary"/>
     </React.Fragment>)
@@ -83,7 +87,7 @@ const Dashboard = (props) => {
                 <DropdownMenu>
                   {
                     systems && systems.map(system => {
-                      return (<DropdownItem onClick={() => setChosenSystem({name: system.name, id: system._id})}>{system.name}</DropdownItem>)
+                      return (<DropdownItem onClick={() => setChosenSystem(system)}>{system.name}</DropdownItem>)
                     })
                   }
                 </DropdownMenu>
@@ -93,20 +97,24 @@ const Dashboard = (props) => {
           <Row>
             <Col xl="12">
               <Card>
-                <CardBody>
-                  <CardTitle className="mb-4 float-sm-left">
-                    Rooms
-                  </CardTitle>
-                  <div className="float-sm-right">
+                <CardTitle className="mt-4 ml-4 float-sm-left">
+                  Rooms
+                  <div className="float-sm-right mr-4">
                     <div className="btn-group btn-group-md">
                       <button className="btn btn-dark">Occupied</button>
                       <button className="btn btn-success">Ready</button>
                       <button className="btn btn-danger">Dirty</button>
-                      <button className="btn btn-warning">clean</button>
+                      <button className="btn btn-warning">Clean</button>
                     </div>
                   </div>
-                  <div className="clearfix"></div>
-                  
+                </CardTitle>
+                <CardBody>
+                  <div className="clearfix">
+                    {
+                       chosenSystem &&
+                        <Rooms rooms={chosenSystem.rooms}/>
+                    }
+                  </div>
                 </CardBody>
               </Card>
             </Col>
@@ -138,7 +146,7 @@ const Dashboard = (props) => {
 
           <Row>
             <Col lg="12">
-              <TaskTable systemID={chosenSystem.id}/>
+              <TaskTable systemID={chosenSystem._id}/>
             </Col>
           </Row>
         </Container>

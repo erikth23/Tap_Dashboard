@@ -1,7 +1,8 @@
 import axios from 'axios';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import {
+  Badge,
   Button,
   Row,
   Col,
@@ -23,16 +24,17 @@ const OWNER = 'OWNER';
 
 const AddUser = (props) => {
 
+  const [success,  setSuccess] = useState(false);
   let user = JSON.parse(localStorage.getItem("authUser"));
   const {systems, error, isLoading} = useSystems(user.email);
 
   const handleSubmit = (event, error, values) => {
-    axios.post(process.env.REACT_APP_APIURL_DEV + '/systems/addUser', {
+    axios.post(process.env.REACT_APP_APIURL + '/systems/addUser', {
       systemID: values.systemID,
       owner: user.email,
       userEmail: values.email,
       role: values.role
-    }).then(res => console.log(res))
+    }).then(res => setSuccess(true))
     .catch(error => console.log(error))
   }
 
@@ -86,6 +88,7 @@ const AddUser = (props) => {
                         <Button type="reset" color="secondary">
                           Cancel
                         </Button>
+                        {success && <Badge pill="pill" className="badge-soft-success mr-1 ml-3">Success</Badge>}
                       </div>
                     </FormGroup>
                   </AvForm>

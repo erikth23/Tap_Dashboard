@@ -1,6 +1,6 @@
 
 @import "./icons.scss";
-@import "./custom.scss";
+
 
 // Dark Theme
 // @import "./bootstrap-dark.scss";
@@ -13,6 +13,7 @@
 // Light Theme
 @import "./bootstrap.scss";
 @import "./app.scss";
+@import "./custom.scss";
 
 #sidebar-menu {
     ul {

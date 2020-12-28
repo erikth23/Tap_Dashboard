@@ -19,7 +19,7 @@ const UserDropdown = (props) => {
       userID: props.user._user._id,
       newRole: role
     }
-    const result = await axios.post(process.env.REACT_APP_APIURL_DEV + '/systems/changeUserRole', request).catch(error => {
+    const result = await axios.post(process.env.REACT_APP_APIURL + '/systems/changeUserRole', request).catch(error => {
       return error;
     })
     if(!result.status) {

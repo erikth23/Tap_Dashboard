@@ -23,7 +23,14 @@ const TaskTable = (props) => {
 
   if(isLoading) {
     return (<React.Fragment>
-      <Spinner className="mr-2" color="primary" />
+      <Card>
+        <CardTitle className="m-4">
+          Tasks
+        </CardTitle>
+        <CardBody>
+          <Spinner className="mr-2" color="primary" />
+        </CardBody>
+      </Card>
     </React.Fragment>)
   } else {
     return (<React.Fragment>

@@ -12,6 +12,7 @@ import {
   DropdownItem,
   DropdownToggle,
   ButtonDropdown,
+  Button,
   Spinner
 } from "reactstrap";
 //Import Breadcrumb
@@ -20,6 +21,9 @@ import Breadcrumbs from '../../components/Common/Breadcrumb';
 import ReactApexChart from 'react-apexcharts';
 
 import {useSystems, useTasks} from '../../helpers/hooks';
+import TaskView from './taskView';
+
+import './tasks.scss';
 
 const NOT_TAKEN = "NOT_TAKEN";
 const IN_PROGRESS = "IN_PROGRESS";
@@ -29,22 +33,23 @@ const STUCK = "STUCK";
 const TasksList = (props) => {
 
   const [systemDropIsOpen, setSystemDropIsOpen] = useState(false);
-  const [chosenSystem, setChosenSystem] = useState({});
+  const [chosenSystem, setChosenSystem] = useState({_id: ''});
+  const [viewTask, setViewTask] = useState();
   let user = JSON.parse(localStorage.getItem("authUser"));
   const {systems, error: errorSystem, isLoading: isLoadingSystem} = useSystems(user.email);
-  const {tasks, error: errorTasks, isLoading: isLoadingTasks} = useTasks(chosenSystem.id);
+  const {tasks, error: errorTasks, isLoading: isLoadingTasks} = useTasks(chosenSystem._id);
   var today = new Date();
-  today.setHours(0,0,0,0);
+  today.setHours(0, 0, 0, 0);
 
   useEffect(() => {
     if (systems && !chosenSystem.name) {
-      setChosenSystem({name: systems[0].name, id: systems[0]._id});
+      setChosenSystem(systems[0]);
     }
   }, [systems])
 
   if (isLoadingSystem || isLoadingTasks) {
     return (<React.Fragment>
-      <Spinner className="mr-2" color="primary" />
+      <Spinner className="mr-2" color="primary"/>
     </React.Fragment>)
   } else {
     return (<React.Fragment>
@@ -61,15 +66,27 @@ const TasksList = (props) => {
                 <DropdownMenu>
                   {
                     systems && systems.map(system => {
-                      return (<DropdownItem onClick={() => setChosenSystem({name: system.name, id: system._id})}>{system.name}</DropdownItem>)
+                      return (<DropdownItem onClick={() => {
+                        setViewTask();
+                        setChosenSystem(system)
+                      }}>{system.name}</DropdownItem>)
                     })
                   }
                 </DropdownMenu>
               </Dropdown>
             </Col>
+            <Col className='mb-4' sm={2}>
+              <div className="float-sm-right">
+                <Link to='/tasks-addTask'>
+                  <i className='pt-0 mdi mdi-clipboard-plus-outline w-100' style={{
+                      fontSize: 25
+                    }}></i>
+                </Link>
+              </div>
+            </Col>
           </Row>
           <Row>
-            <Col lg={8}>
+            <Col xl={8}>
               <Card>
                 <CardBody>
                   <CardTitle className="mb-4">Not Taken
@@ -79,17 +96,18 @@ const TasksList = (props) => {
                       <tbody>
                         {
                           tasks && tasks.filter(task => task.status == NOT_TAKEN).map(task => {
-                          return(
-                          <tr>
-                            <td>
-                              <h5 className="text-truncate font-size-14 m-0">
-                                <Link to="#" className="text-dark">{task.title}</Link>
-                              </h5>
-                            </td>
-                            <td>{task.shortDescription}</td>
-                            <td>{task.createdAt}</td>
-                          </tr>)
-                        })}
+                            let date = new Date(task.createdAt);
+                            return (<tr>
+                              <td>
+                                <h5 className="text-truncate font-size-14 m-0">
+                                  <Button color="light" outline className="waves-effect" onClick={() => setViewTask(task)}>{task.title}</Button>
+                                </h5>
+                              </td>
+                              <td>{task.owner && task.owner.firstName + ' ' + task.owner.lastName}</td>
+                              <td>{date.toLocaleString()}</td>
+                            </tr>)
+                          })
+                        }
                       </tbody>
                     </table>
                   </div>
@@ -105,17 +123,18 @@ const TasksList = (props) => {
                       <tbody>
                         {
                           tasks && tasks.filter(task => task.status == STUCK).map(task => {
-                          return(
-                          <tr>
-                            <td>
-                              <h5 className="text-truncate font-size-14 m-0">
-                                <Link to="#" className="text-dark">{task.title}</Link>
-                              </h5>
-                            </td>
-                            <td>{task.shortDescription}</td>
-                            <td>{task.createdAt}</td>
-                          </tr>)
-                        })}
+                            let date = new Date(task.createdAt);
+                            return (<tr>
+                              <td>
+                                <h5 className="text-truncate font-size-14 m-0">
+                                  <Button color="light" outline className="waves-effect" onClick={() => setViewTask(task)}>{task.title}</Button>
+                                </h5>
+                              </td>
+                              <td>{task.email}</td>
+                              <td>{date.toLocaleString()}</td>
+                            </tr>)
+                          })
+                        }
                       </tbody>
                     </table>
                   </div>
@@ -131,17 +150,18 @@ const TasksList = (props) => {
                       <tbody>
                         {
                           tasks && tasks.filter(task => task.status == IN_PROGRESS).map(task => {
-                          return(
-                          <tr>
-                            <td>
-                              <h5 className="text-truncate font-size-14 m-0">
-                                <Link to="#" className="text-dark">{task.title}</Link>
-                              </h5>
-                            </td>
-                            <td>{task.shortDescription}</td>
-                            <td>{task.createdAt}</td>
-                          </tr>)
-                        })}
+                            let date = new Date(task.createdAt);
+                            return (<tr>
+                              <td>
+                                <h5 className="text-truncate font-size-14 m-0">
+                                  <Button color="light" outline className="waves-effect" onClick={() => setViewTask(task)}>{task.title}</Button>
+                                </h5>
+                              </td>
+                              <td>{task.email}</td>
+                              <td>{date.toLocaleString()}</td>
+                            </tr>)
+                          })
+                        }
                       </tbody>
                     </table>
                   </div>
@@ -157,22 +177,26 @@ const TasksList = (props) => {
                       <tbody>
                         {
                           tasks && tasks.filter(task => task.status == COMPLETED).filter(task => task.createdAt > today).map(task => {
-                          return(
-                          <tr>
-                            <td>
-                              <h5 className="text-truncate font-size-14 m-0">
-                                <Link to="#" className="text-dark">{task.title}</Link>
-                              </h5>
-                            </td>
-                            <td>{task.shortDescription}</td>
-                            <td>{task.createdAt}</td>
-                          </tr>)
-                        })}
+                            let date = new Date(task.createdAt);
+                            return (<tr>
+                              <td>
+                                <h5 className="text-truncate font-size-14 m-0">
+                                  <Button color="light" outline className="waves-effect" onClick={() => setViewTask(task)}>{task.title}</Button>
+                                </h5>
+                              </td>
+                              <td>{task.email}</td>
+                              <td>{date.toLocaleString()}</td>
+                            </tr>)
+                          })
+                        }
                       </tbody>
                     </table>
                   </div>
                 </CardBody>
               </Card>
+            </Col>
+            <Col className="mb-4" xl={4}>
+              {viewTask && <TaskView task={viewTask} system={chosenSystem}/>}
             </Col>
           </Row>
 

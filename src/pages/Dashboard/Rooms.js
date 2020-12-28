@@ -7,30 +7,29 @@ const Rooms = (props) => {
 
   const statusToClass = new Map([
     [
-      'ready', 'btn-outline-success'
+      'READY', 'btn-success'
     ],
     [
-      'occupied', 'btn-outline-dark'
+      'OCCUPIED', 'btn-dark'
     ],
     [
-      'clean', 'btn-outline-warning'
+      'CLEAN', 'btn-warning'
     ],
     [
-      'dirty', 'btn-outline-danger'
+      'DIRTY', 'btn-danger'
     ]
   ])
 
   return (<React.Fragment>
     <div className="m-3">
-
+      {
+        props.rooms && props.rooms.map((room, key) => <button className={`btn-lg btn-room ${statusToClass.get(room.status)}`}>
+          {room.name}
+        </button>)
+      }
     </div>
   </React.Fragment>)
 
 }
-// {
-//   props.rooms && props.rooms.map((room, key) => <button className={`btn-lg btn-room ${statusToClass.get(room.status)}`}>
-//     {room._id}
-//   </button>)
-// }
 
 export default Rooms;
