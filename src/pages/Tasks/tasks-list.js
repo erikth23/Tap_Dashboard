@@ -35,7 +35,7 @@ const TasksList = (props) => {
   const [systemDropIsOpen, setSystemDropIsOpen] = useState(false);
   const [chosenSystem, setChosenSystem] = useState({_id: ''});
   const [viewTask, setViewTask] = useState();
-  let user = JSON.parse(localStorage.getItem("authUser"));
+  let user = JSON.parse(localStorage.getItem("authUser")).user;
   const {systems, error: errorSystem, isLoading: isLoadingSystem} = useSystems(user.email);
   const {tasks, error: errorTasks, isLoading: isLoadingTasks} = useTasks(chosenSystem._id);
   var today = new Date();

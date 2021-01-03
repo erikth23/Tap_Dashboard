@@ -121,7 +121,7 @@ class FirebaseAuthBackend {
    */
   getAuthenticatedUser = () => {
     if (!localStorage.getItem("authUser")) return null;
-    return JSON.parse(localStorage.getItem("authUser"));
+    return JSON.parse(localStorage.getItem("authUser")).user;
   };
 
   /**

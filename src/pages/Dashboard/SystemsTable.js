@@ -5,7 +5,7 @@ import {useSystems} from '../../helpers/hooks';
 
 const SystemTable = (props) => {
 
-  let user = JSON.parse(localStorage.getItem("authUser"));
+  let user = JSON.parse(localStorage.getItem("authUser")).user;
   const {systems, error, isLoading} = useSystems(user.email);
 
   if (isLoading) {

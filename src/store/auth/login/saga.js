@@ -46,7 +46,7 @@ function* loginUser({
 			localStorage.setItem("authUser", JSON.stringify(response));
 			yield put(loginSuccess(response));
 		} else if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
-			const response = yield call(postFakeLogin, process.env.REACT_APP_APIURL + '/user/login', {
+			const response = yield call(postFakeLogin, process.env.REACT_APP_APIURL_DEV + '/user/authenticate', {
 				email: user.email,
 				password: user.password
 			});

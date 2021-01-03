@@ -25,7 +25,7 @@ const OWNER = 'OWNER';
 const AddUser = (props) => {
 
   const [success,  setSuccess] = useState(false);
-  let user = JSON.parse(localStorage.getItem("authUser"));
+  let user = JSON.parse(localStorage.getItem("authUser")).user;
   const {systems, error, isLoading} = useSystems(user.email);
 
   const handleSubmit = (event, error, values) => {

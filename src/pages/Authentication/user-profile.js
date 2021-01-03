@@ -24,7 +24,7 @@ const UserProfile = (props) => {
    useEffect(() => {
            if(localStorage.getItem("authUser"))
            {
-             const obj = JSON.parse(localStorage.getItem("authUser"));
+             const obj = JSON.parse(localStorage.getItem("authUser")).user;
              if(process.env.REACT_APP_DEFAULTAUTH === 'firebase')
              { 
                 setname(obj.displayName);

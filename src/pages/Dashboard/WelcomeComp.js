@@ -8,7 +8,7 @@ import profileImg from "../../assets/images/profile-img.png";
 
 const WelcomeComp = (props) => {
 
-  const user = JSON.parse(localStorage.getItem("authUser"));
+  const user = JSON.parse(localStorage.getItem("authUser")).user;
   const [name, setName] = useState(user.firstName + " " + user.lastName);
 
   return (<React.Fragment>

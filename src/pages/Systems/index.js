@@ -25,7 +25,7 @@ const Systems = (props) => {
 
   const [systemDropIsOpen, setSystemDropIsOpen] = useState(false);
   const [chosenSystem, setChosenSystem] = useState({});
-  let user = JSON.parse(localStorage.getItem("authUser"));
+  let user = JSON.parse(localStorage.getItem("authUser")).user;
   const {systems, error, isLoading} = useSystems(user.email);
 
   useEffect(() => {

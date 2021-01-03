@@ -27,7 +27,7 @@ const AddTask = (props) => {
 
   const [chosenSystem, setChosenSystem] = useState();
   const [success, setSuccess] = useState(false);
-  let user = JSON.parse(localStorage.getItem("authUser"));
+  let user = JSON.parse(localStorage.getItem("authUser")).user;
   const {systems, error: errorSystem, isLoading: isLoadingSystem} = useSystems(user.email);
 
   useEffect(() => {

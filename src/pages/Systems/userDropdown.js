@@ -9,7 +9,7 @@ const OWNER = 'OWNER';
 const UserDropdown = (props) => {
   const [isDropOpen, setIsDropOpen] = useState(false);
   const [role, setRole] = useState(props.user.role);
-  let user = JSON.parse(localStorage.getItem("authUser"));
+  let user = JSON.parse(localStorage.getItem("authUser")).user;
 
   const changeRole = async (role) => {
     setRole(role);

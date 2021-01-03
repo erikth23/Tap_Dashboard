@@ -25,7 +25,7 @@ const TaskView = (props) => {
   const [success, setSuccess] = useState(false);
   const [failure, setFailure] = useState(false);
   const room = props.system.rooms.find(room => room._id == props.task.room);
-  let user = JSON.parse(localStorage.getItem("authUser"));
+  let user = JSON.parse(localStorage.getItem("authUser")).user;
 
   const updateStatus = async (status) => {
     setStatus(status);
