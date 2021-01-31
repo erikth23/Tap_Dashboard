@@ -29,7 +29,7 @@ const TaskView = (props) => {
 
   const updateStatus = async (status) => {
     setStatus(status);
-    let result = await axios.post(process.env.REACT_APP_APIURL + '/task/updateStatus', {taskID: props.task._id, status: status}).then((result) => {
+    let result = await axios.post(process.env.REACT_APP_APIURL + '/task/update', {taskID: props.task._id, status: status}).then((result) => {
       return result;
     }).catch(error => {
       return null;
@@ -41,7 +41,7 @@ const TaskView = (props) => {
 
   const updateOwner = async (email) => {
     setOwner(email);
-    let result = await axios.post(process.env.REACT_APP_APIURL + '/task/assignTask', {taskID: props.task._id, email: email}).then((result) => {
+    let result = await axios.post(process.env.REACT_APP_APIURL + '/task/update', {taskID: props.task._id, email: email}).then((result) => {
       return result;
     }).catch(error => {
       return null;

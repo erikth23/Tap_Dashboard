@@ -18,22 +18,8 @@ export function useSystems(email) {
   }
 }
 
-export function useRooms(systemID) {
-  let {data, error} = useSWR(`/rooms/getRooms/${systemID}`, () => axios.post(process.env.REACT_APP_APIURL + '/rooms/getRooms', {systemID: systemID}, {headers: authHeader()}).then(res => {
-		return res.data.rooms.sort((a, b) => {
-			return a._id > b._id ? 1 : -1
-		});
-  }));
-
-  return {
-    rooms: data,
-    isError: error,
-    isLoading: !data && !error
-  }
-}
-
 export function useTasks(systemID) {
-	let {data, error} = useSWR(`/systems/getTasks/${systemID}`, () => axios.post(process.env.REACT_APP_APIURL + '/task/getTasks', {systemID: systemID}, {headers: authHeader()}).then(res => {
+	let {data, error} = useSWR(`/systems/get/${systemID}`, () => axios.post(process.env.REACT_APP_APIURL + '/task/getTasks', {systemID: systemID}, {headers: authHeader()}).then(res => {
     return res.data.tasks
 	}).catch(error => {
     console.log(error.response.data);
