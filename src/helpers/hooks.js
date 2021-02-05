@@ -19,7 +19,7 @@ export function useSystems(email) {
 }
 
 export function useTasks(systemID) {
-	let {data, error} = useSWR(`/systems/get/${systemID}`, () => axios.post(process.env.REACT_APP_APIURL + '/task/getTasks', {systemID: systemID}, {headers: authHeader()}).then(res => {
+	let {data, error} = useSWR(`/tasks/get/${systemID}`, () => axios.post(process.env.REACT_APP_APIURL + '/task/get', {systemID: systemID}, {headers: authHeader()}).then(res => {
     return res.data.tasks
 	}).catch(error => {
     console.log(error.response.data);
