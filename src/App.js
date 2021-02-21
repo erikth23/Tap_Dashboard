@@ -2,6 +2,7 @@ import React from 'react';
 
 import {Switch, BrowserRouter as Router, Route} from "react-router-dom";
 import {connect} from "react-redux";
+import {withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
 
 // Import Routes all
 import {userRoutes, authRoutes} from "./routes/allRoutes";
@@ -36,7 +37,7 @@ const App = (props) => {
     return layoutCls;
   };
 
-  const Layout = getLayout();
+  const Layout = VerticalLayout;
 
   const NonAuthmiddleware = ({component: Component, layout: Layout}) => (<Route render={props => {
       return (<Layout>
@@ -53,6 +54,7 @@ const App = (props) => {
 
       </Switch>
     </Router>
+    <AmplifySignOut />
   </React.Fragment>);
 }
 
@@ -60,4 +62,4 @@ const mapStateToProps = state => {
   return {layout: state.Layout};
 };
 
-export default connect(mapStateToProps, null)(App);
+export default connect(mapStateToProps, null)(withAuthenticator(App));
