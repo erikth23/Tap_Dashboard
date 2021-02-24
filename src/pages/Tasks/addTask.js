@@ -15,54 +15,76 @@ import {
 } from "reactstrap";
 import {withNamespaces} from 'react-i18next';
 import { AvForm, AvField } from "availity-reactstrap-validation";
+import {API, Auth} from 'aws-amplify';
+import { getUser, getSystem } from '../../graphql/queries.js';
+import { createTask } from '../../graphql/mutations.js';
 
 import {useSystems, useTasks} from '../../helpers/hooks';
 
-const NOT_TAKEN = "NOT_TAKEN";
-const IN_PROGRESS = "IN_PROGRESS";
+const NOT_TAKEN = "NOTTAKEN";
+const IN_PROGRESS = "INPROGRESS";
 const COMPLETED = "COMPLETED";
 const STUCK = "STUCK";
 
 const AddTask = (props) => {
 
-  const [chosenSystem, setChosenSystem] = useState();
   const [success, setSuccess] = useState(false);
-  let user = JSON.parse(localStorage.getItem("authUser")).user;
-  const {systems, error: errorSystem, isLoading: isLoadingSystem} = useSystems(user.email);
+  const [system, setSystem] = useState({});
+  const [email, setEmail] = useState();
+  const [user, setUser] = useState({});
 
   useEffect(() => {
-    if (systems) {
-      setChosenSystem(systems[0]._id);
-    }
-  }, [systems])
+    Auth.currentSession().then(data => setEmail(data.idToken.payload.email))
+  })
 
-  const handleSubmit = (event, error, values) => {
-    axios.post(process.env.REACT_APP_APIURL + '/task/add', {
-      systemID: values.systemID,
-      title: values.title,
-      shortDescription: values.shortDescription,
-      status: values.taskStatus,
-      email: values.email,
-      room: values.room
-    }).then(res => setSuccess(true))
-    .catch(error => console.log(error))
-    const timer = setTimeout(() => {
-      setSuccess(false);
-    }, 2000)
+  useEffect(() => {
+    if(email) {
+        getDBUser()
+    }
+  }, [email])
+
+  useEffect(() => {
+    if(user.systemID) {
+      getDBSystem();
+    }
+  }, [user])
+
+  const getDBUser = async () => {
+    await API.graphql({query: getUser, variables: {id: email}})
+    .then(res => setUser(res.data.getUser))
+    .catch(err => console.log(err));
   }
 
-  if(isLoadingSystem) {
-    return (<React.Fragment>
-      <Spinner className="mr-2" color="primary" />
-    </React.Fragment>)
-  } else {
+  const getDBSystem = async () => {
+    await API.graphql({query: getSystem, variables: {id: user.systemID}})
+    .then(res => setSystem(res.data.getSystem))
+    .catch(err => console.log(err));
+  }
+
+  const handleSubmit = async (event, error, values) => {
+    console.log(values);
+
+    const input = {
+      systemID: system.id,
+      title: values.title,
+      shortDescription: values.shortDescription,
+      status: values.stat,
+      assetID: values.assetID
+    }
+
+    await API.graphql({query: createTask, variables: {input: input}})
+    .then(res => console.log(res))
+    .catch(err => console.log(err))
+  }
+
+
     const defaultValues = {
-      systemID: systems[0]._id,
+      systemID: system.id,
       title: '',
       shortDescription: '',
-      taskStatus: NOT_TAKEN,
-      email: systems[0].users[0]._user.email,
-      room: systems[0].rooms[0]._id
+      status: NOT_TAKEN,
+      email: email,
+      assetID: ''
     }
     return (<React.Fragment>
       <div className="page-content">
@@ -74,13 +96,15 @@ const AddTask = (props) => {
                 <CardTitle className='mt-4 ml-4'>Add Task</CardTitle>
                 <CardBody>
                   <AvForm onSubmit={handleSubmit} model={defaultValues}>
-                    <AvField onChange={(event, value) => setChosenSystem(value)} type="select" name="systemID" label="System" validate={{required: {value: true}}}>
-                      {
-                        systems.map((system, i) => {
-                          return <option onSelectvalue={system._id} value={system._id}>{system.name}</option>
-                        })
-                      }
-                    </AvField>
+                    {
+                      // <AvField onChange={(event, value) => setChosenSystem(value)} type="select" name="systemID" label="System" validate={{required: {value: true}}}>
+                      //   {
+                      //     systems.map((system, i) => {
+                      //       return <option onSelectvalue={system._id} value={system._id}>{system.name}</option>
+                      //     })
+                      //   }
+                      // </AvField>
+                    }
                     <AvField
                       name="title"
                       label="Title "
@@ -101,21 +125,23 @@ const AddTask = (props) => {
                         required: {value: true}
                       }}
                     />
-                    <AvField type='select' name='email' label='Assignee E-mail(Optional)'>
+                    {
+                      // <AvField type='select' name='email' label='Assignee E-mail(Optional)'>
+                      //   {
+                      //     chosenSystem && systems.find(system => system._id == chosenSystem).users.map(user => {
+                      //       return <option value={user._user.email}>{user._user.email}</option>
+                      //     })
+                      //   }
+                      // </AvField>
+                    }
+                    <AvField type='select' name='assetID' label='Asset for Task(Optional)'>
                       {
-                        chosenSystem && systems.find(system => system._id == chosenSystem).users.map(user => {
-                          return <option value={user._user.email}>{user._user.email}</option>
+                        system.assets && system.assets.items.map(asset => {
+                          return <option value={asset.id}>{asset.name}</option>
                         })
                       }
                     </AvField>
-                    <AvField type='select' name='room' label='Room for Task(Optional)'>
-                      {
-                        chosenSystem && systems.find(system => system._id == chosenSystem).rooms.map(room => {
-                          return <option value={room._id}>{room.name}</option>
-                        })
-                      }
-                    </AvField>
-                    <AvField type="select" name="taskStatus" label="Status" validate={{required: {value: true}}}>
+                    <AvField type="select" name="stat" label="Status" validate={{required: {value: true}}}>
                       <option value={NOT_TAKEN}>{NOT_TAKEN}</option>
                       <option value={STUCK}>{STUCK}</option>
                       <option value={IN_PROGRESS}>{IN_PROGRESS}</option>
@@ -141,6 +167,5 @@ const AddTask = (props) => {
       </div>
     </React.Fragment>)
   }
-}
 
 export default withNamespaces()(AddTask);

@@ -1,8 +1,7 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getSystem =/* GraphQL */
-`
+export const getSystem = /* GraphQL */ `
   query GetSystem($id: ID!) {
     getSystem(id: $id) {
       id
@@ -38,8 +37,8 @@ export const getSystem =/* GraphQL */
     }
   }
 `;
-export const listSystems =/* GraphQL */
-`  query ListSystems(
+export const listSystems = /* GraphQL */ `
+  query ListSystems(
     $filter: ModelSystemFilterInput
     $limit: Int
     $nextToken: String
@@ -49,20 +48,10 @@ export const listSystems =/* GraphQL */
         id
         name
         assets {
-          items {
-            createdAt
-            description
-            name
-            status
-            assetType
-          }
+          nextToken
         }
         users {
-          items {
-            id
-            firstName
-            lastName
-          }
+          nextToken
         }
         createdAt
         updatedAt
@@ -71,8 +60,7 @@ export const listSystems =/* GraphQL */
     }
   }
 `;
-export const getAsset =/* GraphQL */
-`
+export const getAsset = /* GraphQL */ `
   query GetAsset($id: ID!) {
     getAsset(id: $id) {
       id
@@ -99,8 +87,7 @@ export const getAsset =/* GraphQL */
     }
   }
 `;
-export const listAssets =/* GraphQL */
-`
+export const listAssets = /* GraphQL */ `
   query ListAssets(
     $filter: ModelAssetFilterInput
     $limit: Int
@@ -128,8 +115,7 @@ export const listAssets =/* GraphQL */
     }
   }
 `;
-export const getTask =/* GraphQL */
-`
+export const getTask = /* GraphQL */ `
   query GetTask($id: ID!) {
     getTask(id: $id) {
       id
@@ -184,8 +170,7 @@ export const getTask =/* GraphQL */
     }
   }
 `;
-export const listTasks =/* GraphQL */
-`
+export const listTasks = /* GraphQL */ `
   query ListTasks(
     $filter: ModelTaskFilterInput
     $limit: Int
@@ -226,8 +211,7 @@ export const listTasks =/* GraphQL */
     }
   }
 `;
-export const getNote =/* GraphQL */
-`
+export const getNote = /* GraphQL */ `
   query GetNote($id: ID!) {
     getNote(id: $id) {
       id
@@ -249,8 +233,7 @@ export const getNote =/* GraphQL */
     }
   }
 `;
-export const listNotes =/* GraphQL */
-`
+export const listNotes = /* GraphQL */ `
   query ListNotes(
     $filter: ModelNoteFilterInput
     $limit: Int
@@ -279,8 +262,7 @@ export const listNotes =/* GraphQL */
     }
   }
 `;
-export const getTap =/* GraphQL */
-`
+export const getTap = /* GraphQL */ `
   query GetTap($id: ID!) {
     getTap(id: $id) {
       id
@@ -319,8 +301,7 @@ export const getTap =/* GraphQL */
     }
   }
 `;
-export const listTaps =/* GraphQL */
-`
+export const listTaps = /* GraphQL */ `
   query ListTaps(
     $filter: ModelTapFilterInput
     $limit: Int
@@ -360,8 +341,7 @@ export const listTaps =/* GraphQL */
     }
   }
 `;
-export const getUser =/* GraphQL */
-`
+export const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
       id
@@ -374,8 +354,7 @@ export const getUser =/* GraphQL */
     }
   }
 `;
-export const listUsers =/* GraphQL */
-`
+export const listUsers = /* GraphQL */ `
   query ListUsers(
     $filter: ModelUserFilterInput
     $limit: Int

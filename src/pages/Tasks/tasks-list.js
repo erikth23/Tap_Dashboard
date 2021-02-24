@@ -17,66 +17,88 @@ import {
 } from "reactstrap";
 //Import Breadcrumb
 import Breadcrumbs from '../../components/Common/Breadcrumb';
+import {API, graphqlOperation, Auth} from 'aws-amplify';
+import { getUser, listTasks } from '../../graphql/queries.js';
 
-import ReactApexChart from 'react-apexcharts';
 
-import {useSystems, useTasks} from '../../helpers/hooks';
 import TaskView from './taskView';
 
 import './tasks.scss';
 
-const NOT_TAKEN = "NOT_TAKEN";
-const IN_PROGRESS = "IN_PROGRESS";
+const NOT_TAKEN = "NOTTAKEN";
+const IN_PROGRESS = "INPROGRESS";
 const COMPLETED = "COMPLETED";
 const STUCK = "STUCK";
 
 const TasksList = (props) => {
 
-  const [systemDropIsOpen, setSystemDropIsOpen] = useState(false);
-  const [chosenSystem, setChosenSystem] = useState({_id: ''});
+  const [email, setEmail] = useState();
+  const [user, setUser] = useState({});
+  const [tasks, setTasks] = useState([]);
   const [viewTask, setViewTask] = useState();
-  let user = JSON.parse(localStorage.getItem("authUser")).user;
-  const {systems, error: errorSystem, isLoading: isLoadingSystem} = useSystems(user.email);
-  const {tasks, error: errorTasks, isLoading: isLoadingTasks} = useTasks(chosenSystem._id);
   var today = new Date();
   today.setHours(0, 0, 0, 0);
 
   useEffect(() => {
-    if (systems && !chosenSystem.name) {
-      setChosenSystem(systems[0]);
-    }
-  }, [systems])
+    Auth.currentSession().then(data => setEmail(data.idToken.payload.email))
+  })
 
-  if (isLoadingSystem || isLoadingTasks) {
-    return (<React.Fragment>
-      <Spinner className="mr-2" color="primary"/>
-    </React.Fragment>)
-  } else {
-    return (<React.Fragment>
+  useEffect(() => {
+    if(email) {
+        getDBUser()
+    }
+  }, [email])
+
+  useEffect(() => {
+    if(user.systemID) {
+      getTasks();
+    }
+  }, [user])
+
+  const getDBUser = async () => {
+    await API.graphql({query: getUser, variables: {id: email}})
+    .then(res => setUser(res.data.getUser))
+    .catch(err => console.log(err));
+  }
+
+  const getTasks = async () => {
+    const filter = {
+      systemID: {
+        eq: user.systemID
+      }
+    }
+    await API.graphql({query: listTasks, variables: { filter: filter}})
+    .then(res => setTasks(res.data.listTasks.items))
+    .catch(err => console.log(err))
+  }
+
+  return (<React.Fragment>
       <div className="page-content">
         <Container fluid="fluid">
           <Breadcrumbs title="Tasks" breadcrumbItem="Task List"/> {/* Render Breadcrumbs */}
           <Row>
-            <Col className='mb-4' sm={6}>
-              <Dropdown isOpen={systemDropIsOpen} toggle={() => setSystemDropIsOpen(!systemDropIsOpen)}>
-                <DropdownToggle className="btn btn-secondary" caret="caret">
-                  {chosenSystem.name}{" "}
-                  <i className="mdi mdi-chevron-down"></i>
-                </DropdownToggle>
-                <DropdownMenu>
-                  {
-                    systems && systems.map(system => {
-                      return (<DropdownItem onClick={() => {
-                        setViewTask();
-                        setChosenSystem(system)
-                      }}>{system.name}</DropdownItem>)
-                    })
-                  }
-                </DropdownMenu>
-              </Dropdown>
-            </Col>
+            {
+              // <Col className='mb-4' sm={6}>
+              //   <Dropdown isOpen={systemDropIsOpen} toggle={() => setSystemDropIsOpen(!systemDropIsOpen)}>
+              //     <DropdownToggle className="btn btn-secondary" caret="caret">
+              //       {chosenSystem.name}{" "}
+              //       <i className="mdi mdi-chevron-down"></i>
+              //     </DropdownToggle>
+              //     <DropdownMenu>
+              //       {
+              //         systems && systems.map(system => {
+              //           return (<DropdownItem onClick={() => {
+              //             setViewTask();
+              //             setChosenSystem(system)
+              //           }}>{system.name}</DropdownItem>)
+              //         })
+              //       }
+              //     </DropdownMenu>
+              //   </Dropdown>
+              // </Col>
+            }
             <Col className='mb-4' sm={2}>
-              <div className="float-sm-right">
+              <div className="float-sm-left">
                 <Link to='/tasks-addTask'>
                   <i className='pt-0 mdi mdi-clipboard-plus-outline w-100' style={{
                       fontSize: 25
@@ -87,6 +109,7 @@ const TasksList = (props) => {
           </Row>
           <Row>
             <Col xl={8}>
+
               <Card>
                 <CardBody>
                   <CardTitle className="mb-4">Not Taken
@@ -196,7 +219,7 @@ const TasksList = (props) => {
               </Card>
             </Col>
             <Col className="mb-4" xl={4}>
-              {viewTask && <TaskView task={viewTask} system={chosenSystem}/>}
+              {viewTask && <TaskView task={viewTask} system={user.systemID}/>}
             </Col>
           </Row>
 
@@ -204,6 +227,5 @@ const TasksList = (props) => {
       </div>
     </React.Fragment>);
   }
-}
 
 export default TasksList;

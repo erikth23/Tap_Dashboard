@@ -54,7 +54,7 @@ type Task @model @key(name: "bySystem", fields: ["systemID", "assetID"]) {
   comments: [Note] @connection(keyName: "byTask", fields: ["id"])
   systemID: ID!
   system: System @connection(fields: ["systemID"])
-  assetID: ID!
+  assetID: ID
   asset: Asset @connection(fields: ["assetID"])
   status: TaskStatus
 }

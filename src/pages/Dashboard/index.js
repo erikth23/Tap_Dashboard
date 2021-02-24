@@ -39,7 +39,7 @@ const Dashboard = (props) => {
 
   const [system, setSystem] = useState({});
   const [email, setEmail] = useState();
-  const [awsUser, setAwsUser] = useState({});
+  const [user, setUser] = useState({});
 
   useEffect(() => {
     Auth.currentSession().then(data => setEmail(data.idToken.payload.email))
@@ -52,19 +52,19 @@ const Dashboard = (props) => {
   }, [email])
 
   useEffect(() => {
-    if(awsUser.systemID) {
+    if(user.systemID) {
       getDBSystem();
     }
-  }, [awsUser])
+  }, [user])
 
   const getDBUser = async () => {
     await API.graphql({query: getUser, variables: {id: email}})
-    .then(res => setAwsUser(res.data.getUser))
+    .then(res => setUser(res.data.getUser))
     .catch(err => console.log(err));
   }
 
   const getDBSystem = async () => {
-    await API.graphql({query: getSystem, variables: {id: awsUser.systemID}})
+    await API.graphql({query: getSystem, variables: {id: user.systemID}})
     .then(res => setSystem(res.data.getSystem))
     .catch(err => console.log(err));
   }
