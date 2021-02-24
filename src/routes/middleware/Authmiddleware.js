@@ -7,14 +7,14 @@ const Authmiddleware = ({
 }) => (
 		<Route
 			render={props => {
-			
+
 			// here you can apply condition
-			if (!localStorage.getItem("authUser")) {
-					return (
-						<Redirect to={{ pathname: "/login", state: { from: props.location } }} />
-					);
-				}
-				
+			// if (!localStorage.getItem("authUser")) {
+			// 		return (
+			// 			<Redirect to={{ pathname: "/login", state: { from: props.location } }} />
+			// 		);
+			// 	}
+
 				return (
 		     	<Layout>
 						<Component {...props} />
@@ -25,4 +25,3 @@ const Authmiddleware = ({
 	);
 
 export default withRouter(Authmiddleware);
-
