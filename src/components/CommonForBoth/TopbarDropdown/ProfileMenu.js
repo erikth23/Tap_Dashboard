@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Auth } from 'aws-amplify';
 
 //i18n
 import { withNamespaces } from 'react-i18next';
 // Redux
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter, Link, useHistory } from 'react-router-dom';
 
 
 // users
@@ -15,8 +16,10 @@ const ProfileMenu = (props) => {
 
    // Declare a new state variable, which we'll call "menu"
    const [menu, setMenu] = useState(false);
-  
+
    const [username, setusername] = useState("Admin");
+
+   const history = useHistory();
 
    useEffect(() => {
            if(localStorage.getItem("authUser"))
@@ -44,14 +47,15 @@ const ProfileMenu = (props) => {
                     </DropdownToggle>
                     <DropdownMenu right>
                         <DropdownItem tag="a"  href="/profile"> <i className="bx bx-user font-size-16 align-middle mr-1"></i>{props.t('Profile')}  </DropdownItem>
-                        <DropdownItem tag="a" href="/crypto-wallet"><i className="bx bx-wallet font-size-16 align-middle mr-1"></i>{props.t('My Wallet')}</DropdownItem>
-                        <DropdownItem tag="a" href="#"><span className="badge badge-success float-right">11</span><i className="mdi mdi-settings font-size-17 align-middle mr-1"></i>{props.t('Settings')}</DropdownItem>
-                        <DropdownItem tag="a" href="auth-lock-screen"><i className="bx bx-lock-open font-size-16 align-middle mr-1"></i>{props.t('Lock screen')}</DropdownItem>
                         <div className="dropdown-divider"></div>
-                        <Link to="/logout" className="dropdown-item">
-                            <i className="bx bx-power-off font-size-16 align-middle mr-1 text-danger"></i>
-                            <span>{props.t('Logout')}</span>
-                        </Link>
+                        <DropdownItem onClick={async () => {
+                            try {
+                              await Auth.signOut({global: true})
+                              history.push("/");
+                            } catch (error) {
+                              console.log(`error signing out: ${error}`)
+                            }
+                          }}><i className="bx bx-power-off font-size-16 align-middle mr-1 text-danger"></i>{props.t('Log Out')}  </DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
             </React.Fragment>
@@ -64,4 +68,3 @@ const mapStatetoProps = state => {
 }
 
 export default withRouter(connect(mapStatetoProps, {  })(withNamespaces()(ProfileMenu)));
-

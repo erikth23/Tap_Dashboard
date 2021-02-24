@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Badge, Card, CardBody, CardTitle, Spinner} from 'reactstrap';
-
-import {useTasks} from '../../helpers/hooks';
+import {API, graphqlOperation, Auth} from 'aws-amplify';
+import { listTasks} from '../../graphql/queries.js';
 
 const TaskTable = (props) => {
 
@@ -10,30 +10,35 @@ const TaskTable = (props) => {
       'COMPLETED', 'success'
     ],
     [
-      'NOT_TAKEN', 'dark'
+      'NOTTAKEN', 'dark'
     ],
     [
-      'IN_PROGRESS', 'warning'
+      'INPROGRESS', 'warning'
     ],
     [
       'STUCK', 'danger'
     ]
   ])
-  const {tasks, isError, isLoading} = useTasks(props.systemID);
+  const [awsTasks, setAwsTasks] = useState([]);
 
-  if(isLoading) {
-    return (<React.Fragment>
-      <Card>
-        <CardTitle className="m-4">
-          Tasks
-        </CardTitle>
-        <CardBody>
-          <Spinner className="mr-2" color="primary" />
-        </CardBody>
-      </Card>
-    </React.Fragment>)
-  } else {
-    return (<React.Fragment>
+  useEffect(() => {
+    if(props.systemID) {
+      getAwsTasks();
+    }
+  }, [props.SystemID])
+
+  const getAwsTasks = async () => {
+    const filter = {
+      systemID: {
+        eq: props.systemID
+      }
+    }
+    API.graphql({query: listTasks, variables: {filter: filter}})
+    .then(res => setAwsTasks(res.data.listTasks.items))
+    .catch(err => console.error(err))
+  }
+
+  return (<React.Fragment>
       <Card>
         <CardTitle className="m-4">
           Tasks
@@ -51,10 +56,10 @@ const TaskTable = (props) => {
               </thead>
               <tbody>
                 {
-                  props.systemID && tasks.filter((task) => task.system == props.systemID).map((task) => {
+                  awsTasks && awsTasks.map((task) => {
                     return (<tr>
                       <td>{task.title}</td>
-                      <td>{task.email}</td>
+                      <td>{'Not Found'}</td>
                       <td>{task.createdAt}</td>
                       <td><Badge color={statusToColor.get(task.status)}>{task.status}</Badge></td>
                     </tr>)
@@ -67,6 +72,5 @@ const TaskTable = (props) => {
       </Card>
     </React.Fragment>)
   }
-}
 
 export default TaskTable;

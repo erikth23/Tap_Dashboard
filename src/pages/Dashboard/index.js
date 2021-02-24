@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, {useState, useEffect} from 'react';
 import {
   Container,
@@ -22,22 +21,12 @@ import {
   Table
 } from "reactstrap";
 import {Link} from "react-router-dom";
-
-//import Charts
-import StackedColumnChart from "./StackedColumnChart";
-
-import modalimage1 from "../../assets/images/product/img-7.png";
-import modalimage2 from "../../assets/images/product/img-4.png";
+import {API, graphqlOperation, Auth} from 'aws-amplify';
+import { getUser, getSystem } from '../../graphql/queries.js';
 
 // Pages Components
 import WelcomeComp from "./WelcomeComp";
-import MonthlyEarning from "./MonthlyEarning";
-import SocialSource from "./SocialSource";
-import ActivityComp from "./ActivityComp";
-import TopCities from "./TopCities";
-import LatestTranaction from "./LatestTranaction";
 import Rooms from "./Rooms";
-import SystemsTable from "./SystemsTable";
 import TaskTable from "./TaskTable";
 
 //Import Breadcrumb
@@ -46,52 +35,73 @@ import Breadcrumbs from '../../components/Common/Breadcrumb';
 //i18n
 import {withNamespaces} from 'react-i18next';
 
-import {useSystems} from '../../helpers/hooks.js';
-
 const Dashboard = (props) => {
 
-  const [modal, setmodal] = useState(false);
-  const [systemDropIsOpen, setSystemDropIsOpen] = useState(false);
-  const [chosenSystem, setChosenSystem] = useState();
-  let user = JSON.parse(localStorage.getItem("authUser")).user;
-  const {systems, error, isLoading} = useSystems(user.email);
+  const [system, setSystem] = useState({});
+  const [email, setEmail] = useState();
+  const [awsUser, setAwsUser] = useState({});
 
   useEffect(() => {
-    if (systems && !chosenSystem) {
-      setChosenSystem(systems[0]);
+    Auth.currentSession().then(data => setEmail(data.idToken.payload.email))
+  })
+
+  useEffect(() => {
+    if(email) {
+        getDBUser()
     }
-  }, [systems])
+  }, [email])
 
   useEffect(() => {
-    console.log(chosenSystem);
-  }, [chosenSystem])
+    if(awsUser.systemID) {
+      getDBSystem();
+    }
+  }, [awsUser])
 
-  if (isLoading || !chosenSystem) {
-    return (<React.Fragment>
-      <Spinner className="mr-2" color="primary"/>
-    </React.Fragment>)
-  } else {
-    return (<React.Fragment>
+  const getDBUser = async () => {
+    await API.graphql({query: getUser, variables: {id: email}})
+    .then(res => setAwsUser(res.data.getUser))
+    .catch(err => console.log(err));
+  }
+
+  const getDBSystem = async () => {
+    await API.graphql({query: getSystem, variables: {id: awsUser.systemID}})
+    .then(res => setSystem(res.data.getSystem))
+    .catch(err => console.log(err));
+  }
+
+  return (<React.Fragment>
       <div className="page-content">
         <Container fluid="fluid">
 
           {/* Render Breadcrumb */}
           <Breadcrumbs title={props.t('Dashboard')} breadcrumbItem={props.t('Dashboard')}/>
+          {
+            // <Row>
+            //   <Col className='mb-4' sm={6}>
+            //     <Dropdown isOpen={systemDropIsOpen} toggle={() => setSystemDropIsOpen(!systemDropIsOpen)}>
+            //       <DropdownToggle className="btn btn-secondary" caret="caret">
+            //         {chosenSystem.name}{" "}
+            //         <i className="mdi mdi-chevron-down"></i>
+            //       </DropdownToggle>
+            //       <DropdownMenu>
+            //         {
+            //           systems && systems.map(system => {
+            //             return (<DropdownItem onClick={() => setChosenSystem(system)}>{system.name}</DropdownItem>)
+            //           })
+            //         }
+            //       </DropdownMenu>
+            //     </Dropdown>
+            //   </Col>
+            // </Row>
+          }
           <Row>
-            <Col className='mb-4' sm={6}>
-              <Dropdown isOpen={systemDropIsOpen} toggle={() => setSystemDropIsOpen(!systemDropIsOpen)}>
-                <DropdownToggle className="btn btn-secondary" caret="caret">
-                  {chosenSystem.name}{" "}
-                  <i className="mdi mdi-chevron-down"></i>
-                </DropdownToggle>
-                <DropdownMenu>
-                  {
-                    systems && systems.map(system => {
-                      return (<DropdownItem onClick={() => setChosenSystem(system)}>{system.name}</DropdownItem>)
-                    })
-                  }
-                </DropdownMenu>
-              </Dropdown>
+            <Col xl="4">
+              <WelcomeComp/>
+            </Col>
+            <Col xl="8">
+              {
+                //<SystemsTable/>
+              }
             </Col>
           </Row>
           <Row>
@@ -111,34 +121,10 @@ const Dashboard = (props) => {
                 <CardBody>
                   <div className="clearfix">
                     {
-                       chosenSystem &&
-                        <Rooms rooms={chosenSystem.rooms}/>
+                       system.assets &&
+                        <Rooms rooms={system.assets.items.filter(item => item.assetType == "ROOM")}/>
                     }
                   </div>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-          <Row>
-            <Col xl="4">
-              <WelcomeComp/>
-            </Col>
-            <Col xl="8">
-              <SystemsTable/>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col xl="4">
-              <ActivityComp/>
-            </Col>
-            <Col xl="8">
-              <Card>
-                <CardTitle className="m-4">
-                  Cleaning Time
-                </CardTitle>
-                <CardBody>
-                  <StackedColumnChart/>
                 </CardBody>
               </Card>
             </Col>
@@ -146,13 +132,14 @@ const Dashboard = (props) => {
 
           <Row>
             <Col lg="12">
-              <TaskTable systemID={chosenSystem._id}/>
+              { system.id &&
+                <TaskTable systemID={system.id}/>
+              }
             </Col>
           </Row>
         </Container>
       </div>
     </React.Fragment>);
   }
-}
 
 export default withNamespaces()(Dashboard);
