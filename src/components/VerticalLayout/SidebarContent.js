@@ -81,16 +81,18 @@ const SidebarContent = (props) => {
               <li><Link to="/tasks-addTask">{props.t('Add Task') }</Link></li>
           </ul>
         </li>
-        <li>
-          <Link to="/#" className="has-arrow waves-effect">
-            <i className="bx bx-vector"></i>
-            <span>{props.t('Systems')}</span>
-          </Link>
-          <ul className="sub-menu" aria-expanded="true">
-              <li><Link to="/systems">{props.t('View Systems') }</Link></li>
-              <li><Link to="/systems-addUser">{props.t('Add User') }</Link></li>
-          </ul>
-        </li>
+        {
+          // <li>
+          //   <Link to="/#" className="has-arrow waves-effect">
+          //     <i className="bx bx-vector"></i>
+          //     <span>{props.t('Systems')}</span>
+          //   </Link>
+          //   <ul className="sub-menu" aria-expanded="true">
+          //       <li><Link to="/systems">{props.t('View Systems') }</Link></li>
+          //       <li><Link to="/systems-addUser">{props.t('Add User') }</Link></li>
+          //   </ul>
+          // </li>
+        }
       </ul>
     </div>
   </React.Fragment>);
