@@ -1,0 +1,68 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+        "authTapAuthUserPoolId": {
+            "Type": "String",
+            "Default": "authTapAuthUserPoolId"
+        },
+        
+        "authTapAuthAppClientID": {
+            "Type": "String",
+            "Default": "authTapAuthAppClientID"
+        },
+        "authTapAuthAppClientIDWeb": {
+            "Type": "String",
+            "Default": "authTapAuthAppClientIDWeb"
+        },
+        "AuthRoleArn": {
+            "Type": "String"
+        },
+        "UnauthRoleArn": {
+            "Type": "String"
+        },
+        "env": {
+            "Type": "String"
+        }
+    },
+    "Conditions": {
+        "ShouldNotCreateEnvResources": {
+            "Fn::Equals": [
+                {
+                    "Ref": "env"
+                },
+                "NONE"
+            ]
+        }
+    },
+    "Resources": {
+    
+        "AdminGroup": {
+          "Type" : "AWS::Cognito::UserPoolGroup",
+          "Properties" : {
+              "GroupName" : "Admin",
+              "Precedence" : 1,
+              
+              "UserPoolId" : {
+                "Ref": "authTapAuthUserPoolId"
+              } 
+            }
+        },
+        
+    
+        "UserGroup": {
+          "Type" : "AWS::Cognito::UserPoolGroup",
+          "Properties" : {
+              "GroupName" : "User",
+              "Precedence" : 2,
+              
+              "UserPoolId" : {
+                "Ref": "authTapAuthUserPoolId"
+              } 
+            }
+        },
+        
+    
+    
+    },
+    
+}

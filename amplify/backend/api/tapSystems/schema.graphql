@@ -1,0 +1,87 @@
+enum AssetType {
+  ROOM
+  EQUIPMENT
+  INVENTORY
+}
+
+enum AssetStatus {
+  CLEAN
+  READY
+  OCCUPIED
+  DIRTY
+  BROKEN
+}
+
+enum TaskStatus {
+  INPROGRESS
+  NOTTAKEN
+  COMPLETED
+  ARCHIVED
+  STUCK
+}
+
+enum TapType {
+  CLEANING
+  COMPLETETASK
+  HOUSEKEEPING
+  MAINTENANCE
+  LOGGING
+  OTHER
+}
+
+type System @model {
+  id: ID!
+  name: String!
+  assets: [Asset] @connection(keyName: "bySystem", fields:["id"])
+  users: [User] @connection(keyName: "bySystem", fields:["id"])
+}
+
+type Asset @model @key(name: "bySystem", fields: ["systemID", "tagID"]) {
+  id: ID!
+  name: String!
+  description: String
+  systemID: ID!
+  system: System @connection(fields: ["systemID"])
+  tagID: String!
+  assetType: AssetType!
+  status: AssetStatus!
+}
+
+type Task @model @key(name: "bySystem", fields: ["systemID", "assetID"]) {
+  id: ID!
+  title: String!
+  shortDescription: String!
+  comments: [Note] @connection(keyName: "byTask", fields: ["id"])
+  systemID: ID!
+  system: System @connection(fields: ["systemID"])
+  assetID: ID!
+  asset: Asset @connection(fields: ["assetID"])
+  status: TaskStatus
+}
+
+type Note @model @key(name: "byTask", fields: ["taskOrAssetID"]) {
+  id: ID!
+  taskOrAssetID: ID!
+  comment: String!
+  image: String!
+  userID: ID!
+  user: User @connection(fields: ["userID"])
+}
+
+type Tap @model @key(name: "byAsset", fields: ["assetID", "purpose"]){
+  id: ID!
+  assetID: ID!
+  asset: Asset @connection(fields: ["assetID"])
+  purpose: TapType!
+  timestamp: String!
+  userID: ID!
+  user: User @connection(fields: ["userID"])
+}
+
+type User @model @key(name: "bySystem", fields: ["systemID", "userName"]){
+  id: ID!
+  userName: String!
+  firstName: String!
+  lastName: String!
+  systemID: ID!
+}
