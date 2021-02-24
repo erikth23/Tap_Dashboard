@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {Row, Col, Card, CardBody} from "reactstrap";
 import {Link} from "react-router-dom";
@@ -8,8 +8,13 @@ import profileImg from "../../assets/images/profile-img.png";
 
 const WelcomeComp = (props) => {
 
-  const user = JSON.parse(localStorage.getItem("authUser")).user;
-  const [name, setName] = useState(user.firstName + " " + user.lastName);
+  const [name, setName] = useState();
+
+  useEffect(() => {
+    if(props.user) {
+        setName(`${props.user.firstName} ${props.user.lastName}`)
+    }
+  }, [props.user])
 
   return (<React.Fragment>
     <Card className="overflow-hidden">

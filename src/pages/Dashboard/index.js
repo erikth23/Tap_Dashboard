@@ -96,7 +96,7 @@ const Dashboard = (props) => {
           }
           <Row>
             <Col xl="4">
-              <WelcomeComp/>
+              <WelcomeComp user={user}/>
             </Col>
             <Col xl="8">
               {
