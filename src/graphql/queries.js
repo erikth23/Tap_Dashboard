@@ -285,7 +285,6 @@ export const getTap = /* GraphQL */ `
         updatedAt
       }
       purpose
-      timestamp
       userID
       user {
         id
@@ -323,7 +322,6 @@ export const listTaps = /* GraphQL */ `
           updatedAt
         }
         purpose
-        timestamp
         userID
         user {
           id

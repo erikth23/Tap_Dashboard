@@ -62,8 +62,6 @@ const AddTask = (props) => {
   }
 
   const handleSubmit = async (event, error, values) => {
-    console.log(values);
-
     const input = {
       systemID: system.id,
       title: values.title,

@@ -73,7 +73,6 @@ type Tap @model @key(name: "byAsset", fields: ["assetID", "purpose"]){
   assetID: ID!
   asset: Asset @connection(fields: ["assetID"])
   purpose: TapType!
-  timestamp: String!
   userID: ID!
   user: User @connection(fields: ["userID"])
 }

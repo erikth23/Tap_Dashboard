@@ -444,7 +444,6 @@ export const onCreateTap = /* GraphQL */ `
         updatedAt
       }
       purpose
-      timestamp
       userID
       user {
         id
@@ -483,7 +482,6 @@ export const onUpdateTap = /* GraphQL */ `
         updatedAt
       }
       purpose
-      timestamp
       userID
       user {
         id
@@ -522,7 +520,6 @@ export const onDeleteTap = /* GraphQL */ `
         updatedAt
       }
       purpose
-      timestamp
       userID
       user {
         id

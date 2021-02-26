@@ -483,7 +483,6 @@ export const createTap = /* GraphQL */ `
         updatedAt
       }
       purpose
-      timestamp
       userID
       user {
         id
@@ -525,7 +524,6 @@ export const updateTap = /* GraphQL */ `
         updatedAt
       }
       purpose
-      timestamp
       userID
       user {
         id
@@ -567,7 +565,6 @@ export const deleteTap = /* GraphQL */ `
         updatedAt
       }
       purpose
-      timestamp
       userID
       user {
         id
