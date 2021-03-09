@@ -18,7 +18,9 @@ import {
 //Import Breadcrumb
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import {API, graphqlOperation, Auth} from 'aws-amplify';
-import { getUser, listTasks } from '../../graphql/queries.js';
+import { getUser, listTasks } from '../../graphql/queries';
+import { updateTask } from '../../graphql/mutations';
+import { onCreateTask, onUpdateTaskSystem, onDeleteTask } from '../../graphql/subscriptions';
 
 
 import TaskView from './taskView';
@@ -29,6 +31,7 @@ const NOT_TAKEN = "NOTTAKEN";
 const IN_PROGRESS = "INPROGRESS";
 const COMPLETED = "COMPLETED";
 const STUCK = "STUCK";
+const statuses = [NOT_TAKEN, IN_PROGRESS, STUCK, COMPLETED];
 
 const TasksList = (props) => {
 
@@ -36,6 +39,7 @@ const TasksList = (props) => {
   const [user, setUser] = useState({});
   const [tasks, setTasks] = useState([]);
   const [viewTask, setViewTask] = useState();
+  const [subscriptions, setSubscriptions] = useState([]);
   var today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -55,6 +59,14 @@ const TasksList = (props) => {
     }
   }, [user])
 
+  useEffect(() => {
+    console.log(tasks);
+    if(tasks.length > 0 && subscriptions.length < 1) {
+        setupSubscriptions();
+        return clearSubscriptions();
+    }
+  }, [tasks])
+
   const getDBUser = async () => {
     await API.graphql({query: getUser, variables: {id: email}})
     .then(res => setUser(res.data.getUser))
@@ -62,14 +74,97 @@ const TasksList = (props) => {
   }
 
   const getTasks = async () => {
-    const filter = {
+    const input = {
       systemID: {
         eq: user.systemID
       }
     }
-    await API.graphql({query: listTasks, variables: { filter: filter}})
+    await API.graphql({query: listTasks, variables: { input: input}})
     .then(res => setTasks(res.data.listTasks.items))
     .catch(err => console.log(err))
+  }
+
+  const setupSubscriptions = async () => {
+    const createSub = await API.graphql({query: onCreateTask, variables: { systemID: user.systemID}})
+    .subscribe({
+      next: event => {
+        if(event) {
+          const newTask = event.value.data.onCreateTask;
+          if(!newTask) {
+            return;
+          }
+          setTasks([...tasks, newTask])
+        }
+      },
+      error: error => console.error(error)
+    })
+
+    const updateSub = await API.graphql({query: onUpdateTaskSystem, variables: { systemID: user.systemID}})
+    .subscribe({
+      next: event => {
+        if(event) {
+          const newTask = event.value.data.onUpdateTask;
+          if(!newTask) {
+            return;
+          }
+
+          tasks.forEach((item, i) => {
+            if(item.id == newTask.id) {
+              tasks[i] = newTask;
+              setTasks([...tasks]);
+              return;
+            }
+          });
+        }
+      },
+      error: error => console.error(error)
+    })
+
+    const deleteSub = await API.graphql({query: onDeleteTask, variables: { systemID: user.systemID}})
+    .subscribe({
+      next: event => {
+        const newTask = event.value.data.onDeleteTask;
+        if(!newTask) {
+          return;
+        }
+        const newTasks = tasks.filter(task => task.id != newTask.id )
+        console.log(newTasks)
+        setTasks(newTasks);
+      },
+      error: error => console.error(error)
+    })
+
+    setSubscriptions([...subscriptions, createSub, updateSub, deleteSub])
+  }
+
+  const clearSubscriptions = () => {
+    subscriptions.forEach(sub => {
+      sub.unsubscribe();
+    });
+    setSubscriptions([]);
+  }
+
+  const runUpdateTask = async (task) => {
+    const update = {
+      id: task.id,
+      title: task.title,
+      shortDescription: task.shortDescription,
+      status: task.status,
+    }
+
+    await API.graphql(graphqlOperation(updateTask, {input: update}))
+    .then(res => {
+      tasks.forEach((item, i) => {
+        if(item.id == task.id) {
+          tasks[i] = res.data.updateTask;
+          console.log("Setting task value")
+          setTasks([...tasks]);
+          return;
+        }
+      });
+    }).catch(err => {
+      console.log(err);
+    })
   }
 
   return (<React.Fragment>
@@ -77,26 +172,6 @@ const TasksList = (props) => {
         <Container fluid="fluid">
           <Breadcrumbs title="Tasks" breadcrumbItem="Task List"/> {/* Render Breadcrumbs */}
           <Row>
-            {
-              // <Col className='mb-4' sm={6}>
-              //   <Dropdown isOpen={systemDropIsOpen} toggle={() => setSystemDropIsOpen(!systemDropIsOpen)}>
-              //     <DropdownToggle className="btn btn-secondary" caret="caret">
-              //       {chosenSystem.name}{" "}
-              //       <i className="mdi mdi-chevron-down"></i>
-              //     </DropdownToggle>
-              //     <DropdownMenu>
-              //       {
-              //         systems && systems.map(system => {
-              //           return (<DropdownItem onClick={() => {
-              //             setViewTask();
-              //             setChosenSystem(system)
-              //           }}>{system.name}</DropdownItem>)
-              //         })
-              //       }
-              //     </DropdownMenu>
-              //   </Dropdown>
-              // </Col>
-            }
             <Col className='mb-4' sm={2}>
               <div className="float-sm-left">
                 <Link to='/tasks-addTask'>
@@ -109,117 +184,36 @@ const TasksList = (props) => {
           </Row>
           <Row>
             <Col xl={8}>
-
-              <Card>
-                <CardBody>
-                  <CardTitle className="mb-4">Not Taken
-                  </CardTitle>
-                  <div className="table-responsive">
-                    <table className="table table-nowrap table-centered mb-0">
-                      <tbody>
-                        {
-                          tasks && tasks.filter(task => task.status == NOT_TAKEN).map(task => {
-                            let date = new Date(task.createdAt);
-                            return (<tr>
-                              <td>
-                                <h5 className="text-truncate font-size-14 m-0">
-                                  <Button color="light" outline className="waves-effect" onClick={() => setViewTask(task)}>{task.title}</Button>
-                                </h5>
-                              </td>
-                              <td>{task.owner && task.owner.firstName + ' ' + task.owner.lastName}</td>
-                              <td>{date.toLocaleString()}</td>
-                            </tr>)
-                          })
-                        }
-                      </tbody>
-                    </table>
-                  </div>
-                </CardBody>
-              </Card>
-
-              <Card>
-                <CardBody>
-                  <CardTitle className="mb-4">Stuck
-                  </CardTitle>
-                  <div className="table-responsive">
-                    <table className="table table-nowrap table-centered mb-0">
-                      <tbody>
-                        {
-                          tasks && tasks.filter(task => task.status == STUCK).map(task => {
-                            let date = new Date(task.createdAt);
-                            return (<tr>
-                              <td>
-                                <h5 className="text-truncate font-size-14 m-0">
-                                  <Button color="light" outline className="waves-effect" onClick={() => setViewTask(task)}>{task.title}</Button>
-                                </h5>
-                              </td>
-                              <td>{task.email}</td>
-                              <td>{date.toLocaleString()}</td>
-                            </tr>)
-                          })
-                        }
-                      </tbody>
-                    </table>
-                  </div>
-                </CardBody>
-              </Card>
-
-              <Card>
-                <CardBody>
-                  <CardTitle className="mb-4">In Progress
-                  </CardTitle>
-                  <div className="table-responsive">
-                    <table className="table table-nowrap table-centered mb-0">
-                      <tbody>
-                        {
-                          tasks && tasks.filter(task => task.status == IN_PROGRESS).map(task => {
-                            let date = new Date(task.createdAt);
-                            return (<tr>
-                              <td>
-                                <h5 className="text-truncate font-size-14 m-0">
-                                  <Button color="light" outline className="waves-effect" onClick={() => setViewTask(task)}>{task.title}</Button>
-                                </h5>
-                              </td>
-                              <td>{task.email}</td>
-                              <td>{date.toLocaleString()}</td>
-                            </tr>)
-                          })
-                        }
-                      </tbody>
-                    </table>
-                  </div>
-                </CardBody>
-              </Card>
-
-              <Card>
-                <CardBody>
-                  <CardTitle className="mb-4">Completed
-                  </CardTitle>
-                  <div className="table-responsive">
-                    <table className="table table-nowrap table-centered mb-0">
-                      <tbody>
-                        {
-                          tasks && tasks.filter(task => task.status == COMPLETED).filter(task => task.createdAt > today).map(task => {
-                            let date = new Date(task.createdAt);
-                            return (<tr>
-                              <td>
-                                <h5 className="text-truncate font-size-14 m-0">
-                                  <Button color="light" outline className="waves-effect" onClick={() => setViewTask(task)}>{task.title}</Button>
-                                </h5>
-                              </td>
-                              <td>{task.email}</td>
-                              <td>{date.toLocaleString()}</td>
-                            </tr>)
-                          })
-                        }
-                      </tbody>
-                    </table>
-                  </div>
-                </CardBody>
-              </Card>
+              {statuses.map(status =>
+                <Card>
+                  <CardBody>
+                    <CardTitle className="mb-4">{status}</CardTitle>
+                    <div className="table-responsive">
+                      <table className="table table-nowrap table-centered mb-0">
+                        <tbody>
+                          {
+                            tasks && tasks.filter(task => task.status == status).map(task => {
+                              let date = new Date(task.createdAt);
+                              return (<tr>
+                                <td>
+                                  <h5 className="text-truncate font-size-14 m-0">
+                                    <Button color="light" outline className="waves-effect" onClick={() => setViewTask(task)}>{task.title}</Button>
+                                  </h5>
+                                </td>
+                                <td>{task.owner && task.owner.firstName + ' ' + task.owner.lastName}</td>
+                                <td>{date.toLocaleString()}</td>
+                              </tr>)
+                            })
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardBody>
+                </Card>
+              )}
             </Col>
             <Col className="mb-4" xl={4}>
-              {viewTask && <TaskView task={viewTask} system={user.systemID}/>}
+              {viewTask && <TaskView _task={viewTask} system={user.systemID} setViewTask={setViewTask} runUpdateTask={runUpdateTask}/>}
             </Col>
           </Row>
 

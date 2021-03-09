@@ -1,7 +1,8 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateSystem = /* GraphQL */ `
+export const onCreateSystem =/* GraphQL */
+`
   subscription OnCreateSystem {
     onCreateSystem {
       id
@@ -37,9 +38,12 @@ export const onCreateSystem = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateSystem = /* GraphQL */ `
-  subscription OnUpdateSystem {
-    onUpdateSystem {
+export const onUpdateSystem =/* GraphQL */
+`
+  subscription OnUpdateSystem(
+    $id: String
+  ) {
+    onUpdateSystem(id: $id) {
       id
       name
       assets {
@@ -73,7 +77,8 @@ export const onUpdateSystem = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteSystem = /* GraphQL */ `
+export const onDeleteSystem =/* GraphQL */
+`
   subscription OnDeleteSystem {
     onDeleteSystem {
       id
@@ -109,9 +114,12 @@ export const onDeleteSystem = /* GraphQL */ `
     }
   }
 `;
-export const onCreateAsset = /* GraphQL */ `
-  subscription OnCreateAsset {
-    onCreateAsset {
+export const onCreateAsset =/* GraphQL */
+`
+  subscription OnCreateAsset(
+    $systemID: String!
+  ) {
+    onCreateAsset(systemID: $systemID) {
       id
       name
       description
@@ -136,9 +144,13 @@ export const onCreateAsset = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateAsset = /* GraphQL */ `
-  subscription OnUpdateAsset {
-    onUpdateAsset {
+export const onUpdateAsset =/* GraphQL */
+`
+  subscription OnUpdateAsset(
+    $systemID: String
+    $id: String
+  ) {
+    onUpdateAsset(systemID: $systemID, id: $id) {
       id
       name
       description
@@ -163,9 +175,13 @@ export const onUpdateAsset = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteAsset = /* GraphQL */ `
-  subscription OnDeleteAsset {
-    onDeleteAsset {
+export const onDeleteAsset =/* GraphQL */
+`
+  subscription OnDeleteAsset(
+    $systemID: String
+    $id: String
+  ) {
+    onDeleteAsset(systemID: $systemID, id: $id) {
       id
       name
       description
@@ -190,9 +206,12 @@ export const onDeleteAsset = /* GraphQL */ `
     }
   }
 `;
-export const onCreateTask = /* GraphQL */ `
-  subscription OnCreateTask {
-    onCreateTask {
+export const onCreateTask =/* GraphQL */
+`
+  subscription OnCreateTask(
+    $systemID: String!
+  ) {
+    onCreateTask(systemID: $systemID) {
       id
       title
       shortDescription
@@ -245,9 +264,53 @@ export const onCreateTask = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateTask = /* GraphQL */ `
-  subscription OnUpdateTask {
-    onUpdateTask {
+export const onUpdateTask =/* GraphQL */
+`
+  subscription OnUpdateTask (
+    $systemID: String
+    $id: String
+  ) {
+    onUpdateTask(systemID: $systemID, id: $id) {
+      id
+      title
+      shortDescription
+      comments {
+        items {
+          id
+          taskOrAssetID
+          comment
+          image
+          userID
+        }
+        nextToken
+      }
+      systemID
+      system {
+        id
+        name
+        users {
+          nextToken
+        }
+      }
+      assetID
+      asset {
+        id
+        name
+        description
+        status
+      }
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateTaskSystem =/* GraphQL */
+`
+  subscription OnUpdateTask (
+    $systemID: String
+  ) {
+    onUpdateTask(systemID: $systemID) {
       id
       title
       shortDescription
@@ -300,62 +363,19 @@ export const onUpdateTask = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteTask = /* GraphQL */ `
-  subscription OnDeleteTask {
-    onDeleteTask {
+export const onDeleteTask =/* GraphQL */
+`
+  subscription OnDeleteTask (
+    $systemID: String
+    $id: String
+  ) {
+    onDeleteTask(systemID: $systemID, id: $id) {
       id
-      title
-      shortDescription
-      comments {
-        items {
-          id
-          taskOrAssetID
-          comment
-          image
-          userID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      systemID
-      system {
-        id
-        name
-        assets {
-          nextToken
-        }
-        users {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      assetID
-      asset {
-        id
-        name
-        description
-        systemID
-        system {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        tagID
-        assetType
-        status
-        createdAt
-        updatedAt
-      }
-      status
-      createdAt
-      updatedAt
     }
   }
 `;
-export const onCreateNote = /* GraphQL */ `
+export const onCreateNote =/* GraphQL */
+`
   subscription OnCreateNote {
     onCreateNote {
       id
@@ -377,7 +397,8 @@ export const onCreateNote = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateNote = /* GraphQL */ `
+export const onUpdateNote =/* GraphQL */
+`
   subscription OnUpdateNote {
     onUpdateNote {
       id
@@ -399,7 +420,8 @@ export const onUpdateNote = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteNote = /* GraphQL */ `
+export const onDeleteNote =/* GraphQL */
+`
   subscription OnDeleteNote {
     onDeleteNote {
       id
@@ -421,7 +443,8 @@ export const onDeleteNote = /* GraphQL */ `
     }
   }
 `;
-export const onCreateTap = /* GraphQL */ `
+export const onCreateTap =/* GraphQL */
+`
   subscription OnCreateTap {
     onCreateTap {
       id
@@ -459,7 +482,8 @@ export const onCreateTap = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateTap = /* GraphQL */ `
+export const onUpdateTap =/* GraphQL */
+`
   subscription OnUpdateTap {
     onUpdateTap {
       id
@@ -497,7 +521,8 @@ export const onUpdateTap = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteTap = /* GraphQL */ `
+export const onDeleteTap =/* GraphQL */
+`
   subscription OnDeleteTap {
     onDeleteTap {
       id
@@ -535,7 +560,8 @@ export const onDeleteTap = /* GraphQL */ `
     }
   }
 `;
-export const onCreateUser = /* GraphQL */ `
+export const onCreateUser =/* GraphQL */
+`
   subscription OnCreateUser {
     onCreateUser {
       id
@@ -548,7 +574,8 @@ export const onCreateUser = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateUser = /* GraphQL */ `
+export const onUpdateUser =/* GraphQL */
+`
   subscription OnUpdateUser {
     onUpdateUser {
       id
@@ -561,7 +588,8 @@ export const onUpdateUser = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteUser = /* GraphQL */ `
+export const onDeleteUser =/* GraphQL */
+`
   subscription OnDeleteUser {
     onDeleteUser {
       id

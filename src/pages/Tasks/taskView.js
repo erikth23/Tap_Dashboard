@@ -8,9 +8,11 @@ import {
   CardTitle,
   FormGroup
 } from 'reactstrap';
+import {BrowserRouter as Router, Link} from 'react-router-dom';
 import {API, graphqlOperation, Auth} from 'aws-amplify';
-import { listUsers, update } from '../../graphql/queries.js';
-import { updateTask } from '../../graphql/mutations.js';
+import { listUsers, update } from '../../graphql/queries';
+import { updateTask } from '../../graphql/mutations';
+import { onUpdateTask, onDeleteTask } from '../../graphql/subscriptions';
 
 import TaskDropdown from './taskDropdown';
 import Comment from './comment';
@@ -20,28 +22,32 @@ const IN_PROGRESS = 'INPROGRESS';
 const STUCK = 'STUCK';
 const COMPLETED = 'COMPLETED';
 
-const TaskView = (props) => {
+const TaskView = ({setViewTask, system, _task, runUpdateTask }) => {
 
-  const [status, setStatus] = useState(props.task.status);
-  // const [owner, setOwner] = useState(props.task.owner ? props.task.owner.email : null);
-  // const [newComment, setNewComment] = useState();
-  // const [success, setSuccess] = useState(false);
-  // const [failure, setFailure] = useState(false);
-  // const room = props.system.rooms.find(room => room._id == props.task.room);
-  // let user = JSON.parse(localStorage.getItem("authUser")).user;
+  const [task, setTask] = useState(_task);
+  const [updated, setUpdated] = useState(false);
+  const [status, setStatus] = useState(_task.status);
+  const [subscriptions, setSubscriptions] = useState([]);
 
   const [awsUsers, setAwsUsers] = useState([]);
 
   useEffect(() => {
-    if(props.system) {
+    if(system) {
       getAwsUsers();
     }
-  }, [props.system])
+  }, [system])
+
+  useEffect(() => {
+    if(_task && system) {
+        setupSubscriptions();
+        return clearSubscriptions();
+    }
+  }, [_task, system])
 
   const getAwsUsers = async () => {
     const filter = {
       systemID: {
-        eq: props.system
+        eq: system
       }
     }
     await API.graphql({query: listUsers, variables: {filter: filter}})
@@ -49,68 +55,38 @@ const TaskView = (props) => {
     .catch(err => console.log(err))
   }
 
-  const updateStatus = async (status) => {
-    const oldStatus = props.task.status;
-    props.task.status = status;
+  const setupSubscriptions = async () => {
 
-    const input = {
-      id: props.task.id,
-      status: status
-    }
-    await API.graphql({query: updateTask, variables: { input: input}})
-    .then(res => console.log(res))
-    .catch(err => {
-      props.task.status = oldStatus;
-      console.log(err);
+    const deleteSub = await API.graphql({query: onDeleteTask, variables: {id: task.id}})
+    .subscribe({
+      next: event => setViewTask(null),
+      error: error => console.error(error)
     })
+
+    setSubscriptions([...subscriptions, deleteSub])
   }
-  //
-  // const updateOwner = async (email) => {
-  //   setOwner(email);
-  //   let result = await axios.post(process.env.REACT_APP_APIURL + '/task/update', {taskID: props.task._id, email: email}).then((result) => {
-  //     return result;
-  //   }).catch(error => {
-  //     return null;
-  //   });
-  //   if(!result) {
-  //     if(props.task.owner) setOwner(null);
-  //     else setOwner(props.task.owner.email)
-  //   }
-  // }
-  //
-  // const addComment = () => {
-  //   axios.post(process.env.REACT_APP_APIURL + '/task/addComment', {
-  //     taskID: props.task._id,
-  //     comment: newComment,
-  //     email: user.email
-  //   }).then(result => {
-  //     props.task.comments.push({
-  //       _user: {firstName: user.firstName, lastName: user.lastName},
-  //       timestamp: new Date(),
-  //       comment: newComment
-  //     })
-  //     setSuccess(true);
-  //     setNewComment();
-  //   }).catch(error => {
-  //     console.log(error);
-  //   })
-  //   const timer = setTimeout(() => {
-  //     setSuccess(false);
-  //   }, 2000)
-  // }
+
+  const clearSubscriptions = () => {
+    subscriptions.forEach(sub => {
+      sub.unsubscribe();
+    });
+    setSubscriptions([]);
+  }
 
   return(<React.Fragment>
     <Card>
-
-        <CardTitle className='mt-3 ml-3'>{props.systemID}</CardTitle>
+        <CardTitle className='mt-3 ml-3'>{task.title}</CardTitle>
         <CardBody>
           <div>
             <h5>Description</h5>
-            <p>{props.task.shortDescription}</p>
+            <p>{task.shortDescription}</p>
           </div>
           <div className='mt-3'>
             <h5>Task Status</h5>
-            <TaskDropdown initial={props.task.status} changeFunction={updateStatus} items={[NOT_TAKEN, IN_PROGRESS, STUCK, COMPLETED]}/>
+            <TaskDropdown initial={task.status} changeFunction={(value) => {
+                setUpdated(true);
+                setTask({...task, status: value});
+              }} items={[NOT_TAKEN, IN_PROGRESS, STUCK, COMPLETED]}/>
           </div>
           {
             // <div className='mt-3'>
@@ -119,10 +95,10 @@ const TaskView = (props) => {
             // </div>
           }
           {
-            props.task.asset &&
+            task.asset &&
             <div className='mt-3'>
               <h5>Asset</h5>
-              <p>{props.task.asset.name}</p>
+              <p>{task.asset.name}</p>
             </div>
 
           // <div>
@@ -144,6 +120,11 @@ const TaskView = (props) => {
           //   </FormGroup>
           // </div>
         }
+          <Link to="/tasks"
+            className={`btn ${updated ? 'btn-primary' : 'btn-secondary'} waves-effect waves-light btn-sm`}
+            onClick={() => runUpdateTask(task)}>
+            Save
+          </Link>
         </CardBody>
     </Card>
   </React.Fragment>)

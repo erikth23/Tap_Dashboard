@@ -22,7 +22,8 @@ import {
 } from "reactstrap";
 import {Link} from "react-router-dom";
 import {API, graphqlOperation, Auth} from 'aws-amplify';
-import { getUser, getSystem } from '../../graphql/queries.js';
+import { getUser, getSystem } from '../../graphql/queries';
+import { onUpdateSystem } from '../../graphql/subscriptions';
 
 // Pages Components
 import WelcomeComp from "./WelcomeComp";
@@ -40,6 +41,7 @@ const Dashboard = (props) => {
   const [system, setSystem] = useState({});
   const [email, setEmail] = useState();
   const [user, setUser] = useState({});
+  const [subscriptions, setSubscriptions] = useState([]);
 
   useEffect(() => {
     Auth.currentSession().then(data => setEmail(data.idToken.payload.email))
@@ -54,6 +56,8 @@ const Dashboard = (props) => {
   useEffect(() => {
     if(user.systemID) {
       getDBSystem();
+      setSubscriptions();
+      return clearSubscriptions();
     }
   }, [user])
 
@@ -67,6 +71,31 @@ const Dashboard = (props) => {
     await API.graphql({query: getSystem, variables: {id: user.systemID}})
     .then(res => setSystem(res.data.getSystem))
     .catch(err => console.log(err));
+  }
+
+  const setupSubscriptions = async () => {
+    const systemSub = await API.graphql({query: onUpdateSystem, variables: {id: user.systemID}})
+    .subscribe({
+      next: event => {
+        if(event) {
+          const newSystem = event.value.data.onUpdateSystem;
+          if(!newSystem) {
+            return;
+          }
+          setSystem(newSystem)
+        }
+      },
+      error: error => console.error(error)
+    })
+
+    setSubscriptions([...subscriptions, systemSub])
+  }
+
+  const clearSubscriptions = () => {
+    subscriptions.forEach(sub => {
+      sub.unsubscribe();
+    });
+    setSubscriptions([]);
   }
 
   return (<React.Fragment>
