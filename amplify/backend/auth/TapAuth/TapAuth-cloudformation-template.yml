@@ -7,142 +7,70 @@ Parameters:
     Type: String
   unauthRoleArn:
     Type: String
-
-  
-
-    
   resourceNameTruncated:
     Type: String
-  
-            
   userPoolName:
     Type: String
-  
-            
-        
   autoVerifiedAttributes:
-    Type: CommaDelimitedList
-      
+    Type: CommaDelimitedList   
   mfaConfiguration:
     Type: String
-  
-            
-        
   mfaTypes:
     Type: CommaDelimitedList
-      
   smsAuthenticationMessage:
     Type: String
-  
-            
   smsVerificationMessage:
     Type: String
-  
-            
   emailVerificationSubject:
     Type: String
-  
-            
   emailVerificationMessage:
     Type: String
-  
-            
-  
   defaultPasswordPolicy:
     Type: String
-            
-    
   passwordPolicyMinLength:
     Type: Number
-          
-        
   passwordPolicyCharacters:
     Type: CommaDelimitedList
-      
-        
   requiredAttributes:
     Type: CommaDelimitedList
-      
-  
   userpoolClientGenerateSecret:
     Type: String
-            
-    
   userpoolClientRefreshTokenValidity:
     Type: Number
-          
-        
   userpoolClientWriteAttributes:
     Type: CommaDelimitedList
-      
-        
   userpoolClientReadAttributes:
     Type: CommaDelimitedList
-      
   userpoolClientLambdaRole:
     Type: String
-  
-            
-  
   userpoolClientSetAttributes:
     Type: String
-            
   sharedId:
-    Type: String
-  
-            
+    Type: String 
   resourceName:
     Type: String
-  
-            
   authSelections:
     Type: String
-  
-            
-            
-            
   useDefault:
     Type: String
-  
-            
-        
   usernameAttributes:
     Type: CommaDelimitedList
-      
-  
   userPoolGroups:
     Type: String
-            
-  
   adminQueries:
-    Type: String
-            
+    Type: String     
   triggers:
     Type: String
-  
-            
-  
   hostedUI:
     Type: String
-            
-        
   userPoolGroupList:
     Type: CommaDelimitedList
-      
-            
   serviceName:
     Type: String
-  
-            
-      
   parentStack:
     Type: String
-        
-        
   permissions:
     Type: CommaDelimitedList
-      
-        
   dependsOn:
     Type: CommaDelimitedList
       
@@ -235,19 +163,7 @@ Resources:
       SmsConfiguration:
         SnsCallerArn: !GetAtt SNSRole.Arn
         ExternalId: tapdasa79887d3_role_external_id
-    
-    DependsOn: SNSRole
-    
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
   # Updating lambda role with permissions to Cognito
   
   
@@ -260,7 +176,6 @@ Resources:
       
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
       UserPoolId: !Ref UserPool
-    DependsOn: UserPool
   UserPoolClient:
   # Created provide application access to user pool
   # Depends on UserPool for ID reference
@@ -271,7 +186,6 @@ Resources:
       GenerateSecret: !Ref userpoolClientGenerateSecret
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
       UserPoolId: !Ref UserPool
-    DependsOn: UserPool
   # BEGIN USER POOL LAMBDA RESOURCES
   UserPoolClientRole:
   # Created to execute Lambda which gets userpool app client config values
@@ -320,11 +234,10 @@ Resources:
             - '};'
       Handler: index.handler
       Runtime: nodejs10.x
-      Timeout: '300'
+      Timeout: 300
       Role: !GetAtt
         - UserPoolClientRole
         - Arn
-    DependsOn: UserPoolClientRole
   UserPoolClientLambdaPolicy:
   # Sets userpool policy for the role that executes the Userpool Client Lambda
   # Depends on UserPool for Arn
@@ -374,11 +287,6 @@ Resources:
       clientId: !Ref UserPoolClient
       userpoolId: !Ref UserPool
     DependsOn: UserPoolClientLogPolicy
-  
-
-  
-  
-
   
   # BEGIN MFA LAMBDA RESOURCES
   MFALambdaRole:
@@ -448,11 +356,10 @@ Resources:
             - '};'
       Handler: index.handler
       Runtime: nodejs10.x
-      Timeout: '300'
+      Timeout: 300
       Role: !GetAtt
         - MFALambdaRole
         - Arn
-    DependsOn: MFALambdaRole
   MFALambdaPolicy:
   # Sets policy for the role that executes the MFA Lambda
   # Depends on Userpool for Arn
@@ -509,10 +416,6 @@ Resources:
     
 
 Outputs :
-  
-  
-  
-  
   UserPoolId:
     Value: !Ref 'UserPool'
     Description:  Id for the user pool
