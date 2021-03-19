@@ -67,15 +67,13 @@ const TaskView = ({setViewTask, system, _task, runUpdateTask, user }) => {
     const commentCreateSub = await API.graphql({query: onCreateNote, variables: {taskOrAssetID: task.id}})
     .subscribe({
       next: event => {
-        console.log(event)
         task.comments.items.push(event.value.data.onCreateNote)
-        console.log(task);
         setTask({...task});
       },
       error: error => console.error(error)
     })
 
-    setSubscriptions([...subscriptions, deleteSub])
+    setSubscriptions([...subscriptions, deleteSub, commentCreateSub])
   }
 
   const clearSubscriptions = () => {
