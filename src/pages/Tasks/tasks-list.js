@@ -20,7 +20,7 @@ import Breadcrumbs from '../../components/Common/Breadcrumb';
 import {API, graphqlOperation, Auth} from 'aws-amplify';
 import { getUser, listTasks } from '../../graphql/queries';
 import { updateTask } from '../../graphql/mutations';
-import { onCreateTask, onUpdateTaskSystem, onDeleteTask } from '../../graphql/subscriptions';
+import { onCreateTask, onUpdateTask, onDeleteTask } from '../../graphql/subscriptions';
 
 
 import TaskView from './taskView';
@@ -60,7 +60,6 @@ const TasksList = (props) => {
   }, [user])
 
   useEffect(() => {
-    console.log(tasks);
     if(tasks.length > 0 && subscriptions.length < 1) {
         setupSubscriptions();
         return clearSubscriptions();
@@ -99,7 +98,7 @@ const TasksList = (props) => {
       error: error => console.error(error)
     })
 
-    const updateSub = await API.graphql({query: onUpdateTaskSystem, variables: { systemID: user.systemID}})
+    const updateSub = await API.graphql({query: onUpdateTask, variables: { systemID: user.systemID}})
     .subscribe({
       next: event => {
         if(event) {
@@ -147,9 +146,9 @@ const TasksList = (props) => {
   const runUpdateTask = async (task) => {
     const update = {
       id: task.id,
-      title: task.title,
       shortDescription: task.shortDescription,
       status: task.status,
+      userID: task.userID
     }
 
     await API.graphql(graphqlOperation(updateTask, {input: update}))
@@ -213,7 +212,7 @@ const TasksList = (props) => {
               )}
             </Col>
             <Col className="mb-4" xl={4}>
-              {viewTask && <TaskView _task={viewTask} system={user.systemID} setViewTask={setViewTask} runUpdateTask={runUpdateTask}/>}
+              {viewTask && <TaskView _task={viewTask} system={user.systemID} setViewTask={setViewTask} runUpdateTask={runUpdateTask} user={user}/>}
             </Col>
           </Row>
 

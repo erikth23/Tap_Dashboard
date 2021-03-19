@@ -1,7 +1,8 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createSystem = /* GraphQL */ `
+export const createSystem =/* GraphQL */
+`
   mutation CreateSystem(
     $input: CreateSystemInput!
     $condition: ModelSystemConditionInput
@@ -40,7 +41,8 @@ export const createSystem = /* GraphQL */ `
     }
   }
 `;
-export const updateSystem = /* GraphQL */ `
+export const updateSystem =/* GraphQL */
+`
   mutation UpdateSystem(
     $input: UpdateSystemInput!
     $condition: ModelSystemConditionInput
@@ -79,7 +81,8 @@ export const updateSystem = /* GraphQL */ `
     }
   }
 `;
-export const deleteSystem = /* GraphQL */ `
+export const deleteSystem =/* GraphQL */
+`
   mutation DeleteSystem(
     $input: DeleteSystemInput!
     $condition: ModelSystemConditionInput
@@ -118,7 +121,8 @@ export const deleteSystem = /* GraphQL */ `
     }
   }
 `;
-export const createAsset = /* GraphQL */ `
+export const createAsset =/* GraphQL */
+`
   mutation CreateAsset(
     $input: CreateAssetInput!
     $condition: ModelAssetConditionInput
@@ -148,7 +152,8 @@ export const createAsset = /* GraphQL */ `
     }
   }
 `;
-export const updateAsset = /* GraphQL */ `
+export const updateAsset =/* GraphQL */
+`
   mutation UpdateAsset(
     $input: UpdateAssetInput!
     $condition: ModelAssetConditionInput
@@ -178,7 +183,8 @@ export const updateAsset = /* GraphQL */ `
     }
   }
 `;
-export const deleteAsset = /* GraphQL */ `
+export const deleteAsset =/* GraphQL */
+`
   mutation DeleteAsset(
     $input: DeleteAssetInput!
     $condition: ModelAssetConditionInput
@@ -208,7 +214,8 @@ export const deleteAsset = /* GraphQL */ `
     }
   }
 `;
-export const createTask = /* GraphQL */ `
+export const createTask =/* GraphQL */
+`
   mutation CreateTask(
     $input: CreateTaskInput!
     $condition: ModelTaskConditionInput
@@ -248,12 +255,6 @@ export const createTask = /* GraphQL */ `
         name
         description
         systemID
-        system {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         tagID
         assetType
         status
@@ -261,12 +262,14 @@ export const createTask = /* GraphQL */ `
         updatedAt
       }
       status
+      userID
       createdAt
       updatedAt
     }
   }
 `;
-export const updateTask = /* GraphQL */ `
+export const updateTask =/* GraphQL */
+`
   mutation UpdateTask(
     $input: UpdateTaskInput!
     $condition: ModelTaskConditionInput
@@ -319,12 +322,14 @@ export const updateTask = /* GraphQL */ `
         updatedAt
       }
       status
+      userID
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteTask = /* GraphQL */ `
+export const deleteTask =/* GraphQL */
+`
   mutation DeleteTask(
     $input: DeleteTaskInput!
     $condition: ModelTaskConditionInput
@@ -382,7 +387,8 @@ export const deleteTask = /* GraphQL */ `
     }
   }
 `;
-export const createNote = /* GraphQL */ `
+export const createNote =/* GraphQL */
+`
   mutation CreateNote(
     $input: CreateNoteInput!
     $condition: ModelNoteConditionInput
@@ -392,7 +398,6 @@ export const createNote = /* GraphQL */ `
       taskOrAssetID
       comment
       image
-      userID
       user {
         id
         userName
@@ -402,12 +407,14 @@ export const createNote = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      userID
       createdAt
       updatedAt
     }
   }
 `;
-export const updateNote = /* GraphQL */ `
+export const updateNote =/* GraphQL */
+`
   mutation UpdateNote(
     $input: UpdateNoteInput!
     $condition: ModelNoteConditionInput
@@ -432,7 +439,8 @@ export const updateNote = /* GraphQL */ `
     }
   }
 `;
-export const deleteNote = /* GraphQL */ `
+export const deleteNote =/* GraphQL */
+`
   mutation DeleteNote(
     $input: DeleteNoteInput!
     $condition: ModelNoteConditionInput
@@ -457,7 +465,8 @@ export const deleteNote = /* GraphQL */ `
     }
   }
 `;
-export const createTap = /* GraphQL */ `
+export const createTap =/* GraphQL */
+`
   mutation CreateTap(
     $input: CreateTapInput!
     $condition: ModelTapConditionInput
@@ -498,7 +507,8 @@ export const createTap = /* GraphQL */ `
     }
   }
 `;
-export const updateTap = /* GraphQL */ `
+export const updateTap =/* GraphQL */
+`
   mutation UpdateTap(
     $input: UpdateTapInput!
     $condition: ModelTapConditionInput
@@ -539,7 +549,8 @@ export const updateTap = /* GraphQL */ `
     }
   }
 `;
-export const deleteTap = /* GraphQL */ `
+export const deleteTap =/* GraphQL */
+`
   mutation DeleteTap(
     $input: DeleteTapInput!
     $condition: ModelTapConditionInput
@@ -580,7 +591,8 @@ export const deleteTap = /* GraphQL */ `
     }
   }
 `;
-export const createUser = /* GraphQL */ `
+export const createUser =/* GraphQL */
+`
   mutation CreateUser(
     $input: CreateUserInput!
     $condition: ModelUserConditionInput
@@ -596,7 +608,8 @@ export const createUser = /* GraphQL */ `
     }
   }
 `;
-export const updateUser = /* GraphQL */ `
+export const updateUser =/* GraphQL */
+`
   mutation UpdateUser(
     $input: UpdateUserInput!
     $condition: ModelUserConditionInput
@@ -612,7 +625,8 @@ export const updateUser = /* GraphQL */ `
     }
   }
 `;
-export const deleteUser = /* GraphQL */ `
+export const deleteUser =/* GraphQL */
+`
   mutation DeleteUser(
     $input: DeleteUserInput!
     $condition: ModelUserConditionInput

@@ -201,6 +201,7 @@ export const onDeleteAsset =/* GraphQL */
       tagID
       assetType
       status
+      userID
       createdAt
       updatedAt
     }
@@ -259,6 +260,7 @@ export const onCreateTask =/* GraphQL */
         updatedAt
       }
       status
+      userID
       createdAt
       updatedAt
     }
@@ -300,6 +302,7 @@ export const onUpdateTask =/* GraphQL */
         status
       }
       status
+      userID
       createdAt
       updatedAt
     }
@@ -376,8 +379,10 @@ export const onDeleteTask =/* GraphQL */
 `;
 export const onCreateNote =/* GraphQL */
 `
-  subscription OnCreateNote {
-    onCreateNote {
+  subscription OnCreateNote(
+    $taskOrAssetID: String!
+  ) {
+    onCreateNote(taskOrAssetID: $taskOrAssetID) {
       id
       taskOrAssetID
       comment
@@ -399,8 +404,11 @@ export const onCreateNote =/* GraphQL */
 `;
 export const onUpdateNote =/* GraphQL */
 `
-  subscription OnUpdateNote {
-    onUpdateNote {
+  subscription OnUpdateNote(
+    $taskOrAssetID: String
+    $id: String
+  ) {
+    onUpdateNote(taskOrAssetID: $taskOrAssetID, id: $id) {
       id
       taskOrAssetID
       comment
@@ -422,8 +430,11 @@ export const onUpdateNote =/* GraphQL */
 `;
 export const onDeleteNote =/* GraphQL */
 `
-  subscription OnDeleteNote {
-    onDeleteNote {
+  subscription OnDeleteNote(
+    $taskOrAssetID: String
+    $id: String
+  ) {
+    onDeleteNote(taskOrAssetID: $taskOrAssetID, id: $id) {
       id
       taskOrAssetID
       comment

@@ -4,7 +4,6 @@ import useSWR from 'swr';
 import authHeader from './jwt-token-access/auth-token-header';
 
 export function useSystems(email) {
-  console.log('getting systems');
   let {data, error} = useSWR(`/systems/getSystemByUser/${email}`, () => axios.post(process.env.REACT_APP_APIURL + '/systems/getSystemByUser', {email: email}, {headers: authHeader()}).then(res => {
 		return res.data.systems;
   }).catch(error => {

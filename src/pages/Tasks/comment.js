@@ -5,10 +5,10 @@ import {
   CardTitle
 } from 'reactstrap';
 
-const Comment = (props) => {
+const Comment = ({comment}) => {
 
-  const fullName = props.comment._user.firstName + ' ' + props.comment._user.lastName;
-  const timestamp = new Date(props.comment.timestamp);
+  const fullName = comment.user.userName;
+  const timestamp = new Date(comment.createdAt);
   return(
     <React.Fragment>
       <Card>
@@ -16,7 +16,7 @@ const Comment = (props) => {
           <h5>{fullName}<span style={{color: 'gray', fontSize: '10px'}}>{timestamp.toLocaleString()}</span></h5>
         </div>
         <CardBody>
-          <div>{props.comment.comment}</div>
+          <div>{comment.comment}</div>
         </CardBody>
       </Card>
     </React.Fragment>
