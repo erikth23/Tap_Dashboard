@@ -20,7 +20,7 @@ import Breadcrumbs from '../../components/Common/Breadcrumb';
 import {API, graphqlOperation, Auth} from 'aws-amplify';
 import { getUser, listTasks } from '../../graphql/queries';
 import { updateTask } from '../../graphql/mutations';
-import { onCreateTask, onUpdateTask, onDeleteTask } from '../../graphql/subscriptions';
+import { onCreateTask, onUpdateTaskSystem, onDeleteTask } from '../../graphql/subscriptions';
 
 
 import TaskView from './taskView';
@@ -98,7 +98,7 @@ const TasksList = (props) => {
       error: error => console.error(error)
     })
 
-    const updateSub = await API.graphql({query: onUpdateTask, variables: { systemID: user.systemID}})
+    const updateSub = await API.graphql({query: onUpdateTaskSystem, variables: { systemID: user.systemID}})
     .subscribe({
       next: event => {
         if(event) {
