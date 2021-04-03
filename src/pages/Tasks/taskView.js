@@ -11,7 +11,7 @@ import {
 import {BrowserRouter as Router, Link} from 'react-router-dom';
 import {API, graphqlOperation, Auth} from 'aws-amplify';
 import { listUsers, update } from '../../graphql/queries';
-import { createNote, updateTask } from '../../graphql/mutations';
+import { createNote } from '../../graphql/mutations';
 import { onCreateNote, onDeleteTask } from '../../graphql/subscriptions';
 
 import TaskDropdown from './taskDropdown';
@@ -21,6 +21,8 @@ const NOT_TAKEN = 'NOTTAKEN';
 const IN_PROGRESS = 'INPROGRESS';
 const STUCK = 'STUCK';
 const COMPLETED = 'COMPLETED';
+
+const LOGEVENT_API = "https://ji7sxv0nt2.execute-api.us-east-1.amazonaws.com/default/LogEvent";
 
 const TaskView = ({setViewTask, system, _task, runUpdateTask, user }) => {
 
@@ -89,9 +91,25 @@ const TaskView = ({setViewTask, system, _task, runUpdateTask, user }) => {
       userID: user.id,
       taskOrAssetID: task.id
     }
+
+    let result = null;
     await API.graphql({query: createNote, variables: {input: note}})
-    .then(res => console.log(res))
-    .catch(err => console.error(err))
+    .then(res => {
+      result = note;
+      console.log(res)
+    }).catch(err => {
+      result = err;
+      console.console.error(err);
+    })
+
+    await axios.post(LOGEVENT_API, {
+      meta: {
+        systemID: system,
+        userID: user.id,
+        graphql: 'createNote'
+      },
+      event: result
+    })
   }
 
   return(<React.Fragment>
@@ -126,7 +144,6 @@ const TaskView = ({setViewTask, system, _task, runUpdateTask, user }) => {
           <div>
             <h5 className='mt-3 mb-2'>Comments</h5>
             {task.comments.items.map(comment => {
-              console.log(comment)
               return <Comment comment={comment}/>
             })}
             <div className="form-group">

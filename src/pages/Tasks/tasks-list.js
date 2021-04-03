@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import {
@@ -22,7 +23,6 @@ import { getUser, listTasks } from '../../graphql/queries';
 import { updateTask } from '../../graphql/mutations';
 import { onCreateTask, onUpdateTaskSystem, onDeleteTask } from '../../graphql/subscriptions';
 
-
 import TaskView from './taskView';
 
 import './tasks.scss';
@@ -32,6 +32,8 @@ const IN_PROGRESS = "INPROGRESS";
 const COMPLETED = "COMPLETED";
 const STUCK = "STUCK";
 const statuses = [NOT_TAKEN, IN_PROGRESS, STUCK, COMPLETED];
+
+const LOGEVENT_API = "https://ji7sxv0nt2.execute-api.us-east-1.amazonaws.com/default/LogEvent";
 
 const TasksList = (props) => {
 
@@ -151,18 +153,29 @@ const TasksList = (props) => {
       userID: task.userID
     }
 
+    let result = null;
     await API.graphql(graphqlOperation(updateTask, {input: update}))
     .then(res => {
       tasks.forEach((item, i) => {
         if(item.id == task.id) {
           tasks[i] = res.data.updateTask;
-          console.log("Setting task value")
           setTasks([...tasks]);
           return;
         }
       });
+      result = update;
     }).catch(err => {
+      result = err;
       console.log(err);
+    })
+
+    await axios.post(LOGEVENT_API, {
+      meta: {
+        systemID: user.systemID,
+        userID: user.id,
+        graphql: 'updateTask'
+      },
+      event: result
     })
   }
 

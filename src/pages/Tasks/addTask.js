@@ -26,6 +26,8 @@ const IN_PROGRESS = "INPROGRESS";
 const COMPLETED = "COMPLETED";
 const STUCK = "STUCK";
 
+const LOGEVENT_API = "https://ji7sxv0nt2.execute-api.us-east-1.amazonaws.com/default/LogEvent";
+
 const AddTask = (props) => {
 
   const [success, setSuccess] = useState(false);
@@ -70,9 +72,24 @@ const AddTask = (props) => {
       assetID: values.assetID
     }
 
+    let result = null;
     await API.graphql({query: createTask, variables: {input: input}})
-    .then(res => console.log(res))
-    .catch(err => console.log(err))
+    .then(res => {
+      result = input;
+      console.log(res)
+    }).catch(err => {
+      result = err;
+      console.log(err)
+    })
+
+    await axios.post(LOGEVENT_API, {
+      meta: {
+        systemID: system.id,
+        userID: user.id,
+        graphql: 'updateTask'
+      },
+      event: result
+    })
   }
 
 
