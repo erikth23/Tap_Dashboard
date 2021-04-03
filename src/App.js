@@ -56,30 +56,28 @@ const App = (props) => {
             label: "Email Address",
             placeholder: "email",
             required: true,
+            displayOrder: 1
           },
           {
             type: "given_name",
             label: "First Name",
             placeholder: "first name",
             required: true,
+            displayOrder: 2
           },
           {
             type: "family_name",
             label: "Last Name",
             placeholder: "last name",
             required: true,
+            displayOrder: 3
           },
           {
             type: "password",
             label: "Password",
             placeholder: "password",
             required: true,
-          },
-          {
-            type: "password",
-            label: "Confirm Password",
-            placeholder: "confirm password",
-            required: true,
+            displayOrder: 4
           },
         ]}
         />
