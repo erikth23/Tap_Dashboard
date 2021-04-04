@@ -16,6 +16,7 @@ import {
   Button,
   Spinner
 } from "reactstrap";
+import {BrowserRouter as Router, useHistory} from "react-router-dom";
 //Import Breadcrumb
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import {API, graphqlOperation, Auth} from 'aws-amplify';
@@ -37,29 +38,26 @@ const LOGEVENT_API = "https://ji7sxv0nt2.execute-api.us-east-1.amazonaws.com/def
 
 const TasksList = (props) => {
 
-  const [email, setEmail] = useState();
-  const [user, setUser] = useState({});
+  const [cognitoUser, setCognitoUser] = useState();
   const [tasks, setTasks] = useState([]);
   const [viewTask, setViewTask] = useState();
   const [subscriptions, setSubscriptions] = useState([]);
+  const history = useHistory();
   var today = new Date();
   today.setHours(0, 0, 0, 0);
 
   useEffect(() => {
-    Auth.currentSession().then(data => setEmail(data.idToken.payload.email))
-  })
+    Auth.currentSession().then(data => setCognitoUser({
+      username: data.idToken.payload["cognito:username"],
+      systemID: data.idToken.payload["custom:systemID"]
+    }))
+  }, [])
 
   useEffect(() => {
-    if(email) {
-        getDBUser()
+    if(cognitoUser) {
+        getTasks()
     }
-  }, [email])
-
-  useEffect(() => {
-    if(user.systemID) {
-      getTasks();
-    }
-  }, [user])
+  }, [cognitoUser])
 
   useEffect(() => {
     if(tasks.length > 0 && subscriptions.length < 1) {
@@ -68,16 +66,10 @@ const TasksList = (props) => {
     }
   }, [tasks])
 
-  const getDBUser = async () => {
-    await API.graphql({query: getUser, variables: {id: email}})
-    .then(res => setUser(res.data.getUser))
-    .catch(err => console.log(err));
-  }
-
   const getTasks = async () => {
     const input = {
       systemID: {
-        eq: user.systemID
+        eq: cognitoUser.systemID
       }
     }
     await API.graphql({query: listTasks, variables: { input: input}})
@@ -86,7 +78,7 @@ const TasksList = (props) => {
   }
 
   const setupSubscriptions = async () => {
-    const createSub = await API.graphql({query: onCreateTask, variables: { systemID: user.systemID}})
+    const createSub = await API.graphql({query: onCreateTask, variables: { systemID: cognitoUser.systemID}})
     .subscribe({
       next: event => {
         if(event) {
@@ -100,7 +92,7 @@ const TasksList = (props) => {
       error: error => console.error(error)
     })
 
-    const updateSub = await API.graphql({query: onUpdateTaskSystem, variables: { systemID: user.systemID}})
+    const updateSub = await API.graphql({query: onUpdateTaskSystem, variables: { systemID: cognitoUser.systemID}})
     .subscribe({
       next: event => {
         if(event) {
@@ -121,7 +113,7 @@ const TasksList = (props) => {
       error: error => console.error(error)
     })
 
-    const deleteSub = await API.graphql({query: onDeleteTask, variables: { systemID: user.systemID}})
+    const deleteSub = await API.graphql({query: onDeleteTask, variables: { systemID: cognitoUser.systemID}})
     .subscribe({
       next: event => {
         const newTask = event.value.data.onDeleteTask;
@@ -171,12 +163,13 @@ const TasksList = (props) => {
 
     await axios.post(LOGEVENT_API, {
       meta: {
-        systemID: user.systemID,
-        userID: user.id,
+        systemID: cognitoUser.systemID,
+        userID: `${cognitoUser.systemID}-${cognitoUser.username}`,
         graphql: 'updateTask'
       },
       event: result
     })
+    history.push('/tasks');
   }
 
   return (<React.Fragment>
@@ -225,7 +218,7 @@ const TasksList = (props) => {
               )}
             </Col>
             <Col className="mb-4" xl={4}>
-              {viewTask && <TaskView _task={viewTask} system={user.systemID} setViewTask={setViewTask} runUpdateTask={runUpdateTask} user={user}/>}
+              {viewTask && <TaskView _task={viewTask} system={cognitoUser.systemID} setViewTask={setViewTask} runUpdateTask={runUpdateTask} username={cognitoUser.username}/>}
             </Col>
           </Row>
 

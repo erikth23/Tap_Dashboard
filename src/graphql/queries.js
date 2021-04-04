@@ -175,6 +175,8 @@ export const listTasks =/* GraphQL */
             createdAt
             user {
               userName
+              firstName
+              lastName
             }
           }
           nextToken
@@ -200,6 +202,9 @@ export const listTasks =/* GraphQL */
         }
         status
         userID
+        user {
+          userName
+        }
         createdAt
         updatedAt
       }

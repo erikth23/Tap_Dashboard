@@ -13,6 +13,7 @@ import {
   FormGroup,
   Spinner
 } from "reactstrap";
+import {BrowserRouter as Router, useHistory} from 'react-router-dom';
 import {withNamespaces} from 'react-i18next';
 import { AvForm, AvField } from "availity-reactstrap-validation";
 import {API, Auth} from 'aws-amplify';
@@ -21,44 +22,48 @@ import { createTask } from '../../graphql/mutations.js';
 
 import {useSystems, useTasks} from '../../helpers/hooks';
 
-const NOT_TAKEN = "NOTTAKEN";
-const IN_PROGRESS = "INPROGRESS";
-const COMPLETED = "COMPLETED";
-const STUCK = "STUCK";
-
 const LOGEVENT_API = "https://ji7sxv0nt2.execute-api.us-east-1.amazonaws.com/default/LogEvent";
+
+const taskStatusArr = [
+  {
+    value: 'NOTTAKEN',
+    label: 'Not Taken'
+  },
+  {
+    value: 'INPROGRESS',
+    label: 'In Progress'
+  },
+  {
+    value: 'STUCK',
+    label: 'Stuck'
+  },
+  {
+    value: 'COMPLETED',
+    label: 'Completed'
+  }]
 
 const AddTask = (props) => {
 
   const [success, setSuccess] = useState(false);
   const [system, setSystem] = useState({});
-  const [email, setEmail] = useState();
-  const [user, setUser] = useState({});
+  const [cognitoUser, setCognitoUser] = useState();
+  const history = useHistory();
 
   useEffect(() => {
-    Auth.currentSession().then(data => setEmail(data.idToken.payload.email))
-  })
+    Auth.currentSession().then(data => setCognitoUser({
+      username: data.idToken.payload["cognito:username"],
+      systemID: data.idToken.payload["custom:systemID"]
+    }))
+  }, [])
 
   useEffect(() => {
-    if(email) {
-        getDBUser()
+    if(cognitoUser) {
+        getDBSystem();
     }
-  }, [email])
-
-  useEffect(() => {
-    if(user.systemID) {
-      getDBSystem();
-    }
-  }, [user])
-
-  const getDBUser = async () => {
-    await API.graphql({query: getUser, variables: {id: email}})
-    .then(res => setUser(res.data.getUser))
-    .catch(err => console.log(err));
-  }
+  }, [cognitoUser])
 
   const getDBSystem = async () => {
-    await API.graphql({query: getSystem, variables: {id: user.systemID}})
+    await API.graphql({query: getSystem, variables: {id: cognitoUser.systemID}})
     .then(res => setSystem(res.data.getSystem))
     .catch(err => console.log(err));
   }
@@ -69,8 +74,11 @@ const AddTask = (props) => {
       title: values.title,
       shortDescription: values.shortDescription,
       status: values.stat,
-      assetID: values.assetID
+      assetID: values.assetID,
+      userID: 'nouser'
     }
+
+    console.log(input);
 
     let result = null;
     await API.graphql({query: createTask, variables: {input: input}})
@@ -85,11 +93,13 @@ const AddTask = (props) => {
     await axios.post(LOGEVENT_API, {
       meta: {
         systemID: system.id,
-        userID: user.id,
+        userID: `${cognitoUser.systemID}-${cognitoUser.username}`,
         graphql: 'updateTask'
       },
       event: result
     })
+
+    history.push('/tasks')
   }
 
 
@@ -97,8 +107,7 @@ const AddTask = (props) => {
       systemID: system.id,
       title: '',
       shortDescription: '',
-      status: NOT_TAKEN,
-      email: email,
+      status: 'NOTTAKEN',
       assetID: ''
     }
     return (<React.Fragment>
@@ -149,7 +158,7 @@ const AddTask = (props) => {
                       //   }
                       // </AvField>
                     }
-                    <AvField type='select' name='assetID' label='Asset for Task(Optional)'>
+                    <AvField type='select' name='assetID' label='Asset for Task' validate={{required: {value: true}}}>
                       {
                         system.assets && system.assets.items.map(asset => {
                           return <option value={asset.id}>{asset.name}</option>
@@ -157,10 +166,7 @@ const AddTask = (props) => {
                       }
                     </AvField>
                     <AvField type="select" name="stat" label="Status" validate={{required: {value: true}}}>
-                      <option value={NOT_TAKEN}>{NOT_TAKEN}</option>
-                      <option value={STUCK}>{STUCK}</option>
-                      <option value={IN_PROGRESS}>{IN_PROGRESS}</option>
-                      <option value={COMPLETED}>{COMPLETED}</option>
+                      {taskStatusArr.map(status => <option value={status.value}>{status.label}</option>)}
                     </AvField>
                     <FormGroup>
                       <div>

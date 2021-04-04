@@ -1,10 +1,10 @@
 {
-    "resourceNameTruncated": "tapdasa79887d3",
-    "userPoolName": "tap_users",
+    "resourceNameTruncated": "tapdas3e925604",
+    "userPoolName": "tap_dashboard3e925604_userpool_3e925604",
     "autoVerifiedAttributes": [
-        "email"
+        "phone_number"
     ],
-    "mfaConfiguration": "OPTIONAL",
+    "mfaConfiguration": "OFF",
     "mfaTypes": [
         "SMS Text Message"
     ],
@@ -12,25 +12,51 @@
     "smsVerificationMessage": "Your verification code is {####}",
     "emailVerificationSubject": "Your verification code",
     "emailVerificationMessage": "Your verification code is {####}",
-    "defaultPasswordPolicy": false,
+    "defaultPasswordPolicy": true,
     "passwordPolicyMinLength": 8,
-    "passwordPolicyCharacters": [],
+    "passwordPolicyCharacters": [
+        "Requires Lowercase",
+        "Requires Uppercase",
+        "Requires Numbers"
+    ],
     "requiredAttributes": [
-        "email",
         "family_name",
+        "locale",
         "given_name"
     ],
     "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [
-        "email"
+        "birthdate",
+        "email",
+        "gender",
+        "name",
+        "nickname",
+        "phone_number",
+        "preferred_username",
+        "picture",
+        "profile",
+        "family_name",
+        "locale",
+        "given_name"
     ],
     "userpoolClientReadAttributes": [
-        "email"
+        "birthdate",
+        "email",
+        "family_name",
+        "gender",
+        "locale",
+        "given_name",
+        "name",
+        "nickname",
+        "phone_number",
+        "preferred_username",
+        "picture",
+        "profile"
     ],
-    "userpoolClientLambdaRole": "TapAuta79887d3_userpoolclient_lambda_role",
-    "userpoolClientSetAttributes": false,
-    "sharedId": "a79887d3",
+    "userpoolClientLambdaRole": "TapAut3e925604_userpoolclient_lambda_role",
+    "userpoolClientSetAttributes": true,
+    "sharedId": "3e925604",
     "resourceName": "TapAuth",
     "authSelections": "userPoolOnly",
     "authRoleArn": {
@@ -46,9 +72,6 @@
         ]
     },
     "useDefault": "manual",
-    "usernameAttributes": [
-        "email"
-    ],
     "userPoolGroups": true,
     "adminQueries": false,
     "triggers": "{}",

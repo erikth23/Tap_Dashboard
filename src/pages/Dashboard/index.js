@@ -39,42 +39,40 @@ import {withNamespaces} from 'react-i18next';
 const Dashboard = (props) => {
 
   const [system, setSystem] = useState({});
-  const [email, setEmail] = useState();
+  const [cognitoUser, setCognitoUser] = useState();
   const [user, setUser] = useState({});
   const [subscriptions, setSubscriptions] = useState([]);
 
   useEffect(() => {
-    Auth.currentSession().then(data => setEmail(data.idToken.payload.email))
-  })
+    Auth.currentSession().then(data => setCognitoUser({
+      username: data.idToken.payload["cognito:username"],
+      systemID: data.idToken.payload["custom:systemID"]
+    }))
+  }, [])
 
   useEffect(() => {
-    if(email) {
+    if(cognitoUser) {
         getDBUser()
+        getDBSystem();
+        setSubscriptions();
+        return clearSubscriptions();
     }
-  }, [email])
-
-  useEffect(() => {
-    if(user.systemID) {
-      getDBSystem();
-      setSubscriptions();
-      return clearSubscriptions();
-    }
-  }, [user])
+  }, [cognitoUser])
 
   const getDBUser = async () => {
-    await API.graphql({query: getUser, variables: {id: email}})
+    await API.graphql({query: getUser, variables: {id: `${cognitoUser.systemID}-${cognitoUser.username}`}})
     .then(res => setUser(res.data.getUser))
     .catch(err => console.log(err));
   }
 
   const getDBSystem = async () => {
-    await API.graphql({query: getSystem, variables: {id: user.systemID}})
+    await API.graphql({query: getSystem, variables: {id: cognitoUser.systemID}})
     .then(res => setSystem(res.data.getSystem))
     .catch(err => console.log(err));
   }
 
   const setupSubscriptions = async () => {
-    const systemSub = await API.graphql({query: onUpdateSystem, variables: {id: user.systemID}})
+    const systemSub = await API.graphql({query: onUpdateSystem, variables: {id: cognitoUser.systemID}})
     .subscribe({
       next: event => {
         if(event) {

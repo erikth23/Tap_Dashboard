@@ -7,7 +7,7 @@ import {
 
 const Comment = ({comment}) => {
 
-  const fullName = comment.user.userName;
+  const fullName = comment.user.firstName;
   const timestamp = new Date(comment.createdAt);
   return(
     <React.Fragment>

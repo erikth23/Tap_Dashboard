@@ -17,14 +17,27 @@ import { onCreateNote, onDeleteTask } from '../../graphql/subscriptions';
 import TaskDropdown from './taskDropdown';
 import Comment from './comment';
 
-const NOT_TAKEN = 'NOTTAKEN';
-const IN_PROGRESS = 'INPROGRESS';
-const STUCK = 'STUCK';
-const COMPLETED = 'COMPLETED';
+const taskStatusArr = [
+  {
+    value: 'NOTTAKEN',
+    label: 'Not Taken'
+  },
+  {
+    value: 'INPROGRESS',
+    label: 'In Progress'
+  },
+  {
+    value: 'STUCK',
+    label: 'Stuck'
+  },
+  {
+    value: 'COMPLETED',
+    label: 'Completed'
+  }]
 
 const LOGEVENT_API = "https://ji7sxv0nt2.execute-api.us-east-1.amazonaws.com/default/LogEvent";
 
-const TaskView = ({setViewTask, system, _task, runUpdateTask, user }) => {
+const TaskView = ({setViewTask, system, _task, runUpdateTask, username }) => {
 
   const [task, setTask] = useState(_task);
   const [updated, setUpdated] = useState(false);
@@ -88,7 +101,7 @@ const TaskView = ({setViewTask, system, _task, runUpdateTask, user }) => {
   const addComment = async () => {
     const note = {
       comment: newComment,
-      userID: user.id,
+      userID: `${system}-${username}`,
       taskOrAssetID: task.id
     }
 
@@ -105,73 +118,83 @@ const TaskView = ({setViewTask, system, _task, runUpdateTask, user }) => {
     await axios.post(LOGEVENT_API, {
       meta: {
         systemID: system,
-        userID: user.id,
+        userID: `${system}-${username}`,
         graphql: 'createNote'
       },
       event: result
     })
   }
 
-  return(<React.Fragment>
-    <Card>
-        <CardTitle className='mt-3 ml-3'>{task.title}</CardTitle>
-        <CardBody>
-          <div>
-            <h5>Description</h5>
-            <p>{task.shortDescription}</p>
-          </div>
-          <div className='mt-3'>
-            <h5>Task Status</h5>
-            <TaskDropdown initial={task.status} changeFunction={(value) => {
-                setUpdated(true);
-                setTask({...task, status: value});
-              }} items={[NOT_TAKEN, IN_PROGRESS, STUCK, COMPLETED]}/>
-          </div>
-          <div className='mt-3'>
-            <h5>Assignee</h5>
-            <TaskDropdown initial={task.userID} changeFunction={(value) => {
-                setUpdated(true);
-                setTask({...task, userID: value});
-              }} items={users.map(user => user.userName)}/>
-          </div>
-          {
-            task.asset &&
+  if(!task) {
+    return (
+      <React.Fragment>
+        <div>Loading...</div>
+      </React.Fragment>
+    )
+  } else {
+    return(<React.Fragment>
+      <Card>
+          <CardTitle className='mt-3 ml-3'>{task.title}</CardTitle>
+          <CardBody>
+            <div>
+              <h5>Description</h5>
+              <p>{task.shortDescription}</p>
+            </div>
             <div className='mt-3'>
-              <h5>Asset</h5>
-              <p>{task.asset.name}</p>
+              <h5>Task Status</h5>
+              <TaskDropdown initial={taskStatusArr.find(status => task.status == status.value).label} changeFunction={(res) => {
+                  setUpdated(true);
+                  setTask({...task, status: res.value});
+                }} items={taskStatusArr}/>
             </div>
-          }
-          <div>
-            <h5 className='mt-3 mb-2'>Comments</h5>
-            {task.comments.items.map(comment => {
-              return <Comment comment={comment}/>
-            })}
-            <div className="form-group">
-              <input className="form-control" type="text" placeholder="Add Comment" onChange={(event) => setNewComment(event.target.value)}/>
+            <div className='mt-3'>
+              <h5>Assignee</h5>
+              <TaskDropdown initial={task.user ? task.user.userName : 'nouser'} changeFunction={(res) => {
+                  setUpdated(true);
+                  setTask({...task, userID: res.value, user: {userName: res.label}});
+                }} items={users.map(user => ({value: user.id, label: user.userName}))}/>
             </div>
-            <FormGroup>
-              <div>
-                <Button type="submit" color="primary" className="mr-1" onClick={() => addComment()}>
-                  Add
-                </Button>{" "}
-                {//success && <Badge pill="pill" className="badge-soft-success mr-1 ml-3">Success</Badge>
-                }
-                {//failure && <Badge pill="pill" className="badge-soft-danger mr-1 ml-3">Failed</Badge>
-                }
+            {
+              task.asset &&
+              <div className='mt-3'>
+                <h5>Asset</h5>
+                <p>{task.asset.name}</p>
               </div>
-            </FormGroup>
-          </div>
-          <Link to="/tasks"
-            className={`btn ${updated ? 'btn-primary' : 'btn-secondary'} waves-effect waves-light btn-sm`}
-            onClick={() => {
-              setUpdated(false)
-              runUpdateTask(task)
-            }}>
-            Save
-          </Link>
-        </CardBody>
-    </Card>
-  </React.Fragment>)
+            }
+            <div>
+              <h5 className='mt-3 mb-2'>Comments</h5>
+              {task.comments.items.map(comment => {
+                console.log(comment)
+                return <Comment comment={comment}/>
+              })}
+              <div className="form-group">
+                <input className="form-control" type="text" placeholder="Add Comment" onChange={(event) => setNewComment(event.target.value)}/>
+              </div>
+              <FormGroup>
+                <div>
+                  <Button type="submit" color="primary" className="mr-1" onClick={() => addComment()}>
+                    Add
+                  </Button>{" "}
+                  {//success && <Badge pill="pill" className="badge-soft-success mr-1 ml-3">Success</Badge>
+                  }
+                  {//failure && <Badge pill="pill" className="badge-soft-danger mr-1 ml-3">Failed</Badge>
+                  }
+                </div>
+              </FormGroup>
+            </div>
+            <Link to="/tasks"
+              className={`btn ${updated ? 'btn-primary' : 'btn-secondary'} waves-effect waves-light btn-sm`}
+              onClick={() => {
+                setUpdated(false)
+                runUpdateTask(task)
+              }}>
+              Save
+            </Link>
+          </CardBody>
+      </Card>
+    </React.Fragment>)
+  }
+
 }
 
 export default TaskView;

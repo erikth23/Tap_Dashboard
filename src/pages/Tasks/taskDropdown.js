@@ -12,7 +12,7 @@ const TaskDropdown = (props) => {
     <DropdownMenu>
       {
         props.items.map(item => {
-          return <DropdownItem onClick={() => props.changeFunction(item)}>{item}</DropdownItem>
+          return <DropdownItem onClick={() => props.changeFunction(item)}>{item.label}</DropdownItem>
         })
       }
     </DropdownMenu>

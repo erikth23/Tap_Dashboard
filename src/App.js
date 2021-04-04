@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Switch, BrowserRouter as Router, Route} from "react-router-dom";
 import {connect} from "react-redux";
-import {AmplifyAuthenticator, AmplifySignIn, AmplifySignOut, AmplifySignUp } from '@aws-amplify/ui-react';
+import {AmplifyAuthenticator, AmplifySignIn, AmplifySignOut, AmplifySignUp, AmplifyConfirmSignUp } from '@aws-amplify/ui-react';
 
 // Import Routes all
 import {userRoutes, authRoutes} from "./routes/allRoutes";
@@ -46,20 +46,22 @@ const App = (props) => {
     }}/>);
 
   return (<React.Fragment>
-    <AmplifyAuthenticator usernameAlias="email">
+    <AmplifyAuthenticator >
       <AmplifySignUp
         slot="sign-up"
-        usernameAlias="email"
+        username-alias="username"
         formFields={[
           {
-            type: "email",
-            label: "Email Address",
-            placeholder: "email",
+            type: "username",
+            key: "username",
+            label: "Username",
+            placeholder: "username",
             required: true,
             displayOrder: 1
           },
           {
             type: "given_name",
+            key: "given_name",
             label: "First Name",
             placeholder: "first name",
             required: true,
@@ -67,6 +69,7 @@ const App = (props) => {
           },
           {
             type: "family_name",
+            key: "family_name",
             label: "Last Name",
             placeholder: "last name",
             required: true,
@@ -74,14 +77,41 @@ const App = (props) => {
           },
           {
             type: "password",
+            key: "password",
             label: "Password",
             placeholder: "password",
             required: true,
             displayOrder: 4
           },
+          {
+            type: "locale",
+            key: "locale",
+            label: "Language",
+            placeholder: "language",
+            required: true,
+            displayOrder: 5
+          },
+          {
+            type: "custom:systemID",
+            key: "custom:systemID",
+            label: "Hotel ID",
+            placeholder: "hotel id",
+            required: true,
+            displayOrder: 5
+          },
+          {
+            key: "phone_number",
+            type: "phone_number",
+            label: "Phone Number",
+            placeholder: "Phone Number",
+            required: true,
+            displayOrder: 6
+          }
         ]}
         />
-      <AmplifySignIn slot="sign-in" usernameAlias="email" />
+      <AmplifyConfirmSignUp
+        slot="confirm-sign-up"/>
+      <AmplifySignIn slot="sign-in" />
       <Router>
         <Switch>
           {userRoutes.map((route, idx) => (<Authmiddleware path={route.path} layout={Layout} component={route.component} key={idx}/>))}

@@ -24,6 +24,7 @@ const TaskTable = ({systemID}) => {
   const [subscriptions, setSubscriptions] = useState([]);
 
   useEffect(() => {
+    console.log(systemID)
     if(systemID) {
       getTasks();
     }
@@ -69,10 +70,8 @@ const TaskTable = ({systemID}) => {
           if(!newTask) {
             return;
           }
-          console.log(newTask)
 
           tasks.forEach((item, i) => {
-            console.log(`Item id: ${item.id}\nTask id: ${newTask.id}`)
             if(item.id == newTask.id) {
               tasks[i] = newTask;
               setTasks([...tasks]);
