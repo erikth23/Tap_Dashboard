@@ -41,7 +41,7 @@ const TaskTable = ({systemID}) => {
         eq: systemID
       }
     }
-    API.graphql({query: listTasks, variables: {filter: filter}})
+    await API.graphql({query: listTasks, variables: {filter: filter}})
     .then(res => setTasks(res.data.listTasks.items))
     .catch(err => console.error(err))
   }

@@ -67,12 +67,12 @@ const TasksList = (props) => {
   }, [tasks])
 
   const getTasks = async () => {
-    const input = {
+    const filter = {
       systemID: {
         eq: cognitoUser.systemID
       }
     }
-    await API.graphql({query: listTasks, variables: { input: input}})
+    await API.graphql({query: listTasks, variables: { filter: filter}})
     .then(res => setTasks(res.data.listTasks.items))
     .catch(err => console.log(err))
   }
