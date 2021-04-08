@@ -172,7 +172,7 @@ const TasksList = (props) => {
     history.push('/tasks');
   }
 
-  export const getTimeDiff = (updatedAt) => {
+  const getTimeDiff = (updatedAt) => {
   	const today = new Date();
   	const timestamp = new Date(updatedAt);
   	const days = Math.round(Math.abs((timestamp - today)) / (24 * 60 * 60 * 1000));
