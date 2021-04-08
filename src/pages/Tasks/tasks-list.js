@@ -172,6 +172,14 @@ const TasksList = (props) => {
     history.push('/tasks');
   }
 
+  export const getTimeDiff = (updatedAt) => {
+  	const today = new Date();
+  	const timestamp = new Date(updatedAt);
+  	const days = Math.round(Math.abs((timestamp - today)) / (24 * 60 * 60 * 1000));
+
+  	return days < 1;
+  }
+
   return (<React.Fragment>
       <div className="page-content">
         <Container fluid="fluid">
@@ -197,7 +205,7 @@ const TasksList = (props) => {
                       <table className="table table-nowrap table-centered mb-0">
                         <tbody>
                           {
-                            tasks && tasks.filter(task => task.status == status).map(task => {
+                            tasks && tasks.filter(task => task.status == status && (status != "COMPLETED" || getTimeDiff(task.updatedAt))).map(task => {
                               let date = new Date(task.createdAt);
                               return (<tr>
                                 <td>
