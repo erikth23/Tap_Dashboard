@@ -13,7 +13,7 @@ import {
   FormGroup,
   Spinner
 } from "reactstrap";
-import {withNamespaces} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { AvForm, AvField } from "availity-reactstrap-validation";
 
 import {useSystems} from '../../helpers/hooks';
@@ -27,6 +27,7 @@ const AddUser = (props) => {
   const [success,  setSuccess] = useState(false);
   let user = JSON.parse(localStorage.getItem("authUser")).user;
   const {systems, error, isLoading} = useSystems(user.email);
+  const { t } = useTranslation();
 
   const handleSubmit = (event, error, values) => {
     axios.post(process.env.REACT_APP_APIURL + '/systems/addUser', {
@@ -51,7 +52,7 @@ const AddUser = (props) => {
     return (<React.Fragment>
       <div className="page-content">
         <Container fluid="fluid">
-          <Breadcrumbs title={props.t('System')} breadcrumbItem={props.t('Add User')}/>
+          <Breadcrumbs title={t('System')} breadcrumbItem={t('Add User')}/>
           <Row>
             <Col>
               <Card>
@@ -102,4 +103,4 @@ const AddUser = (props) => {
   }
 }
 
-export default withNamespaces()(AddUser);
+export default AddUser;

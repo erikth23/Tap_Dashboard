@@ -9,7 +9,7 @@ class StackedColumnChart extends Component {
             options: {
                 chart: {
                     height: 359,
-                    type: "bar",
+                    type: "line",
                     stacked: !0,
                     toolbar: {
                         show: 1

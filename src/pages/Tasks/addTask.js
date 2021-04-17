@@ -14,9 +14,10 @@ import {
   Spinner
 } from "reactstrap";
 import {BrowserRouter as Router, useHistory} from 'react-router-dom';
-import {withNamespaces} from 'react-i18next';
 import { AvForm, AvField } from "availity-reactstrap-validation";
+import { useTranslation } from 'react-i18next';
 import {API, Auth} from 'aws-amplify';
+
 import { getUser, getSystem } from '../../graphql/queries.js';
 import { createTask } from '../../graphql/mutations.js';
 
@@ -48,6 +49,7 @@ const AddTask = (props) => {
   const [system, setSystem] = useState({});
   const [cognitoUser, setCognitoUser] = useState();
   const history = useHistory();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     Auth.currentSession().then(data => setCognitoUser({
@@ -71,11 +73,14 @@ const AddTask = (props) => {
   const handleSubmit = async (event, error, values) => {
     const input = {
       systemID: system.id,
-      title: values.title,
-      shortDescription: values.shortDescription,
+      localeTaskInput: {
+        locale: i18n.language,
+        title: values.title,
+        shortDescription: values.shortDescription,
+      },
       status: values.stat,
-      assetID: values.assetID,
-      userID: 'nouser'
+      assetID: values.assetID || system.assets.items[0].id,
+      userID: 'nouser',
     }
 
     console.log(input);
@@ -103,6 +108,15 @@ const AddTask = (props) => {
   }
 
 
+  if(!system) {
+    return (
+      <React.Fragment>
+        <div>
+          Loading...
+        </div>
+      </React.Fragment>
+    )
+  } else {
     const defaultValues = {
       systemID: system.id,
       title: '',
@@ -113,7 +127,7 @@ const AddTask = (props) => {
     return (<React.Fragment>
       <div className="page-content">
         <Container fluid="fluid">
-          <Breadcrumbs title={props.t('Tasks')} breadcrumbItem={props.t('Add Task')}/>
+          <Breadcrumbs title={t('Tasks')} breadcrumbItem={t('Add Task')}/>
           <Row>
             <Col>
               <Card>
@@ -188,5 +202,6 @@ const AddTask = (props) => {
       </div>
     </React.Fragment>)
   }
+}
 
-export default withNamespaces()(AddTask);
+export default AddTask;

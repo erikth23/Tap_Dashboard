@@ -3,7 +3,7 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap
 import { Auth } from 'aws-amplify';
 
 //i18n
-import { withNamespaces } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 // Redux
 import { connect } from 'react-redux';
 import { withRouter, Link, useHistory } from 'react-router-dom';
@@ -20,6 +20,7 @@ const ProfileMenu = (props) => {
    const [username, setusername] = useState("Admin");
 
    const history = useHistory();
+   const { t } = useTranslation();
 
    useEffect(() => {
            if(localStorage.getItem("authUser"))
@@ -46,7 +47,7 @@ const ProfileMenu = (props) => {
                         <i className="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                     </DropdownToggle>
                     <DropdownMenu right>
-                        <DropdownItem tag="a"  href="/profile"> <i className="bx bx-user font-size-16 align-middle mr-1"></i>{props.t('Profile')}  </DropdownItem>
+                        <DropdownItem tag="a"  href="/profile"> <i className="bx bx-user font-size-16 align-middle mr-1"></i>{t('Profile')}  </DropdownItem>
                         <div className="dropdown-divider"></div>
                         <DropdownItem onClick={async () => {
                             try {
@@ -55,7 +56,7 @@ const ProfileMenu = (props) => {
                             } catch (error) {
                               console.log(`error signing out: ${error}`)
                             }
-                          }}><i className="bx bx-power-off font-size-16 align-middle mr-1 text-danger"></i>{props.t('Log Out')}  </DropdownItem>
+                          }}><i className="bx bx-power-off font-size-16 align-middle mr-1 text-danger"></i>{t('Log Out')}  </DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
             </React.Fragment>
@@ -67,4 +68,4 @@ const mapStatetoProps = state => {
     return { error,success };
 }
 
-export default withRouter(connect(mapStatetoProps, {  })(withNamespaces()(ProfileMenu)));
+export default withRouter(connect(mapStatetoProps, {  })(ProfileMenu));

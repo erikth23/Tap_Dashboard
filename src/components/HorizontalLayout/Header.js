@@ -29,13 +29,14 @@ import mail_chimp from "../../assets/images/brands/mail_chimp.png";
 import slack from "../../assets/images/brands/slack.png";
 
 //i18n
-import { withNamespaces } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 const Header = (props) => {
 
     const [menu, setMenu] = useState(false);
     const [isSearch, setSearch] = useState(false);
     const [socialDrp, setsocialDrp] = useState(false);
+    const { t } = useTranslation();
 
 
   function toggleFullscreen() {
@@ -110,89 +111,89 @@ const Header = (props) => {
               </form>
 
             <Dropdown className="dropdown-mega d-none d-lg-block ml-2" isOpen={menu} toggle={() => setMenu(!menu)}>
-                <DropdownToggle className="btn header-item waves-effect" caret tag="button"> 
-              {props.t('Mega Menu')}  {" "}
+                <DropdownToggle className="btn header-item waves-effect" caret tag="button">
+              {t('Mega Menu')}  {" "}
                   <i className="mdi mdi-chevron-down"></i></DropdownToggle>
                 <DropdownMenu className="dropdown-megamenu">
                   <Row>
                     <Col sm={8}>
                       <Row>
                         <Col md={4}>
-                          <h5 className="font-size-14 mt-0">{props.t('UI Components')}</h5>
+                          <h5 className="font-size-14 mt-0">{t('UI Components')}</h5>
                           <ul className="list-unstyled megamenu-list">
                             <li>
-                              <Link to="#">{props.t('Lightbox')}</Link>
+                              <Link to="#">{t('Lightbox')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Range Slider')}</Link>
+                              <Link to="#">{t('Range Slider')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Sweet Alert')}</Link>
+                              <Link to="#">{t('Sweet Alert')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Rating')}</Link>
+                              <Link to="#">{t('Rating')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Forms')}</Link>
+                              <Link to="#">{t('Forms')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Tables')}</Link>
+                              <Link to="#">{t('Tables')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Charts')}</Link>
+                              <Link to="#">{t('Charts')}</Link>
                             </li>
                           </ul>
                         </Col>
 
                         <Col md={4}>
-                          <h5 className="font-size-14 mt-0">{props.t('Applications')}</h5>
+                          <h5 className="font-size-14 mt-0">{t('Applications')}</h5>
                           <ul className="list-unstyled megamenu-list">
                             <li>
-                              <Link to="#">{props.t('Ecommerce')}</Link>
+                              <Link to="#">{t('Ecommerce')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Calendar')}</Link>
+                              <Link to="#">{t('Calendar')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Email')}</Link>
+                              <Link to="#">{t('Email')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Projects')}</Link>
+                              <Link to="#">{t('Projects')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Tasks')}</Link>
+                              <Link to="#">{t('Tasks')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Contacts')}</Link>
+                              <Link to="#">{t('Contacts')}</Link>
                             </li>
                           </ul>
                         </Col>
 
                         <Col md={4}>
-                          <h5 className="font-size-14 mt-0">{props.t('Extra Pages')}</h5>
+                          <h5 className="font-size-14 mt-0">{t('Extra Pages')}</h5>
                           <ul className="list-unstyled megamenu-list">
                             <li>
-                              <Link to="#">{props.t('Light Sidebar')}</Link>
+                              <Link to="#">{t('Light Sidebar')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Compact Sidebar')}</Link>
+                              <Link to="#">{t('Compact Sidebar')}</Link>
                             </li>
                             <li>
                               <Link to="#">
-                                {props.t('Horizontal layout')}
+                                {t('Horizontal layout')}
                               </Link>
                             </li>
                             <li>
-                              <Link to="#">  {props.t('Maintenance')}</Link>
+                              <Link to="#">  {t('Maintenance')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Coming Soon')}</Link>
+                              <Link to="#">{t('Coming Soon')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Timeline')}</Link>
+                              <Link to="#">{t('Timeline')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('FAQs')}</Link>
+                              <Link to="#">{t('FAQs')}</Link>
                             </li>
                           </ul>
                         </Col>
@@ -201,28 +202,28 @@ const Header = (props) => {
                     <Col sm={4}>
                       <Row>
                         <Col sm={6}>
-                          <h5 className="font-size-14 mt-0">{props.t('UI Components')}</h5>
+                          <h5 className="font-size-14 mt-0">{t('UI Components')}</h5>
                           <ul className="list-unstyled megamenu-list">
                             <li>
-                              <Link to="#">{props.t('Lightbox')}</Link>
+                              <Link to="#">{t('Lightbox')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Range Slider')}</Link>
+                              <Link to="#">{t('Range Slider')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Sweet Alert')}</Link>
+                              <Link to="#">{t('Sweet Alert')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Rating')}</Link>
+                              <Link to="#">{t('Rating')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Forms')}</Link>
+                              <Link to="#">{t('Forms')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Tables')}</Link>
+                              <Link to="#">{t('Tables')}</Link>
                             </li>
                             <li>
-                              <Link to="#">{props.t('Charts')}</Link>
+                              <Link to="#">{t('Charts')}</Link>
                             </li>
                           </ul>
                         </Col>
@@ -262,7 +263,7 @@ const Header = (props) => {
                         <input
                           type="text"
                           className="form-control"
-                          placeholder={props.t('Search') + "..."}
+                          placeholder={t('Search') + "..."}
                           aria-label="Recipient's username"
                         />
                         <div className="input-group-append">
@@ -363,6 +364,4 @@ const mapStatetoProps = state => {
   return { layoutType,showRightSidebar,leftMenu };
 };
 
-export default connect(mapStatetoProps, { showRightSidebarAction,toggleLeftmenu })(withNamespaces()(Header));
-
-
+export default connect(mapStatetoProps, { showRightSidebarAction,toggleLeftmenu })(Header);

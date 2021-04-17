@@ -15,8 +15,7 @@ import {
 } from 'reactstrap';
 import {Link} from 'react-router-dom';
 import Breadcrumbs from '../../components/Common/Breadcrumb';
-
-import {withNamespaces} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import {useSystems} from '../../helpers/hooks.js';
 import UserDropdown from './userDropdown';
@@ -27,6 +26,7 @@ const Systems = (props) => {
   const [chosenSystem, setChosenSystem] = useState({});
   let user = JSON.parse(localStorage.getItem("authUser")).user;
   const {systems, error, isLoading} = useSystems(user.email);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (systems && !chosenSystem.name) {
@@ -42,7 +42,7 @@ const Systems = (props) => {
     return (<React.Fragment>
       <div className="page-content">
         <Container fluid="fluid">
-          <Breadcrumbs title={props.t('Systems')} breadcrumbItem={props.t('Systems')}/>
+          <Breadcrumbs title={t('Systems')} breadcrumbItem={t('Systems')}/>
           <Row>
             <Col className='mb-4' sm={6}>
               <Dropdown isOpen={systemDropIsOpen} toggle={() => setSystemDropIsOpen(!systemDropIsOpen)}>
@@ -102,4 +102,4 @@ const Systems = (props) => {
   }
 }
 
-export default withNamespaces()(Systems);
+export default Systems;

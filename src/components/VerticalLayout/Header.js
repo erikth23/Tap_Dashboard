@@ -28,7 +28,7 @@ import mail_chimp from "../../assets/images/brands/mail_chimp.png";
 import slack from "../../assets/images/brands/slack.png";
 
 //i18n
-import {withNamespaces} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 // Redux Store
 import {showRightSidebarAction, toggleLeftmenu, changeSidebarType} from "../../store/actions";
@@ -38,6 +38,7 @@ const Header = (props) => {
   const [search, setsearch] = useState(false);
   const [megaMenu, setmegaMenu] = useState(false);
   const [socialDrp, setsocialDrp] = useState(false);
+  const { t } = useTranslation();
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
@@ -104,7 +105,7 @@ const Header = (props) => {
 
           <form className="app-search d-none d-lg-block">
             <div className="position-relative">
-              <input type="text" className="form-control" placeholder={props.t('Search') + "..."}/>
+              <input type="text" className="form-control" placeholder={t('Search') + "..."}/>
               <span className="bx bx-search-alt"></span>
             </div>
           </form>
@@ -157,4 +158,4 @@ const mapStatetoProps = state => {
   return {layoutType, showRightSidebar, leftMenu, leftSideBarType};
 };
 
-export default connect(mapStatetoProps, {showRightSidebarAction, toggleLeftmenu, changeSidebarType})(withNamespaces()(Header));
+export default connect(mapStatetoProps, {showRightSidebarAction, toggleLeftmenu, changeSidebarType})(Header);

@@ -13,6 +13,7 @@ import {API, graphqlOperation, Auth} from 'aws-amplify';
 import { listUsers, update } from '../../graphql/queries';
 import { createNote } from '../../graphql/mutations';
 import { onCreateNote, onDeleteTask } from '../../graphql/subscriptions';
+import {useTranslation} from 'react-i18next';
 
 import TaskDropdown from './taskDropdown';
 import Comment from './comment';
@@ -45,6 +46,7 @@ const TaskView = ({setViewTask, system, _task, runUpdateTask, username }) => {
   const [subscriptions, setSubscriptions] = useState([]);
 
   const [users, setUsers] = useState([]);
+  const {i18n} = useTranslation();
 
   useEffect(() => {
     if(system) {
@@ -102,7 +104,8 @@ const TaskView = ({setViewTask, system, _task, runUpdateTask, username }) => {
     const note = {
       comment: newComment,
       userID: `${system}-${username}`,
-      taskOrAssetID: task.id
+      taskOrAssetID: task.id,
+      locale: i18n.language
     }
 
     let result = null;
@@ -134,11 +137,11 @@ const TaskView = ({setViewTask, system, _task, runUpdateTask, username }) => {
   } else {
     return(<React.Fragment>
       <Card>
-          <CardTitle className='mt-3 ml-3'>{task.title}</CardTitle>
+          <CardTitle className='mt-3 ml-3'>{typeof task.title == "string" ? task.title : task.title[i18n.language]}</CardTitle>
           <CardBody>
             <div>
               <h5>Description</h5>
-              <p>{task.shortDescription}</p>
+              <p>{typeof task.title == "string" ? task.shortDescription : task.shortDescription[i18n.language]}</p>
             </div>
             <div className='mt-3'>
               <h5>Task Status</h5>
@@ -163,7 +166,7 @@ const TaskView = ({setViewTask, system, _task, runUpdateTask, username }) => {
             }
             <div>
               <h5 className='mt-3 mb-2'>Comments</h5>
-              {task.comments.items.map(comment => {
+              {task.comments.map(comment => {
                 console.log(comment)
                 return <Comment comment={comment}/>
               })}

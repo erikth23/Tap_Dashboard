@@ -17,6 +17,9 @@ import {
   Spinner
 } from "reactstrap";
 import {BrowserRouter as Router, useHistory} from "react-router-dom";
+import { useTranslation } from 'react-i18next';
+import rjson from 'relaxed-json'
+
 //Import Breadcrumb
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import {API, graphqlOperation, Auth} from 'aws-amplify';
@@ -43,6 +46,7 @@ const TasksList = (props) => {
   const [viewTask, setViewTask] = useState();
   const [subscriptions, setSubscriptions] = useState([]);
   const history = useHistory();
+  const { t, i18n } = useTranslation();
   var today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -73,7 +77,19 @@ const TasksList = (props) => {
       }
     }
     await API.graphql({query: listTasks, variables: { filter: filter}})
-    .then(res => setTasks(res.data.listTasks.items))
+    .then(res => setTasks(res.data.listTasks.items.map(item => {
+      return item.title.includes("{") ? {
+        ...item,
+        title: JSON.parse(item.title.replace("{", "{\"").replaceAll(", ", "\",\"").replaceAll("=", "\":\"").replace("}", "\"}")),
+        shortDescription: JSON.parse(item.shortDescription.replace("{", "{\"").replaceAll(", ", "\",\"").replaceAll("=", "\":\"").replace("}", "\"}")),
+        comments: item.comments.items.map(comment => {
+          return comment.comment.includes("{") ? {
+            ...comment,
+            comment: JSON.parse(comment.comment.replace("{", "{\"").replaceAll(", ", "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))
+          } : comment
+        })
+      } : item
+    })))
     .catch(err => console.log(err))
   }
 
@@ -142,7 +158,8 @@ const TasksList = (props) => {
       id: task.id,
       shortDescription: task.shortDescription,
       status: task.status,
-      userID: task.userID
+      userID: task.userID,
+      locale: i18n.language
     }
 
     let result = null;
@@ -210,7 +227,7 @@ const TasksList = (props) => {
                               return (<tr>
                                 <td>
                                   <h5 className="text-truncate font-size-14 m-0">
-                                    <Button color="light" outline className="waves-effect" onClick={() => setViewTask(task)}>{task.title}</Button>
+                                    <Button color="light" outline className="waves-effect" onClick={() => setViewTask(task)}>{typeof task.title == "string" ? task.title : task.title[i18n.language]}</Button>
                                   </h5>
                                 </td>
                                 <td>{task.owner && task.owner.firstName + ' ' + task.owner.lastName}</td>

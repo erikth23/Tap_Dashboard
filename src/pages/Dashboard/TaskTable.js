@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Badge, Card, CardBody, CardTitle, Spinner} from 'reactstrap';
+import {useTranslation} from 'react-i18next';
 import {API, graphqlOperation, Auth} from 'aws-amplify';
 import { listTasks} from '../../graphql/queries.js';
 import { onCreateTask, onUpdateTaskSystem, onDeleteTask } from '../../graphql/subscriptions';
@@ -22,6 +23,7 @@ const statusToColor = new Map([
 const TaskTable = ({systemID}) => {
   const [tasks, setTasks] = useState([]);
   const [subscriptions, setSubscriptions] = useState([]);
+  const {i18n} = useTranslation()
 
   useEffect(() => {
     console.log(systemID)
@@ -41,9 +43,21 @@ const TaskTable = ({systemID}) => {
         eq: systemID
       }
     }
-    await API.graphql({query: listTasks, variables: {filter: filter}})
-    .then(res => setTasks(res.data.listTasks.items))
-    .catch(err => console.error(err))
+    await API.graphql({query: listTasks, variables: { filter: filter}})
+    .then(res => setTasks(res.data.listTasks.items.map(item => {
+      return item.title.includes("{") ? {
+        ...item,
+        title: JSON.parse(item.title.replace("{", "{\"").replaceAll(", ", "\",\"").replaceAll("=", "\":\"").replace("}", "\"}")),
+        shortDescription: JSON.parse(item.shortDescription.replace("{", "{\"").replaceAll(", ", "\",\"").replaceAll("=", "\":\"").replace("}", "\"}")),
+        comments: item.comments.items.map(comment => {
+          return comment.comment.includes("{") ? {
+            ...comment,
+            comment: JSON.parse(comment.comment.replace("{", "{\"").replaceAll(", ", "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))
+          } : comment
+        })
+      } : item
+    })))
+    .catch(err => console.log(err))
   }
 
   const setupSubscriptions = async () => {
@@ -126,7 +140,7 @@ const TaskTable = ({systemID}) => {
                 {
                   tasks && tasks.map((task) => {
                     return (<tr>
-                      <td>{task.title}</td>
+                      <td>{typeof task.title == "string" ? task.title : task.title[i18n.language]}</td>
                       <td>{'Not Found'}</td>
                       <td>{task.createdAt}</td>
                       <td><Badge color={statusToColor.get(task.status)}>{task.status}</Badge></td>

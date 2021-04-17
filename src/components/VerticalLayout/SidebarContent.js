@@ -6,9 +6,11 @@ import {withRouter} from "react-router-dom";
 import {Link} from "react-router-dom";
 
 //i18n
-import {withNamespaces} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 const SidebarContent = (props) => {
+
+  const { t } = useTranslation();
 
   // Use ComponentDidMount and ComponentDidUpdate method symultaniously
   useEffect(() => {
@@ -63,22 +65,22 @@ const SidebarContent = (props) => {
   return (<React.Fragment>
     <div id="sidebar-menu">
       <ul className="metismenu list-unstyled" id="side-menu">
-        <li className="menu-title">{props.t('Menu')}
+        <li className="menu-title">{t('Menu')}
         </li>
         <li>
           <Link to="/dashboard" className="waves-effect">
             <i className="bx bx-home-circle"></i>
-            <span>{props.t('Dashboard')}</span>
+            <span>{t('Dashboard')}</span>
           </Link>
         </li>
         <li>
           <Link to="/#" className="has-arrow waves-effect">
             <i className="bx bx-task"></i>
-            <span>{props.t('Tasks')}</span>
+            <span>{t('Tasks')}</span>
           </Link>
           <ul className="sub-menu" aria-expanded="true">
-              <li><Link to="/tasks">{props.t('View Tasks') }</Link></li>
-              <li><Link to="/tasks-addTask">{props.t('Add Task') }</Link></li>
+              <li><Link to="/tasks">{t('View Tasks') }</Link></li>
+              <li><Link to="/tasks-addTask">{t('Add Task') }</Link></li>
           </ul>
         </li>
         {
@@ -98,4 +100,4 @@ const SidebarContent = (props) => {
   </React.Fragment>);
 }
 
-export default withRouter(withNamespaces()(SidebarContent));
+export default withRouter(SidebarContent);

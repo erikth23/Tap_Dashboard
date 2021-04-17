@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React, {useState, useEffect} from 'react';
 import {
   Container,
@@ -24,6 +25,7 @@ import {Link} from "react-router-dom";
 import {API, graphqlOperation, Auth} from 'aws-amplify';
 import { getUser, getSystem } from '../../graphql/queries';
 import { onUpdateSystem } from '../../graphql/subscriptions';
+import { useTranslation } from 'react-i18next';
 
 // Pages Components
 import WelcomeComp from "./WelcomeComp";
@@ -33,8 +35,8 @@ import TaskTable from "./TaskTable";
 //Import Breadcrumb
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 
-//i18n
-import {withNamespaces} from 'react-i18next';
+
+const GET_CLEANING_TIME_API = " https://271kt734c3.execute-api.us-east-1.amazonaws.com/dev/GetCleaningTime"
 
 const Dashboard = (props) => {
 
@@ -42,18 +44,27 @@ const Dashboard = (props) => {
   const [cognitoUser, setCognitoUser] = useState();
   const [user, setUser] = useState({});
   const [subscriptions, setSubscriptions] = useState([]);
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
 
   useEffect(() => {
-    Auth.currentSession().then(data => setCognitoUser({
-      username: data.idToken.payload["cognito:username"],
-      systemID: data.idToken.payload["custom:systemID"]
-    }))
+    Auth.currentSession().then(data => {
+      changeLanguage(data.idToken.payload["locale"] == "Spanish" ? "sp" : "en")
+      setCognitoUser({
+        username: data.idToken.payload["cognito:username"],
+        systemID: data.idToken.payload["custom:systemID"]
+      })
+    })
   }, [])
 
   useEffect(() => {
     if(cognitoUser) {
         getDBUser()
         getDBSystem();
+        getCleaningTimes();
         setSubscriptions();
         return clearSubscriptions();
     }
@@ -96,12 +107,20 @@ const Dashboard = (props) => {
     setSubscriptions([]);
   }
 
+  const getCleaningTimes = async () => {
+    await axios.post(GET_CLEANING_TIME_API, {systemID: cognitoUser.systemID}).then(res => {
+      console.log(res)
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
   return (<React.Fragment>
       <div className="page-content">
         <Container fluid="fluid">
 
           {/* Render Breadcrumb */}
-          <Breadcrumbs title={props.t('Dashboard')} breadcrumbItem={props.t('Dashboard')}/>
+          <Breadcrumbs title={t('Dashboard')} breadcrumbItem={t('Dashboard')}/>
           {
             // <Row>
             //   <Col className='mb-4' sm={6}>
@@ -169,4 +188,4 @@ const Dashboard = (props) => {
     </React.Fragment>);
   }
 
-export default withNamespaces()(Dashboard);
+export default Dashboard;

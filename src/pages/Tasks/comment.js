@@ -4,8 +4,11 @@ import {
   CardBody,
   CardTitle
 } from 'reactstrap';
+import {useTranslation} from 'react-i18next';
 
 const Comment = ({comment}) => {
+
+  const {i18n} = useTranslation();
 
   const fullName = comment.user.firstName;
   const timestamp = new Date(comment.createdAt);
@@ -16,7 +19,7 @@ const Comment = ({comment}) => {
           <h5>{fullName}<span style={{color: 'gray', fontSize: '10px'}}>{timestamp.toLocaleString()}</span></h5>
         </div>
         <CardBody>
-          <div>{comment.comment}</div>
+          <div>{typeof comment.comment == "string" ? comment.comment : comment.comment[i18n.language]}</div>
         </CardBody>
       </Card>
     </React.Fragment>
