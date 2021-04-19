@@ -110,7 +110,7 @@ const Dashboard = (props) => {
   }
 
   const getCleaningTimes = async () => {
-    await axios.post(GET_CLEANING_TIME_API, {systemID: "5ff293a58d7a680e908fb02a"}).then(res => {
+    await axios.post(GET_CLEANING_TIME_API, {systemID: cognitoUser.systemID}).then(res => {
       setCleaningTimes(res.data)
     }).catch(err => {
       console.error(err)
@@ -147,7 +147,10 @@ const Dashboard = (props) => {
               <WelcomeComp user={user}/>
             </Col>
             <Col xl="8">
-              <CleaningTime times={cleaningTimes}/>
+              {
+                cleaningTimes &&
+                <CleaningTime times={cleaningTimes}/>
+              }
             </Col>
           </Row>
           <Row>
