@@ -31,12 +31,13 @@ import { useTranslation } from 'react-i18next';
 import WelcomeComp from "./WelcomeComp";
 import Rooms from "./Rooms";
 import TaskTable from "./TaskTable";
+import CleaningTime from "./CleaningTime";
 
 //Import Breadcrumb
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 
 
-const GET_CLEANING_TIME_API = " https://271kt734c3.execute-api.us-east-1.amazonaws.com/dev/GetCleaningTime"
+const GET_CLEANING_TIME_API = "https://271kt734c3.execute-api.us-east-1.amazonaws.com/dev/GetCleaningTime"
 
 const Dashboard = (props) => {
 
@@ -44,6 +45,7 @@ const Dashboard = (props) => {
   const [cognitoUser, setCognitoUser] = useState();
   const [user, setUser] = useState({});
   const [subscriptions, setSubscriptions] = useState([]);
+  const [cleaningTimes, setCleaningTimes] = useState([]);
   const { t, i18n } = useTranslation();
 
   const changeLanguage = (lng) => {
@@ -108,8 +110,8 @@ const Dashboard = (props) => {
   }
 
   const getCleaningTimes = async () => {
-    await axios.post(GET_CLEANING_TIME_API, {systemID: cognitoUser.systemID}).then(res => {
-      console.log(res)
+    await axios.post(GET_CLEANING_TIME_API, {systemID: "5ff293a58d7a680e908fb02a"}).then(res => {
+      setCleaningTimes(res.data)
     }).catch(err => {
       console.error(err)
     })
@@ -145,9 +147,7 @@ const Dashboard = (props) => {
               <WelcomeComp user={user}/>
             </Col>
             <Col xl="8">
-              {
-                //<SystemsTable/>
-              }
+              <CleaningTime times={cleaningTimes}/>
             </Col>
           </Row>
           <Row>
