@@ -73,11 +73,9 @@ const AddTask = (props) => {
   const handleSubmit = async (event, error, values) => {
     const input = {
       systemID: system.id,
-      localeTaskInput: {
-        locale: i18n.language,
-        title: values.title,
-        shortDescription: values.shortDescription,
-      },
+      locale: i18n.language,
+      title: values.title,
+      shortDescription: values.shortDescription,
       status: values.stat,
       assetID: values.assetID || system.assets.items[0].id,
       userID: 'nouser',

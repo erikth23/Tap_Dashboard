@@ -11,7 +11,7 @@ const Comment = ({comment}) => {
   const {i18n} = useTranslation();
 
   const fullName = comment.user.firstName;
-  const timestamp = new Date(comment.createdAt);
+  const timestamp = comment.createdAt;
   return(
     <React.Fragment>
       <Card>

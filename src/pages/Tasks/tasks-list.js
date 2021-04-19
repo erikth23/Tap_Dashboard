@@ -70,6 +70,7 @@ const TasksList = (props) => {
     }
   }, [tasks])
 
+
   const getTasks = async () => {
     const filter = {
       systemID: {
@@ -88,7 +89,17 @@ const TasksList = (props) => {
             comment: JSON.parse(comment.comment.replace("{", "{\"").replaceAll(", ", "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))
           } : comment
         })
-      } : item
+      } : {
+        ...item,
+        comments: item.comments.items.map(comment => {
+          const commaRegexp = /, (?=\w{2,3}=)/g
+          return comment.comment.includes("{") ? {
+            ...comment,
+            comment: JSON.parse(comment.comment.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}")),
+            createdAt: new Date(comment.createdAt)
+          } : {...comment, createdAt: new Date(comment.createdAt)}
+        })
+      }
     })))
     .catch(err => console.log(err))
   }

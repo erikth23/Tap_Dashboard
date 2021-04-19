@@ -84,7 +84,7 @@ const TaskView = ({setViewTask, system, _task, runUpdateTask, username }) => {
     const commentCreateSub = await API.graphql({query: onCreateNote, variables: {taskOrAssetID: task.id}})
     .subscribe({
       next: event => {
-        task.comments.items.push(event.value.data.onCreateNote)
+        task.comments.push(event.value.data.onCreateNote)
         setTask({...task});
       },
       error: error => console.error(error)
@@ -166,7 +166,7 @@ const TaskView = ({setViewTask, system, _task, runUpdateTask, username }) => {
             }
             <div>
               <h5 className='mt-3 mb-2'>Comments</h5>
-              {task.comments.map(comment => {
+              {task.comments && task.comments.sort((a,b) => b.createdAt - a.createdAt).map(comment => {
                 console.log(comment)
                 return <Comment comment={comment}/>
               })}
