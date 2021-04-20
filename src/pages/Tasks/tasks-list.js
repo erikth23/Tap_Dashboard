@@ -88,7 +88,7 @@ const TasksList = (props) => {
         comments: item.comments.items.map(comment => {
           return comment.comment.includes("{") ? {
             ...comment,
-            comment: JSON.parse(comment.comment.replace("{", "{\"").replaceAll(", ", "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))
+            comment: JSON.parse(comment.comment.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))
           } : comment
         })
       } : {

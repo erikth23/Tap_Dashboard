@@ -84,9 +84,10 @@ const TaskView = ({setViewTask, system, _task, runUpdateTask, username }) => {
     const commentCreateSub = await API.graphql({query: onCreateNote, variables: {taskOrAssetID: task.id}})
     .subscribe({
       next: event => {
+        const commaRegexp = /, (?=\w{2,3}=)/g
         const new_comment = event.value.data.onCreateNote.comment.includes("{") ?
           {...event.value.data.onCreateNote,
-            comment: JSON.parse(event.value.data.onCreateNote.comment.replace("{", "{\"").replaceAll(", ", "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))
+            comment: JSON.parse(event.value.data.onCreateNote.comment.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))
           } : event.value.data.onCreateNote
         task.comments.push(new_comment)
         setTask({...task});
