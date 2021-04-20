@@ -79,10 +79,12 @@ const TasksList = (props) => {
     }
     await API.graphql({query: listTasks, variables: { filter: filter}})
     .then(res => setTasks(res.data.listTasks.items.map(item => {
+      const commaRegexp = /, (?=\w{2,3}=)/g
+      console.log(item)
       return item.title.includes("{") ? {
         ...item,
-        title: JSON.parse(item.title.replace("{", "{\"").replaceAll(", ", "\",\"").replaceAll("=", "\":\"").replace("}", "\"}")),
-        shortDescription: JSON.parse(item.shortDescription.replace("{", "{\"").replaceAll(", ", "\",\"").replaceAll("=", "\":\"").replace("}", "\"}")),
+        title: JSON.parse(item.title.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}")),
+        shortDescription: JSON.parse(item.shortDescription.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}")),
         comments: item.comments.items.map(comment => {
           return comment.comment.includes("{") ? {
             ...comment,
@@ -92,7 +94,6 @@ const TasksList = (props) => {
       } : {
         ...item,
         comments: item.comments.items.map(comment => {
-          const commaRegexp = /, (?=\w{2,3}=)/g
           return comment.comment.includes("{") ? {
             ...comment,
             comment: JSON.parse(comment.comment.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}")),
@@ -167,10 +168,8 @@ const TasksList = (props) => {
   const runUpdateTask = async (task) => {
     const update = {
       id: task.id,
-      shortDescription: task.shortDescription,
       status: task.status,
       userID: task.userID,
-      locale: i18n.language
     }
 
     let result = null;
@@ -184,6 +183,7 @@ const TasksList = (props) => {
         }
       });
       result = update;
+      console.log(res)
     }).catch(err => {
       result = err;
       console.log(err);

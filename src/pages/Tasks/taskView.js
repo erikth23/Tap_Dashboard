@@ -84,7 +84,11 @@ const TaskView = ({setViewTask, system, _task, runUpdateTask, username }) => {
     const commentCreateSub = await API.graphql({query: onCreateNote, variables: {taskOrAssetID: task.id}})
     .subscribe({
       next: event => {
-        task.comments.push(event.value.data.onCreateNote)
+        const new_comment = event.value.data.onCreateNote.comment.includes("{") ?
+          {...event.value.data.onCreateNote,
+            comment: JSON.parse(event.value.data.onCreateNote.comment.replace("{", "{\"").replaceAll(", ", "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))
+          } : event.value.data.onCreateNote
+        task.comments.push(new_comment)
         setTask({...task});
       },
       error: error => console.error(error)

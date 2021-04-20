@@ -36,5 +36,24 @@
         "userPoolGroups": {}
       }
     }
+  },
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-tapdashboard-prod-111138-authRole",
+      "UnauthRoleArn": "arn:aws:iam::645362900239:role/amplify-tapdashboard-prod-111138-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::645362900239:role/amplify-tapdashboard-prod-111138-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-tapdashboard-prod-111138-deployment",
+      "UnauthRoleName": "amplify-tapdashboard-prod-111138-unauthRole",
+      "StackName": "amplify-tapdashboard-prod-111138",
+      "StackId": "arn:aws:cloudformation:us-east-1:645362900239:stack/amplify-tapdashboard-prod-111138/dcc8c980-a203-11eb-aff8-0abd9caf10fb",
+      "AmplifyAppId": "d5b01hdh8tk6h"
+    },
+    "categories": {
+      "auth": {
+        "userPoolGroups": {},
+        "TapAuth": {}
+      }
+    }
   }
 }
