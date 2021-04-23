@@ -83,15 +83,7 @@ const TaskView = ({setViewTask, systemID, _task, runUpdateTask, username }) => {
       const _comments = await DataStore.query(Note, c => c.taskOrAssetID('eq', _task.id), {
         sort: s => s.createdAt(SortDirection.ASCENDING)
       });
-
-      const commaRegexp = /, (?=\w{2,3}=)/g
-      setComments(_comments.map(comment => {
-          return comment.comment.includes("{") ? {
-            ...comment,
-            comment: JSON.parse(comment.comment.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}")),
-            createdAt: new Date(comment.createdAt)
-          } : {...comment, createdAt: new Date(comment.createdAt)}
-      }))
+      setComments(_comments)
     } catch (err) {
       console.error(err)
     }

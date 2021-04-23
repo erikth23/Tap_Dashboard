@@ -67,23 +67,11 @@ const TasksList = (props) => {
     }
   }, [cognitoUser])
 
-
   const getTasks = async () => {
     try {
-      const _tasks = await DataStore.query(Task, c => c.systemID('eq', cognitoUser.systemID), {
-        sort: s => s.createdAt(SortDirection.ASCENDING)
-      });
-
-      const commaRegexp = /, (?=\w{2,3}=)/g
-      setTasks(_tasks.map(item => {
-        const commaRegexp = /, (?=\w{2,3}=)/g
-        return item.title.includes("{") ? {
-          ...item,
-          title: JSON.parse(item.title.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}")),
-          shortDescription: JSON.parse(item.shortDescription.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))
-        } : item
-      }))
-      } catch (err) {
+      const _tasks = await DataStore.query(Task, c => c.systemID('eq', cognitoUser.systemID))
+      setTasks(_tasks)
+    } catch (err) {
       console.error(err)
     }
   }
