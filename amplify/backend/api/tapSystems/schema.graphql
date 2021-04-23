@@ -21,11 +21,13 @@ enum TaskStatus {
 }
 
 enum TapType {
-  CLEANING
+  START_CLEANING
+  END_CLEANING
+  DO_NOT_DISTURB
   COMPLETETASK
   HOUSEKEEPING
-  MAINTENANCE
   LOGGING
+  MAINTENANCE
   OTHER
 }
 
@@ -33,6 +35,7 @@ type System @model {
   id: ID!
   name: String!
   assets: [Asset] @connection(keyName: "bySystem", fields:["id"])
+  tasks: [Task] @connection(keyName: "bySystem", fields:["id"])
   users: [User] @connection(keyName: "bySystem", fields:["id"])
 }
 
@@ -41,7 +44,6 @@ type Asset @model @key(name: "bySystem", fields: ["systemID", "tagID"]) {
   name: String!
   description: String
   systemID: ID!
-  system: System @connection(fields: ["systemID"])
   tagID: String!
   assetType: AssetType!
   status: AssetStatus!
@@ -53,12 +55,12 @@ type Task @model @key(name: "bySystem", fields: ["systemID", "assetID"]) {
   shortDescription: String!
   comments: [Note] @connection(keyName: "byTask", fields: ["id"])
   systemID: ID!
-  system: System @connection(fields: ["systemID"])
   assetID: ID!
   asset: Asset @connection(fields: ["assetID"])
   userID: ID!
   user: User @connection(fields: ["userID"])
   status: TaskStatus
+  createdAt: AWSDateTime!
 }
 
 type Note @model @key(name: "byTask", fields: ["taskOrAssetID"]) {
@@ -68,6 +70,7 @@ type Note @model @key(name: "byTask", fields: ["taskOrAssetID"]) {
   image: String
   userID: ID!
   user: User @connection(fields: ["userID"])
+  createdAt: AWSDateTime!
 }
 
 type Tap @model @key(name: "byAsset", fields: ["assetID", "purpose"]){
