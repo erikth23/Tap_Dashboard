@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 
 //Import Breadcrumb
 import Breadcrumbs from '../../components/Common/Breadcrumb';
-import {Auth, DataStore} from 'aws-amplify';
+import {Auth, DataStore, SortDirection} from 'aws-amplify';
 import {Task} from '../../models';
 
 import TaskView from './taskView';
@@ -70,9 +70,20 @@ const TasksList = (props) => {
 
   const getTasks = async () => {
     try {
-      const _tasks = await DataStore.query(Task, c => c.systemID('eq', cognitoUser.systemID))
-      setTasks(_tasks)
-    } catch (err) {
+      const _tasks = await DataStore.query(Task, c => c.systemID('eq', cognitoUser.systemID), {
+        sort: s => s.createdAt(SortDirection.ASCENDING)
+      });
+
+      const commaRegexp = /, (?=\w{2,3}=)/g
+      setTasks(_tasks.map(item => {
+        const commaRegexp = /, (?=\w{2,3}=)/g
+        return item.title.includes("{") ? {
+          ...item,
+          title: JSON.parse(item.title.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}")),
+          shortDescription: JSON.parse(item.shortDescription.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))
+        } : item
+      }))
+      } catch (err) {
       console.error(err)
     }
   }
