@@ -18,14 +18,11 @@ import {
 } from "reactstrap";
 import {BrowserRouter as Router, useHistory} from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import rjson from 'relaxed-json'
 
 //Import Breadcrumb
 import Breadcrumbs from '../../components/Common/Breadcrumb';
-import {API, graphqlOperation, Auth} from 'aws-amplify';
-import { getUser, listTasks } from '../../graphql/queries';
-import { updateTask } from '../../graphql/mutations';
-import { onCreateTask, onUpdateTaskSystem, onDeleteTask } from '../../graphql/subscriptions';
+import {Auth, DataStore} from 'aws-amplify';
+import {Task} from '../../models';
 
 import TaskView from './taskView';
 
@@ -44,7 +41,6 @@ const TasksList = (props) => {
   const [cognitoUser, setCognitoUser] = useState();
   const [tasks, setTasks] = useState([]);
   const [viewTask, setViewTask] = useState();
-  const [subscriptions, setSubscriptions] = useState([]);
   const history = useHistory();
   const { t, i18n } = useTranslation();
   var today = new Date();
@@ -58,138 +54,46 @@ const TasksList = (props) => {
   }, [])
 
   useEffect(() => {
-    if(cognitoUser) {
+    if(cognitoUser && cognitoUser.systemID) {
+      getTasks();
+
+      const subscription = DataStore.observe(Task).subscribe(() => {
         getTasks()
+      })
+
+      return () => {
+        subscription.unsubscribe()
+      }
     }
   }, [cognitoUser])
 
-  useEffect(() => {
-    if(tasks.length > 0 && subscriptions.length < 1) {
-        setupSubscriptions();
-        return clearSubscriptions();
-    }
-  }, [tasks])
-
 
   const getTasks = async () => {
-    const filter = {
-      systemID: {
-        eq: cognitoUser.systemID
-      }
+    try {
+      const _tasks = await DataStore.query(Task, c => c.systemID('eq', cognitoUser.systemID))
+      setTasks(_tasks)
+    } catch (err) {
+      console.error(err)
     }
-    await API.graphql({query: listTasks, variables: { filter: filter}})
-    .then(res => setTasks(res.data.listTasks.items.map(item => {
-      const commaRegexp = /, (?=\w{2,3}=)/g
-      console.log(item)
-      return item.title.includes("{") ? {
-        ...item,
-        title: JSON.parse(item.title.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}")),
-        shortDescription: JSON.parse(item.shortDescription.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}")),
-        comments: item.comments.items.map(comment => {
-          return comment.comment.includes("{") ? {
-            ...comment,
-            comment: JSON.parse(comment.comment.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))
-          } : comment
-        })
-      } : {
-        ...item,
-        comments: item.comments.items.map(comment => {
-          return comment.comment.includes("{") ? {
-            ...comment,
-            comment: JSON.parse(comment.comment.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}")),
-            createdAt: new Date(comment.createdAt)
-          } : {...comment, createdAt: new Date(comment.createdAt)}
-        })
-      }
-    })))
-    .catch(err => console.log(err))
-  }
-
-  const setupSubscriptions = async () => {
-    const createSub = await API.graphql({query: onCreateTask, variables: { systemID: cognitoUser.systemID}})
-    .subscribe({
-      next: event => {
-        if(event) {
-          const newTask = event.value.data.onCreateTask;
-          if(!newTask) {
-            return;
-          }
-          setTasks([...tasks, newTask])
-        }
-      },
-      error: error => console.error(error)
-    })
-
-    const updateSub = await API.graphql({query: onUpdateTaskSystem, variables: { systemID: cognitoUser.systemID}})
-    .subscribe({
-      next: event => {
-        if(event) {
-          const newTask = event.value.data.onUpdateTask;
-          if(!newTask) {
-            return;
-          }
-
-          tasks.forEach((item, i) => {
-            if(item.id == newTask.id) {
-              tasks[i] = newTask;
-              setTasks([...tasks]);
-              return;
-            }
-          });
-        }
-      },
-      error: error => console.error(error)
-    })
-
-    const deleteSub = await API.graphql({query: onDeleteTask, variables: { systemID: cognitoUser.systemID}})
-    .subscribe({
-      next: event => {
-        const newTask = event.value.data.onDeleteTask;
-        if(!newTask) {
-          return;
-        }
-        const newTasks = tasks.filter(task => task.id != newTask.id )
-        console.log(newTasks)
-        setTasks(newTasks);
-      },
-      error: error => console.error(error)
-    })
-
-    setSubscriptions([...subscriptions, createSub, updateSub, deleteSub])
-  }
-
-  const clearSubscriptions = () => {
-    subscriptions.forEach(sub => {
-      sub.unsubscribe();
-    });
-    setSubscriptions([]);
   }
 
   const runUpdateTask = async (task) => {
-    const update = {
-      id: task.id,
-      status: task.status,
-      userID: task.userID,
+    let result = null;
+
+    try {
+      await DataStore.save(
+        Task.copyOf(viewTask, updated => {
+          updated.status = task.status;
+          updated.userID = task.userID;
+        })
+      )
+      result = task;
+    } catch (err) {
+      console.error(err);
+      result = err;
     }
 
-    let result = null;
-    await API.graphql(graphqlOperation(updateTask, {input: update}))
-    .then(res => {
-      tasks.forEach((item, i) => {
-        if(item.id == task.id) {
-          tasks[i] = res.data.updateTask;
-          setTasks([...tasks]);
-          return;
-        }
-      });
-      result = update;
-      console.log(res)
-    }).catch(err => {
-      result = err;
-      console.log(err);
-    })
-
-    await axios.post(LOGEVENT_API, {
+    axios.post(LOGEVENT_API, {
       meta: {
         systemID: cognitoUser.systemID,
         userID: `${cognitoUser.systemID}-${cognitoUser.username}`,
@@ -197,7 +101,6 @@ const TasksList = (props) => {
       },
       event: result
     })
-    history.push('/tasks');
   }
 
   const getTimeDiff = (updatedAt) => {
@@ -235,6 +138,7 @@ const TasksList = (props) => {
                           {
                             tasks && tasks.filter(task => task.status == status && (status != "COMPLETED" || getTimeDiff(task.updatedAt))).map(task => {
                               let date = new Date(task.createdAt);
+                              console.log(task)
                               return (<tr>
                                 <td>
                                   <h5 className="text-truncate font-size-14 m-0">
@@ -254,7 +158,7 @@ const TasksList = (props) => {
               )}
             </Col>
             <Col className="mb-4" xl={4}>
-              {viewTask && <TaskView _task={viewTask} system={cognitoUser.systemID} setViewTask={setViewTask} runUpdateTask={runUpdateTask} username={cognitoUser.username}/>}
+              {viewTask && <TaskView _task={viewTask} systemID={cognitoUser.systemID} setViewTask={setViewTask} runUpdateTask={runUpdateTask} username={cognitoUser.username}/>}
             </Col>
           </Row>
 

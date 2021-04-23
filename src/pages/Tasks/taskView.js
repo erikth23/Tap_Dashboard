@@ -9,11 +9,10 @@ import {
   FormGroup
 } from 'reactstrap';
 import {BrowserRouter as Router, Link} from 'react-router-dom';
-import {API, graphqlOperation, Auth} from 'aws-amplify';
-import { listUsers, update } from '../../graphql/queries';
-import { createNote } from '../../graphql/mutations';
-import { onCreateNote, onDeleteTask } from '../../graphql/subscriptions';
 import {useTranslation} from 'react-i18next';
+import {DataStore, SortDirection} from 'aws-amplify';
+
+import {Note, User} from '../../models';
 
 import TaskDropdown from './taskDropdown';
 import Comment from './comment';
@@ -38,10 +37,11 @@ const taskStatusArr = [
 
 const LOGEVENT_API = "https://ji7sxv0nt2.execute-api.us-east-1.amazonaws.com/default/LogEvent";
 
-const TaskView = ({setViewTask, system, _task, runUpdateTask, username }) => {
+const TaskView = ({setViewTask, systemID, _task, runUpdateTask, username }) => {
 
   const [task, setTask] = useState(_task);
   const [updated, setUpdated] = useState(false);
+  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState();
   const [subscriptions, setSubscriptions] = useState([]);
 
@@ -49,84 +49,65 @@ const TaskView = ({setViewTask, system, _task, runUpdateTask, username }) => {
   const {i18n} = useTranslation();
 
   useEffect(() => {
-    if(system) {
+    if(systemID) {
       getUsers();
     }
-  }, [system])
+  }, [systemID])
 
   useEffect(() => {
-    if(_task && system) {
+    if(_task) {
         setTask(_task)
-        setupSubscriptions();
-        return clearSubscriptions();
+        getComments()
+
+        const subscription = DataStore.observe(Note).subscribe(() => {
+          getComments();
+        })
+
+        return () => {
+          subscription.unsubscribe()
+        }
     }
-  }, [_task, system])
+  }, [_task])
 
   const getUsers = async () => {
-    const filter = {
-      systemID: {
-        eq: system
-      }
+    try {
+      const _users = await DataStore(User, c => c.systemID('eq', systemID));
+      setUsers(_users)
+    } catch (err) {
+      console.error(err)
     }
-    await API.graphql({query: listUsers, variables: {filter: filter}})
-    .then(res => setUsers(res.data.listUsers.items))
-    .catch(err => console.log(err))
   }
 
-  const setupSubscriptions = async () => {
-
-    const deleteSub = await API.graphql({query: onDeleteTask, variables: {id: task.id}})
-    .subscribe({
-      next: event => setViewTask(null),
-      error: error => console.error(error)
-    })
-
-    const commentCreateSub = await API.graphql({query: onCreateNote, variables: {taskOrAssetID: task.id}})
-    .subscribe({
-      next: event => {
-        const commaRegexp = /, (?=\w{2,3}=)/g
-        const new_comment = event.value.data.onCreateNote.comment.includes("{") ?
-          {...event.value.data.onCreateNote,
-            comment: JSON.parse(event.value.data.onCreateNote.comment.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))
-          } : event.value.data.onCreateNote
-        task.comments.push(new_comment)
-        setTask({...task});
-      },
-      error: error => console.error(error)
-    })
-
-    setSubscriptions([...subscriptions, deleteSub, commentCreateSub])
-  }
-
-  const clearSubscriptions = () => {
-    subscriptions.forEach(sub => {
-      sub.unsubscribe();
-    });
-    setSubscriptions([]);
+  const getComments = async () => {
+    try {
+      const _comments = await DataStore.query(Note, c => c.taskOrAssetID('eq', _task.id), {
+        sort: s => s.createdAt(SortDirection.ASCENDING)
+      });
+      setComments(_comments)
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   const addComment = async () => {
     const note = {
       comment: newComment,
-      userID: `${system}-${username}`,
+      userID: `${systemID}-${username}`,
       taskOrAssetID: task.id,
       locale: i18n.language
     }
 
     let result = null;
-    await API.graphql({query: createNote, variables: {input: note}})
-    .then(res => {
-      result = note;
-      console.log(res)
-    }).catch(err => {
-      result = err;
-      console.console.error(err);
-    })
+    try {
+      await DataStore.save(new Note(note))
+    } catch (err) {
+      console.error(err)
+    }
 
-    await axios.post(LOGEVENT_API, {
+    axios.post(LOGEVENT_API, {
       meta: {
-        systemID: system,
-        userID: `${system}-${username}`,
+        systemID: systemID,
+        userID: `${systemID}-${username}`,
         graphql: 'createNote'
       },
       event: result
@@ -171,7 +152,7 @@ const TaskView = ({setViewTask, system, _task, runUpdateTask, username }) => {
             }
             <div>
               <h5 className='mt-3 mb-2'>Comments</h5>
-              {task.comments && task.comments.sort((a,b) => b.createdAt - a.createdAt).map(comment => {
+              {comments.map(comment => {
                 console.log(comment)
                 return <Comment comment={comment}/>
               })}

@@ -16,8 +16,9 @@ import {
 import {BrowserRouter as Router, useHistory} from 'react-router-dom';
 import { AvForm, AvField } from "availity-reactstrap-validation";
 import { useTranslation } from 'react-i18next';
-import {API, Auth} from 'aws-amplify';
+import {API, Auth, DataStore} from 'aws-amplify';
 
+import {Asset, Task} from '../../models';
 import { getUser, getSystem } from '../../graphql/queries.js';
 import { createTask } from '../../graphql/mutations.js';
 
@@ -46,7 +47,7 @@ const taskStatusArr = [
 const AddTask = (props) => {
 
   const [success, setSuccess] = useState(false);
-  const [system, setSystem] = useState({});
+  const [assets, setAssets] = useState([]);
   const [cognitoUser, setCognitoUser] = useState();
   const history = useHistory();
   const { t, i18n } = useTranslation();
@@ -59,43 +60,45 @@ const AddTask = (props) => {
   }, [])
 
   useEffect(() => {
-    if(cognitoUser) {
-        getDBSystem();
+    if(cognitoUser && cognitoUser.systemID) {
+        getAssets()
     }
   }, [cognitoUser])
 
-  const getDBSystem = async () => {
-    await API.graphql({query: getSystem, variables: {id: cognitoUser.systemID}})
-    .then(res => setSystem(res.data.getSystem))
-    .catch(err => console.log(err));
+  const getAssets = async () => {
+    try {
+      const _assets = await DataStore.query(Asset, c => c.systemID('eq', cognitoUser.systemID))
+      setAssets(_assets)
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   const handleSubmit = async (event, error, values) => {
     const input = {
-      systemID: system.id,
-      locale: i18n.language,
+      systemID: cognitoUser.systemID,
       title: values.title,
       shortDescription: values.shortDescription,
+      locale: i18n.language,
       status: values.stat,
-      assetID: values.assetID || system.assets.items[0].id,
+      assetID: values.assetID || assets[0].id,
       userID: 'nouser',
     }
 
     console.log(input);
 
     let result = null;
-    await API.graphql({query: createTask, variables: {input: input}})
-    .then(res => {
+    try {
+      await DataStore.save(new Task(input))
       result = input;
-      console.log(res)
-    }).catch(err => {
+    } catch (err) {
       result = err;
-      console.log(err)
-    })
+      console.error(err)
+    }
 
     await axios.post(LOGEVENT_API, {
       meta: {
-        systemID: system.id,
+        systemID: cognitoUser.systemID,
         userID: `${cognitoUser.systemID}-${cognitoUser.username}`,
         graphql: 'updateTask'
       },
@@ -106,7 +109,7 @@ const AddTask = (props) => {
   }
 
 
-  if(!system) {
+  if(!cognitoUser) {
     return (
       <React.Fragment>
         <div>
@@ -116,7 +119,7 @@ const AddTask = (props) => {
     )
   } else {
     const defaultValues = {
-      systemID: system.id,
+      systemID: cognitoUser.systemID,
       title: '',
       shortDescription: '',
       status: 'NOTTAKEN',
@@ -132,15 +135,6 @@ const AddTask = (props) => {
                 <CardTitle className='mt-4 ml-4'>Add Task</CardTitle>
                 <CardBody>
                   <AvForm onSubmit={handleSubmit} model={defaultValues}>
-                    {
-                      // <AvField onChange={(event, value) => setChosenSystem(value)} type="select" name="systemID" label="System" validate={{required: {value: true}}}>
-                      //   {
-                      //     systems.map((system, i) => {
-                      //       return <option onSelectvalue={system._id} value={system._id}>{system.name}</option>
-                      //     })
-                      //   }
-                      // </AvField>
-                    }
                     <AvField
                       name="title"
                       label="Title "
@@ -161,23 +155,14 @@ const AddTask = (props) => {
                         required: {value: true}
                       }}
                     />
-                    {
-                      // <AvField type='select' name='email' label='Assignee E-mail(Optional)'>
-                      //   {
-                      //     chosenSystem && systems.find(system => system._id == chosenSystem).users.map(user => {
-                      //       return <option value={user._user.email}>{user._user.email}</option>
-                      //     })
-                      //   }
-                      // </AvField>
-                    }
-                    <AvField type='select' name='assetID' label='Asset for Task' validate={{required: {value: true}}}>
+                    <AvField type='select' name='assetID' label='Asset for Task'>
                       {
-                        system.assets && system.assets.items.map(asset => {
+                        assets.map(asset => {
                           return <option value={asset.id}>{asset.name}</option>
                         })
                       }
                     </AvField>
-                    <AvField type="select" name="stat" label="Status" validate={{required: {value: true}}}>
+                    <AvField type="select" name="stat" label="Status">
                       {taskStatusArr.map(status => <option value={status.value}>{status.label}</option>)}
                     </AvField>
                     <FormGroup>
