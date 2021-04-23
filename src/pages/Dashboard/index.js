@@ -22,9 +22,7 @@ import {
   Table
 } from "reactstrap";
 import {Link} from "react-router-dom";
-import {API, graphqlOperation, Auth} from 'aws-amplify';
-import { getUser, getSystem } from '../../graphql/queries';
-import { onUpdateSystem } from '../../graphql/subscriptions';
+import { Auth, DataStore } from 'aws-amplify';
 import { useTranslation } from 'react-i18next';
 
 // Pages Components
@@ -41,9 +39,7 @@ const GET_CLEANING_TIME_API = "https://271kt734c3.execute-api.us-east-1.amazonaw
 
 const Dashboard = (props) => {
 
-  const [system, setSystem] = useState({});
   const [cognitoUser, setCognitoUser] = useState();
-  const [user, setUser] = useState({});
   const [subscriptions, setSubscriptions] = useState([]);
   const [cleaningTimes, setCleaningTimes] = useState([]);
   const { t, i18n } = useTranslation();
@@ -61,53 +57,6 @@ const Dashboard = (props) => {
       })
     })
   }, [])
-
-  useEffect(() => {
-    if(cognitoUser) {
-        getDBUser()
-        getDBSystem();
-        getCleaningTimes();
-        setSubscriptions();
-        return clearSubscriptions();
-    }
-  }, [cognitoUser])
-
-  const getDBUser = async () => {
-    await API.graphql({query: getUser, variables: {id: `${cognitoUser.systemID}-${cognitoUser.username}`}})
-    .then(res => setUser(res.data.getUser))
-    .catch(err => console.log(err));
-  }
-
-  const getDBSystem = async () => {
-    await API.graphql({query: getSystem, variables: {id: cognitoUser.systemID}})
-    .then(res => setSystem(res.data.getSystem))
-    .catch(err => console.log(err));
-  }
-
-  const setupSubscriptions = async () => {
-    const systemSub = await API.graphql({query: onUpdateSystem, variables: {id: cognitoUser.systemID}})
-    .subscribe({
-      next: event => {
-        if(event) {
-          const newSystem = event.value.data.onUpdateSystem;
-          if(!newSystem) {
-            return;
-          }
-          setSystem(newSystem)
-        }
-      },
-      error: error => console.error(error)
-    })
-
-    setSubscriptions([...subscriptions, systemSub])
-  }
-
-  const clearSubscriptions = () => {
-    subscriptions.forEach(sub => {
-      sub.unsubscribe();
-    });
-    setSubscriptions([]);
-  }
 
   const getCleaningTimes = async () => {
     await axios.post(GET_CLEANING_TIME_API, {systemID: cognitoUser.systemID}).then(res => {
@@ -144,7 +93,10 @@ const Dashboard = (props) => {
           }
           <Row>
             <Col xl="4">
-              <WelcomeComp user={user}/>
+              {
+                cognitoUser &&
+                <WelcomeComp user={cognitoUser.username}/>
+              }
             </Col>
             <Col xl="8">
               {
@@ -170,8 +122,8 @@ const Dashboard = (props) => {
                 <CardBody>
                   <div className="clearfix">
                     {
-                       system.assets &&
-                        <Rooms rooms={system.assets.items.filter(item => item.assetType == "ROOM")}/>
+                       cognitoUser &&
+                        <Rooms systemID={cognitoUser.systemID}/>
                     }
                   </div>
                 </CardBody>
@@ -181,8 +133,8 @@ const Dashboard = (props) => {
 
           <Row>
             <Col lg="12">
-              { system.id &&
-                <TaskTable systemID={system.id}/>
+              { cognitoUser &&
+                <TaskTable systemID={cognitoUser.systemID}/>
               }
             </Col>
           </Row>

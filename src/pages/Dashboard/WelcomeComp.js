@@ -6,15 +6,7 @@ import {Link} from "react-router-dom";
 import avatar1 from "../../assets/images/users/avatar-1.jpg";
 import profileImg from "../../assets/images/profile-img.png";
 
-const WelcomeComp = (props) => {
-
-  const [name, setName] = useState();
-
-  useEffect(() => {
-    if(props.user) {
-        setName(`${props.user.firstName} ${props.user.lastName}`)
-    }
-  }, [props.user])
+const WelcomeComp = ({name}) => {
 
   return (<React.Fragment>
     <Card className="overflow-hidden">
