@@ -69,6 +69,7 @@ export declare class Task {
   readonly user?: User;
   readonly status?: TaskStatus | keyof typeof TaskStatus;
   readonly createdAt: string;
+  readonly locale: string;
   constructor(init: ModelInit<Task>);
   static copyOf(source: Task, mutator: (draft: MutableModel<Task>) => MutableModel<Task> | void): Task;
 }
@@ -81,6 +82,7 @@ export declare class Note {
   readonly userID: string;
   readonly user?: User;
   readonly createdAt: string;
+  readonly locale: string;
   constructor(init: ModelInit<Note>);
   static copyOf(source: Note, mutator: (draft: MutableModel<Note>) => MutableModel<Note> | void): Note;
 }

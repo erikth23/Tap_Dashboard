@@ -245,6 +245,13 @@ export const schema = {
                     "type": "AWSDateTime",
                     "isRequired": true,
                     "attributes": []
+                },
+                "locale": {
+                    "name": "locale",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -321,6 +328,13 @@ export const schema = {
                     "name": "createdAt",
                     "isArray": false,
                     "type": "AWSDateTime",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "locale": {
+                    "name": "locale",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": true,
                     "attributes": []
                 }
@@ -525,5 +539,5 @@ export const schema = {
         }
     },
     "nonModels": {},
-    "version": "c0233ff7cb48011aba5df97702eff41d"
+    "version": "2ce5fa85e352ce2ea569c237d613dd5b"
 };

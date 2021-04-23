@@ -61,6 +61,7 @@ type Task @model @key(name: "bySystem", fields: ["systemID", "assetID"]) {
   user: User @connection(fields: ["userID"])
   status: TaskStatus
   createdAt: AWSDateTime!
+  locale: String!
 }
 
 type Note @model @key(name: "byTask", fields: ["taskOrAssetID"]) {
@@ -71,6 +72,7 @@ type Note @model @key(name: "byTask", fields: ["taskOrAssetID"]) {
   userID: ID!
   user: User @connection(fields: ["userID"])
   createdAt: AWSDateTime!
+  locale: String!
 }
 
 type Tap @model @key(name: "byAsset", fields: ["assetID", "purpose"]){
