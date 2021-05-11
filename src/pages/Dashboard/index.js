@@ -58,6 +58,12 @@ const Dashboard = (props) => {
     })
   }, [])
 
+  useEffect(() => {
+    if(cognitoUser && cognitoUser.systemID) {
+        getCleaningTimes()
+    }
+  }, [cognitoUser])
+
   const getCleaningTimes = async () => {
     await axios.post(GET_CLEANING_TIME_API, {systemID: cognitoUser.systemID}).then(res => {
       setCleaningTimes(res.data)
