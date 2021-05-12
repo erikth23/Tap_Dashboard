@@ -47,6 +47,7 @@ const TaskView = ({setViewTask, systemID, _task, runUpdateTask, username }) => {
 
   const [users, setUsers] = useState([]);
   const {i18n} = useTranslation();
+  const commaRegexp = /, (?=\w{2,3}=)/g
 
   useEffect(() => {
     if(systemID) {
@@ -71,7 +72,7 @@ const TaskView = ({setViewTask, systemID, _task, runUpdateTask, username }) => {
 
   const getUsers = async () => {
     try {
-      const _users = await DataStore(User, c => c.systemID('eq', systemID));
+      const _users = await DataStore.query(User, c => c.systemID('eq', systemID));
       setUsers(_users)
     } catch (err) {
       console.error(err)
@@ -114,6 +115,18 @@ const TaskView = ({setViewTask, systemID, _task, runUpdateTask, username }) => {
     })
   }
 
+  const translate = (text) => {
+    return !text.includes('{') ?
+        text
+      : (text.includes('=') ?
+          JSON.parse(text
+              .replace("{", "{\"")
+              .replaceAll(commaRegexp, "\",\"")
+              .replaceAll("=", "\":\"")
+              .replace("}", "\"}"))[i18n.language]
+        : JSON.parse(text)[i18n.language])
+  }
+
   if(!task) {
     return (
       <React.Fragment>
@@ -123,11 +136,11 @@ const TaskView = ({setViewTask, systemID, _task, runUpdateTask, username }) => {
   } else {
     return(<React.Fragment>
       <Card>
-          <CardTitle className='mt-3 ml-3'>{typeof task.title == "string" ? task.title : task.title[i18n.language]}</CardTitle>
+          <CardTitle className='mt-3 ml-3'>{translate(task.title)}</CardTitle>
           <CardBody>
             <div>
               <h5>Description</h5>
-              <p>{typeof task.title == "string" ? task.shortDescription : task.shortDescription[i18n.language]}</p>
+              <p>{translate(task.shortDescription)}</p>
             </div>
             <div className='mt-3'>
               <h5>Task Status</h5>
@@ -138,7 +151,7 @@ const TaskView = ({setViewTask, systemID, _task, runUpdateTask, username }) => {
             </div>
             <div className='mt-3'>
               <h5>Assignee</h5>
-              <TaskDropdown initial={task.user ? task.user.userName : 'nouser'} changeFunction={(res) => {
+              <TaskDropdown initial={task.userID.split('-')[1] || 'nouser'} changeFunction={(res) => {
                   setUpdated(true);
                   setTask({...task, userID: res.value, user: {userName: res.label}});
                 }} items={users.map(user => ({value: user.id, label: user.userName}))}/>
@@ -153,8 +166,7 @@ const TaskView = ({setViewTask, systemID, _task, runUpdateTask, username }) => {
             <div>
               <h5 className='mt-3 mb-2'>Comments</h5>
               {comments.map(comment => {
-                console.log(comment)
-                return <Comment comment={comment}/>
+                return <Comment comment={{...comment, comment: translate(comment.comment)}}/>
               })}
               <div className="form-group">
                 <input className="form-control" type="text" placeholder="Add Comment" onChange={(event) => setNewComment(event.target.value)}/>

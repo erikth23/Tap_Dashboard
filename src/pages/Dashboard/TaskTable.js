@@ -22,6 +22,7 @@ const statusToColor = new Map([
 const TaskTable = ({systemID}) => {
   const [tasks, setTasks] = useState([]);
   const {i18n} = useTranslation()
+  const commaRegexp = /, (?=\w{2,3}=)/g
 
   useEffect(() => {
     if(systemID) {
@@ -65,9 +66,10 @@ const TaskTable = ({systemID}) => {
               <tbody>
                 {
                   tasks && tasks.map((task) => {
+                    const _title = !task.title.includes('{') ? task.title : (task.title.includes('=') ? JSON.parse(task.title.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))[i18n.language] : JSON.parse(task.title)[i18n.language])
                     return (<tr>
-                      <td>{typeof task.title == "string" ? task.title : task.title[i18n.language]}</td>
-                      <td>{'Not Found'}</td>
+                      <td>{_title}</td>
+                      <td>{task.userID.split('-')[1] || 'nouser'}</td>
                       <td>{task.createdAt}</td>
                       <td><Badge color={statusToColor.get(task.status)}>{task.status}</Badge></td>
                     </tr>)

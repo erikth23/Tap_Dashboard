@@ -43,6 +43,7 @@ const TasksList = (props) => {
   const [viewTask, setViewTask] = useState();
   const history = useHistory();
   const { t, i18n } = useTranslation();
+  const commaRegexp = /, (?=\w{2,3}=)/g
   var today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -137,11 +138,11 @@ const TasksList = (props) => {
                           {
                             tasks && tasks.filter(task => task.status == status && (status != "COMPLETED" || getTimeDiff(task.updatedAt))).map(task => {
                               let date = new Date(task.createdAt);
-                              console.log(task)
+                              const _title = !task.title.includes('{') ? task.title : (task.title.includes('=') ? JSON.parse(task.title.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))[i18n.language] : JSON.parse(task.title)[i18n.language])
                               return (<tr>
                                 <td>
                                   <h5 className="text-truncate font-size-14 m-0">
-                                    <Button color="light" outline className="waves-effect" onClick={() => setViewTask(task)}>{typeof task.title == "string" ? task.title : task.title[i18n.language]}</Button>
+                                    <Button color="light" outline className="waves-effect" onClick={() => setViewTask(task)}>{_title}</Button>
                                   </h5>
                                 </td>
                                 <td>{task.owner && task.owner.firstName + ' ' + task.owner.lastName}</td>
