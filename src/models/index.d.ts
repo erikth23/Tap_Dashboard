@@ -104,6 +104,7 @@ export declare class Tap {
   readonly purpose: TapType | keyof typeof TapType;
   readonly userID: string;
   readonly user?: User;
+  readonly tapDate?: string;
   constructor(init: ModelInit<Tap>);
   static copyOf(source: Tap, mutator: (draft: MutableModel<Tap>) => MutableModel<Tap> | void): Tap;
 }

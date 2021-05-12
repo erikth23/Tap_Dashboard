@@ -11,8 +11,9 @@ const CleaningTime = ({times}) => {
     var max_ovr_diff = 0;
     var min_ovr_diff = 60;
     times.forEach((time, i) => {
-      const start_date = new Date(time.startTime);
-      const end_date = new Date(time.endTime);
+      console.log(time)
+      const start_date = new Date(time.startTime.S);
+      const end_date = new Date(time.endTime.S);
       const one_week_ago = new Date(Date.now() - 604800000)
       const min_diff = Math.round(Math.abs(end_date - start_date)) / (60 * 1000)
 

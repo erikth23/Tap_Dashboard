@@ -40,7 +40,6 @@ const TaskTable = ({systemID}) => {
   const getTasks = async () => {
     try {
       const _tasks = await DataStore.query(Task, c => c.systemID('eq', systemID))
-      console.log(_tasks)
       setTasks(_tasks)
     } catch (err) {
       console.error(err)

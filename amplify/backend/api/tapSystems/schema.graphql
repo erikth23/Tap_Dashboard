@@ -82,6 +82,7 @@ type Tap @model @key(name: "byAsset", fields: ["assetID", "purpose"]){
   purpose: TapType!
   userID: ID!
   user: User @connection(fields: ["userID"])
+  tapDate: AWSDateTime
 }
 
 type User @model @key(name: "bySystem", fields: ["systemID", "userName"]){

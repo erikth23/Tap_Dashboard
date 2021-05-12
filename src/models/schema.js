@@ -473,6 +473,13 @@ export const schema = {
                         "connectionType": "HAS_ONE",
                         "associatedWith": "id"
                     }
+                },
+                "tapDate": {
+                    "name": "tapDate",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -539,5 +546,5 @@ export const schema = {
         }
     },
     "nonModels": {},
-    "version": "2ce5fa85e352ce2ea569c237d613dd5b"
+    "version": "4308265402fca3fc02a513e75f82f177"
 };
