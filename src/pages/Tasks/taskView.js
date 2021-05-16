@@ -127,13 +127,6 @@ const TaskView = ({setViewTask, systemID, _task, runUpdateTask, username }) => {
         : JSON.parse(text)[i18n.language])
   }
 
-  if(!task) {
-    return (
-      <React.Fragment>
-        <div>Loading...</div>
-      </React.Fragment>
-    )
-  } else {
     return(<React.Fragment>
       <Card>
           <CardTitle className='mt-3 ml-3'>{translate(task.title)}</CardTitle>
@@ -194,7 +187,6 @@ const TaskView = ({setViewTask, systemID, _task, runUpdateTask, username }) => {
           </CardBody>
       </Card>
     </React.Fragment>)
-  }
 
 }
 

@@ -1,21 +1,33 @@
 import React, {useEffect, useState} from 'react';
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from "reactstrap";
 import ReactApexChart from 'react-apexcharts';
-
 
 const CleaningTime = ({times}) => {
   const [series, setSeries] = useState([]);
   const [options, setOptions] = useState({});
+  const [name, setName] = useState('');
+  const [roomType, setRoomType] = useState('');
+  const [roomTypes, setRoomTypes] = useState('');
+  const [buttonExpanded, setButtonExpanded] = useState(false);
 
   useEffect(() => {
     const data = {};
     var max_ovr_diff = 0;
     var min_ovr_diff = 60;
-    times.forEach((time, i) => {
-      console.log(time)
+    const _roomTypes = [];
+
+    times.filter(item =>
+      (name == '' || item.name == name) &&
+      (roomType == '' || item.roomType == roomType)
+    ).forEach((time, i) => {
       const start_date = new Date(time.startTime);
       const end_date = new Date(time.endTime);
       const one_week_ago = new Date(Date.now() - 604800000)
       const min_diff = Math.round(Math.abs(end_date - start_date)) / (60 * 1000)
+
+      if(_roomTypes.indexOf(time.roomType) == -1) {
+        _roomTypes.push(time.roomType);
+      }
 
       if(min_diff < 1 || min_diff > 60 || start_date < one_week_ago) {
         return;
@@ -33,6 +45,7 @@ const CleaningTime = ({times}) => {
         data[date].total_min += min_diff;
       }
     });
+    setRoomTypes(_roomTypes)
 
     var data_arr = [];
     for(var key in data) {
@@ -115,10 +128,33 @@ const CleaningTime = ({times}) => {
         offsetX: -5
       }
     })
-  }, [times])
+  }, [times, roomType, name])
 
   return (
     <React.Fragment id = "chart" >
+      <Dropdown
+        isOpen={buttonExpanded}
+        toggle={() => setButtonExpanded(!buttonExpanded)}
+        >
+        <DropdownToggle className="btn btn-secondary" caret>
+          Dropdown button{" "}
+          <i className="mdi mdi-chevron-down"></i>
+        </DropdownToggle>
+        <DropdownMenu>
+          {
+            roomTypes && roomTypes.map(item => (
+                <DropdownItem onClick={() => {
+                    setButtonExpanded(false)
+                    setRoomType(item)
+                  }}>{item}</DropdownItem>
+            ))
+          }
+        </DropdownMenu>
+      </Dropdown>
+      {
+        roomType != '' &&
+        <Button className="btn-danger" onClick={() => setRoomType('')}>Clear</Button>
+      }
       <ReactApexChart options={options} series={series} type="line" height={350}/>
     </React.Fragment>
   );

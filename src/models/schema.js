@@ -124,6 +124,13 @@ export const schema = {
                     },
                     "isRequired": true,
                     "attributes": []
+                },
+                "roomType": {
+                    "name": "roomType",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -546,5 +553,5 @@ export const schema = {
         }
     },
     "nonModels": {},
-    "version": "4308265402fca3fc02a513e75f82f177"
+    "version": "4a2f466f1f536d67d94ec1a6e71490b0"
 };

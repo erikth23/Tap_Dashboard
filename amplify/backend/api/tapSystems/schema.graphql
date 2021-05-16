@@ -47,6 +47,7 @@ type Asset @model @key(name: "bySystem", fields: ["systemID", "tagID"]) {
   tagID: String!
   assetType: AssetType!
   status: AssetStatus!
+  roomType: String
 }
 
 type Task @model @key(name: "bySystem", fields: ["systemID", "assetID"]) {

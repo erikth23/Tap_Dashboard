@@ -53,6 +53,7 @@ export declare class Asset {
   readonly tagID: string;
   readonly assetType: AssetType | keyof typeof AssetType;
   readonly status: AssetStatus | keyof typeof AssetStatus;
+  readonly roomType?: string;
   constructor(init: ModelInit<Asset>);
   static copyOf(source: Asset, mutator: (draft: MutableModel<Asset>) => MutableModel<Asset> | void): Asset;
 }
