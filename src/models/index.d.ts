@@ -33,6 +33,21 @@ export enum TapType {
   OTHER = "OTHER"
 }
 
+export enum AttendantAccountStatus {
+  STAY = "STAY",
+  CO = "CO",
+  OOI = "OOI",
+  OOO = "OOO",
+  NEW = "NEW"
+}
+
+export enum AttendantOccupiedStatus {
+  OCC = "OCC",
+  VAC = "VAC",
+  OOI = "OOI",
+  OOO = "OOO"
+}
+
 
 
 export declare class System {
@@ -54,6 +69,9 @@ export declare class Asset {
   readonly assetType: AssetType | keyof typeof AssetType;
   readonly status: AssetStatus | keyof typeof AssetStatus;
   readonly roomType?: string;
+  readonly accountStatus?: AttendantAccountStatus | keyof typeof AttendantAccountStatus;
+  readonly occupiedStatus?: AttendantOccupiedStatus | keyof typeof AttendantOccupiedStatus;
+  readonly assignTo?: string;
   constructor(init: ModelInit<Asset>);
   static copyOf(source: Asset, mutator: (draft: MutableModel<Asset>) => MutableModel<Asset> | void): Asset;
 }
@@ -106,6 +124,9 @@ export declare class Tap {
   readonly userID: string;
   readonly user?: User;
   readonly tapDate?: string;
+  readonly accountStatus?: AttendantAccountStatus | keyof typeof AttendantAccountStatus;
+  readonly occupiedStatus?: AttendantOccupiedStatus | keyof typeof AttendantOccupiedStatus;
+  readonly assignTo?: string;
   constructor(init: ModelInit<Tap>);
   static copyOf(source: Tap, mutator: (draft: MutableModel<Tap>) => MutableModel<Tap> | void): Tap;
 }

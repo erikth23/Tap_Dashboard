@@ -31,6 +31,21 @@ enum TapType {
   OTHER
 }
 
+enum AttendantAccountStatus {
+  STAY
+  CO
+  OOI
+  OOO
+  NEW
+}
+
+enum AttendantOccupiedStatus {
+  OCC
+  VAC
+  OOI
+  OOO
+}
+
 type System @model {
   id: ID!
   name: String!
@@ -48,6 +63,9 @@ type Asset @model @key(name: "bySystem", fields: ["systemID", "tagID"]) {
   assetType: AssetType!
   status: AssetStatus!
   roomType: String
+  accountStatus: AttendantAccountStatus
+  occupiedStatus: AttendantOccupiedStatus
+  assignTo: ID
 }
 
 type Task @model @key(name: "bySystem", fields: ["systemID", "assetID"]) {
@@ -84,6 +102,9 @@ type Tap @model @key(name: "byAsset", fields: ["assetID", "purpose"]){
   userID: ID!
   user: User @connection(fields: ["userID"])
   tapDate: AWSDateTime
+  accountStatus: AttendantAccountStatus
+  occupiedStatus: AttendantOccupiedStatus
+  assignTo: ID
 }
 
 type User @model @key(name: "bySystem", fields: ["systemID", "userName"]){

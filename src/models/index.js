@@ -35,6 +35,21 @@ const TapType = {
   "OTHER": "OTHER"
 };
 
+const AttendantAccountStatus = {
+  "STAY": "STAY",
+  "CO": "CO",
+  "OOI": "OOI",
+  "OOO": "OOO",
+  "NEW": "NEW"
+};
+
+const AttendantOccupiedStatus = {
+  "OCC": "OCC",
+  "VAC": "VAC",
+  "OOI": "OOI",
+  "OOO": "OOO"
+};
+
 const { System, Asset, Task, Note, User, Tap } = initSchema(schema);
 
 export {
@@ -47,5 +62,7 @@ export {
   AssetType,
   AssetStatus,
   TaskStatus,
-  TapType
+  TapType,
+  AttendantAccountStatus,
+  AttendantOccupiedStatus
 };

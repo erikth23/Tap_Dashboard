@@ -131,6 +131,31 @@ export const schema = {
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
+                },
+                "accountStatus": {
+                    "name": "accountStatus",
+                    "isArray": false,
+                    "type": {
+                        "enum": "AttendantAccountStatus"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "occupiedStatus": {
+                    "name": "occupiedStatus",
+                    "isArray": false,
+                    "type": {
+                        "enum": "AttendantOccupiedStatus"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "assignTo": {
+                    "name": "assignTo",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -487,6 +512,31 @@ export const schema = {
                     "type": "AWSDateTime",
                     "isRequired": false,
                     "attributes": []
+                },
+                "accountStatus": {
+                    "name": "accountStatus",
+                    "isArray": false,
+                    "type": {
+                        "enum": "AttendantAccountStatus"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "occupiedStatus": {
+                    "name": "occupiedStatus",
+                    "isArray": false,
+                    "type": {
+                        "enum": "AttendantOccupiedStatus"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "assignTo": {
+                    "name": "assignTo",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -550,8 +600,27 @@ export const schema = {
                 "MAINTENANCE",
                 "OTHER"
             ]
+        },
+        "AttendantAccountStatus": {
+            "name": "AttendantAccountStatus",
+            "values": [
+                "STAY",
+                "CO",
+                "OOI",
+                "OOO",
+                "NEW"
+            ]
+        },
+        "AttendantOccupiedStatus": {
+            "name": "AttendantOccupiedStatus",
+            "values": [
+                "OCC",
+                "VAC",
+                "OOI",
+                "OOO"
+            ]
         }
     },
     "nonModels": {},
-    "version": "4a2f466f1f536d67d94ec1a6e71490b0"
+    "version": "e9ec401c59747b24a681b6ad760d94a4"
 };
