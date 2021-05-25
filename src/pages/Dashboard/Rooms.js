@@ -37,7 +37,6 @@ const Rooms = ({systemID}) => {
   const getAssets = async () => {
     try {
       const _assets = await DataStore.query(Asset, c => c.systemID('eq', systemID).assetType('eq', ROOM))
-      console.log(_assets)
       setAssets(_assets);
     } catch (err) {
       console.error(err)

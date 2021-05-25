@@ -8,17 +8,22 @@ const CleaningTime = ({times}) => {
   const [name, setName] = useState('');
   const [roomType, setRoomType] = useState('');
   const [roomTypes, setRoomTypes] = useState('');
-  const [buttonExpanded, setButtonExpanded] = useState(false);
+  const [accountStatus, setAccountStatus] = useState('');
+  const [accountStatuses, setAccountStatuses] = useState([])
+  const [typeButtonExpanded, setTypeButtonExpanded] = useState(false);
+  const [statusButtonExpanded, setStatusButtonExpanded] = useState(false);
 
   useEffect(() => {
     const data = {};
     var max_ovr_diff = 0;
     var min_ovr_diff = 60;
     const _roomTypes = [];
+    const _accountStatuses = [];
 
-    times.filter(item =>
-      (name == '' || item.name == name) &&
-      (roomType == '' || item.roomType == roomType)
+    times.filter(time =>
+      (name == '' || time.name == name) &&
+      (roomType == '' || time.roomType == roomType) &&
+      (accountStatus == '' || time.accountStatus == accountStatus)
     ).forEach((time, i) => {
       const start_date = new Date(time.startTime);
       const end_date = new Date(time.endTime);
@@ -27,6 +32,11 @@ const CleaningTime = ({times}) => {
 
       if(_roomTypes.indexOf(time.roomType) == -1) {
         _roomTypes.push(time.roomType);
+      }
+
+      if(time.accountStatus && _accountStatuses.indexOf(time.accountStatus) == -1) {
+        console.log(time.name, time.accountStatus);
+        _accountStatuses.push(time.accountStatus)
       }
 
       if(min_diff < 1 || min_diff > 60 || start_date < one_week_ago) {
@@ -46,6 +56,7 @@ const CleaningTime = ({times}) => {
       }
     });
     setRoomTypes(_roomTypes)
+    setAccountStatuses(_accountStatuses)
 
     var data_arr = [];
     for(var key in data) {
@@ -128,35 +139,66 @@ const CleaningTime = ({times}) => {
         offsetX: -5
       }
     })
-  }, [times, roomType, name])
+  }, [times, roomType, name, accountStatus])
 
   return (
-    <React.Fragment id = "chart" >
-      <Dropdown
-        isOpen={buttonExpanded}
-        toggle={() => setButtonExpanded(!buttonExpanded)}
-        >
-        <DropdownToggle className="btn btn-secondary" caret>
-          Dropdown button{" "}
-          <i className="mdi mdi-chevron-down"></i>
-        </DropdownToggle>
-        <DropdownMenu>
+    <div id = "chart" >
+      <div className="d-flex">
+        <div className="d-flex mr-4">
+          <Dropdown
+            isOpen={typeButtonExpanded}
+            toggle={() => setTypeButtonExpanded(!typeButtonExpanded)}
+            className="mr-2"
+            >
+            <DropdownToggle className="btn btn-secondary" caret>
+              {roomType ? `${roomType} ` : "Room Type "}
+              <i className="mdi mdi-chevron-down"></i>
+            </DropdownToggle>
+            <DropdownMenu>
+              {
+                roomTypes && roomTypes.map((item, i) => (
+                    <DropdownItem key={i} onClick={() => {
+                        setTypeButtonExpanded(false)
+                        setRoomType(item)
+                      }}>{item}</DropdownItem>
+                ))
+              }
+            </DropdownMenu>
+          </Dropdown>
           {
-            roomTypes && roomTypes.map(item => (
-                <DropdownItem onClick={() => {
-                    setButtonExpanded(false)
-                    setRoomType(item)
-                  }}>{item}</DropdownItem>
-            ))
+            roomType != '' &&
+            <Button className="btn-danger " onClick={() => setRoomType('')}><i className="bx bx-x-circle"/></Button>
           }
-        </DropdownMenu>
-      </Dropdown>
-      {
-        roomType != '' &&
-        <Button className="btn-danger" onClick={() => setRoomType('')}>Clear</Button>
-      }
+        </div>
+        <div className='d-flex'>
+          <Dropdown
+            isOpen={statusButtonExpanded}
+            toggle={() => setStatusButtonExpanded(!statusButtonExpanded)}
+            className="mr-2"
+            >
+            <DropdownToggle className="btn btn-secondary" caret>
+              {accountStatus ? `${accountStatus} ` : "Account Status "}
+              <i className="mdi mdi-chevron-down"></i>
+            </DropdownToggle>
+            <DropdownMenu>
+              {
+                accountStatuses && accountStatuses.map((item, i) => (
+                    <DropdownItem key={i} onClick={() => {
+                        setStatusButtonExpanded(false)
+                        setAccountStatus(item)
+                      }}>{item}</DropdownItem>
+                ))
+              }
+            </DropdownMenu>
+          </Dropdown>
+          {
+            accountStatus != '' &&
+            <Button className="btn-danger " onClick={() => setAccountStatus('')}><i className="bx bx-x-circle"/></Button>
+          }
+        </div>
+      </div>
       <ReactApexChart options={options} series={series} type="line" height={350}/>
-    </React.Fragment>
+    </div>
   );
 }
 
