@@ -48,7 +48,7 @@ const Rooms = ({systemID}) => {
   return (<React.Fragment>
     <div className="m-3">
       {
-        assets.map((room, key) => <button className={`btn-lg btn-room ${statusToClass.get(room.status)}`}>
+        assets.sort((a, b) => parseInt(a.name) - parseInt(b.name)).map((room, key) => <button className={`btn-lg btn-room ${statusToClass.get(room.status)}`}>
           {room.name}
         </button>)
       }
