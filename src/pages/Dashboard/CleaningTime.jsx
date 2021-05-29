@@ -19,6 +19,8 @@ const CleaningTime = ({times}) => {
     var min_ovr_diff = 60;
     const _roomTypes = [];
     const _accountStatuses = [];
+    var _average = 0;
+    var count = 0;
 
     times.filter(time =>
       (name == '' || time.name == name) &&
@@ -30,17 +32,23 @@ const CleaningTime = ({times}) => {
       const one_week_ago = new Date(Date.now() - 604800000)
       const min_diff = Math.round(Math.abs(end_date - start_date)) / (60 * 1000)
 
+      if(min_diff < 1 || min_diff > 60) {
+        return;
+      }
+
+      count++;
+      _average = (_average * (count - 1) + min_diff) / count;
+
+      if(start_date < one_week_ago) {
+        return;
+      }
+
       if(_roomTypes.indexOf(time.roomType) == -1) {
         _roomTypes.push(time.roomType);
       }
 
       if(time.accountStatus && _accountStatuses.indexOf(time.accountStatus) == -1) {
-        console.log(time.name, time.accountStatus);
         _accountStatuses.push(time.accountStatus)
-      }
-
-      if(min_diff < 1 || min_diff > 60 || start_date < one_week_ago) {
-        return;
       }
 
       const date = start_date.getDate();
@@ -124,12 +132,13 @@ const CleaningTime = ({times}) => {
           text: 'Day'
         }
       },
-      yaxis: {
+      yaxis:
+      {
         title: {
           text: 'Average Time(Minutes)'
         },
-        min: min_ovr_diff - 5,
-        max: max_ovr_diff + 5
+        min: min_ovr_diff < _average ? min_ovr_diff - 5 : _average - 5,
+        max: max_ovr_diff > _average ? max_ovr_diff + 5 : _average + 5
       },
       legend: {
         position: 'top',
@@ -137,6 +146,22 @@ const CleaningTime = ({times}) => {
         floating: true,
         offsetY: -25,
         offsetX: -5
+      },
+      annotations: {
+        yaxis: [
+          {
+            y: _average,
+            borderColor: '#000',
+            label: {
+              borderColor: "#000",
+              style: {
+                color: '#fff',
+                background: '#000'
+              },
+              text: 'Average'
+            }
+          }
+        ]
       }
     })
   }, [times, roomType, name, accountStatus])
