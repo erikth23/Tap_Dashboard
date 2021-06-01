@@ -50,7 +50,13 @@ const AttendantOccupiedStatus = {
   "OOO": "OOO"
 };
 
-const { System, Asset, Task, Note, User, Tap } = initSchema(schema);
+const GuestStatus = {
+  "WAIT": "WAIT",
+  "IN": "IN",
+  "DONE": "DONE"
+};
+
+const { System, Asset, Task, Note, User, Guest, Tap } = initSchema(schema);
 
 export {
   System,
@@ -58,11 +64,13 @@ export {
   Task,
   Note,
   User,
+  Guest,
   Tap,
   AssetType,
   AssetStatus,
   TaskStatus,
   TapType,
   AttendantAccountStatus,
-  AttendantOccupiedStatus
+  AttendantOccupiedStatus,
+  GuestStatus
 };

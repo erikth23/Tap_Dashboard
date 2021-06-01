@@ -1,8 +1,7 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateSystem =/* GraphQL */
-`
+export const onCreateSystem = /* GraphQL */ `
   subscription OnCreateSystem {
     onCreateSystem {
       id
@@ -16,10 +15,37 @@ export const onCreateSystem =/* GraphQL */
           tagID
           assetType
           status
+          roomType
+          accountStatus
+          occupiedStatus
+          assignTo
+          _version
+          _deleted
+          _lastChangedAt
           createdAt
           updatedAt
         }
         nextToken
+        startedAt
+      }
+      tasks {
+        items {
+          id
+          title
+          shortDescription
+          systemID
+          assetID
+          userID
+          status
+          createdAt
+          locale
+          _version
+          _deleted
+          _lastChangedAt
+          updatedAt
+        }
+        nextToken
+        startedAt
       }
       users {
         items {
@@ -28,22 +54,26 @@ export const onCreateSystem =/* GraphQL */
           firstName
           lastName
           systemID
+          _version
+          _deleted
+          _lastChangedAt
           createdAt
           updatedAt
         }
         nextToken
+        startedAt
       }
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateSystem =/* GraphQL */
-`
-  subscription OnUpdateSystem(
-    $id: String
-  ) {
-    onUpdateSystem(id: $id) {
+export const onUpdateSystem = /* GraphQL */ `
+  subscription OnUpdateSystem {
+    onUpdateSystem {
       id
       name
       assets {
@@ -55,10 +85,37 @@ export const onUpdateSystem =/* GraphQL */
           tagID
           assetType
           status
+          roomType
+          accountStatus
+          occupiedStatus
+          assignTo
+          _version
+          _deleted
+          _lastChangedAt
           createdAt
           updatedAt
         }
         nextToken
+        startedAt
+      }
+      tasks {
+        items {
+          id
+          title
+          shortDescription
+          systemID
+          assetID
+          userID
+          status
+          createdAt
+          locale
+          _version
+          _deleted
+          _lastChangedAt
+          updatedAt
+        }
+        nextToken
+        startedAt
       }
       users {
         items {
@@ -67,18 +124,24 @@ export const onUpdateSystem =/* GraphQL */
           firstName
           lastName
           systemID
+          _version
+          _deleted
+          _lastChangedAt
           createdAt
           updatedAt
         }
         nextToken
+        startedAt
       }
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteSystem =/* GraphQL */
-`
+export const onDeleteSystem = /* GraphQL */ `
   subscription OnDeleteSystem {
     onDeleteSystem {
       id
@@ -92,10 +155,37 @@ export const onDeleteSystem =/* GraphQL */
           tagID
           assetType
           status
+          roomType
+          accountStatus
+          occupiedStatus
+          assignTo
+          _version
+          _deleted
+          _lastChangedAt
           createdAt
           updatedAt
         }
         nextToken
+        startedAt
+      }
+      tasks {
+        items {
+          id
+          title
+          shortDescription
+          systemID
+          assetID
+          userID
+          status
+          createdAt
+          locale
+          _version
+          _deleted
+          _lastChangedAt
+          updatedAt
+        }
+        nextToken
+        startedAt
       }
       users {
         items {
@@ -104,115 +194,92 @@ export const onDeleteSystem =/* GraphQL */
           firstName
           lastName
           systemID
+          _version
+          _deleted
+          _lastChangedAt
           createdAt
           updatedAt
         }
         nextToken
+        startedAt
       }
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const onCreateAsset =/* GraphQL */
-`
-  subscription OnCreateAsset(
-    $systemID: String!
-  ) {
-    onCreateAsset(systemID: $systemID) {
+export const onCreateAsset = /* GraphQL */ `
+  subscription OnCreateAsset {
+    onCreateAsset {
       id
       name
       description
       systemID
-      system {
-        id
-        name
-        assets {
-          nextToken
-        }
-        users {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       tagID
       assetType
       status
+      roomType
+      accountStatus
+      occupiedStatus
+      assignTo
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateAsset =/* GraphQL */
-`
-  subscription OnUpdateAsset(
-    $systemID: String
-    $id: String
-  ) {
-    onUpdateAsset(systemID: $systemID, id: $id) {
+export const onUpdateAsset = /* GraphQL */ `
+  subscription OnUpdateAsset {
+    onUpdateAsset {
       id
       name
       description
       systemID
-      system {
-        id
-        name
-        assets {
-          nextToken
-        }
-        users {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       tagID
       assetType
       status
+      roomType
+      accountStatus
+      occupiedStatus
+      assignTo
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteAsset =/* GraphQL */
-`
-  subscription OnDeleteAsset(
-    $systemID: String
-    $id: String
-  ) {
-    onDeleteAsset(systemID: $systemID, id: $id) {
+export const onDeleteAsset = /* GraphQL */ `
+  subscription OnDeleteAsset {
+    onDeleteAsset {
       id
       name
       description
       systemID
-      system {
-        id
-        name
-        assets {
-          nextToken
-        }
-        users {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       tagID
       assetType
       status
-      userID
+      roomType
+      accountStatus
+      occupiedStatus
+      assignTo
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const onCreateTask =/* GraphQL */
-`
-  subscription OnCreateTask(
-    $systemID: String!
-  ) {
-    onCreateTask(systemID: $systemID) {
+export const onCreateTask = /* GraphQL */ `
+  subscription OnCreateTask {
+    onCreateTask {
       id
       title
       shortDescription
@@ -224,96 +291,61 @@ export const onCreateTask =/* GraphQL */
           image
           userID
           createdAt
+          locale
+          _version
+          _deleted
+          _lastChangedAt
           updatedAt
         }
         nextToken
+        startedAt
       }
       systemID
-      system {
-        id
-        name
-        assets {
-          nextToken
-        }
-        users {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       assetID
       asset {
         id
         name
         description
         systemID
-        system {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         tagID
         assetType
         status
+        roomType
+        accountStatus
+        occupiedStatus
+        assignTo
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        userName
+        firstName
+        lastName
+        systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
       status
-      userID
       createdAt
+      locale
+      _version
+      _deleted
+      _lastChangedAt
       updatedAt
     }
   }
 `;
-export const onUpdateTask =/* GraphQL */
-`
-  subscription OnUpdateTask (
-    $systemID: String
-    $id: String
-  ) {
-    onUpdateTask(systemID: $systemID, id: $id) {
-      id
-      title
-      shortDescription
-      comments {
-        items {
-          id
-          taskOrAssetID
-          comment
-          image
-          userID
-        }
-        nextToken
-      }
-      systemID
-      system {
-        id
-        name
-        users {
-          nextToken
-        }
-      }
-      assetID
-      asset {
-        id
-        name
-        description
-        status
-      }
-      status
-      userID
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateTaskSystem =/* GraphQL */
-`
-  subscription OnUpdateTask (
-    $systemID: String
-  ) {
-    onUpdateTask(systemID: $systemID) {
+export const onUpdateTask = /* GraphQL */ `
+  subscription OnUpdateTask {
+    onUpdateTask {
       id
       title
       shortDescription
@@ -325,64 +357,181 @@ export const onUpdateTaskSystem =/* GraphQL */
           image
           userID
           createdAt
+          locale
+          _version
+          _deleted
+          _lastChangedAt
           updatedAt
         }
         nextToken
+        startedAt
       }
       systemID
-      system {
-        id
-        name
-        assets {
-          nextToken
-        }
-        users {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       assetID
       asset {
         id
         name
         description
         systemID
-        system {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         tagID
         assetType
         status
+        roomType
+        accountStatus
+        occupiedStatus
+        assignTo
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        userName
+        firstName
+        lastName
+        systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
       status
       createdAt
+      locale
+      _version
+      _deleted
+      _lastChangedAt
       updatedAt
     }
   }
 `;
-export const onDeleteTask =/* GraphQL */
-`
-  subscription OnDeleteTask (
-    $systemID: String
-    $id: String
-  ) {
-    onDeleteTask(systemID: $systemID, id: $id) {
+export const onDeleteTask = /* GraphQL */ `
+  subscription OnDeleteTask {
+    onDeleteTask {
       id
+      title
+      shortDescription
+      comments {
+        items {
+          id
+          taskOrAssetID
+          comment
+          image
+          userID
+          createdAt
+          locale
+          _version
+          _deleted
+          _lastChangedAt
+          updatedAt
+        }
+        nextToken
+        startedAt
+      }
+      systemID
+      assetID
+      asset {
+        id
+        name
+        description
+        systemID
+        tagID
+        assetType
+        status
+        roomType
+        accountStatus
+        occupiedStatus
+        assignTo
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        userName
+        firstName
+        lastName
+        systemID
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      status
+      createdAt
+      locale
+      _version
+      _deleted
+      _lastChangedAt
+      updatedAt
     }
   }
 `;
-export const onCreateNote =/* GraphQL */
-`
-  subscription OnCreateNote(
-    $taskOrAssetID: String!
-  ) {
-    onCreateNote(taskOrAssetID: $taskOrAssetID) {
+export const onCreateGuest = /* GraphQL */ `
+  subscription OnCreateGuest {
+    onCreateGuest {
+      id
+      number
+      firstName
+      lastName
+      assetID
+      systemID
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateGuest = /* GraphQL */ `
+  subscription OnUpdateGuest {
+    onUpdateGuest {
+      id
+      number
+      firstName
+      lastName
+      assetID
+      systemID
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteGuest = /* GraphQL */ `
+  subscription OnDeleteGuest {
+    onDeleteGuest {
+      id
+      number
+      firstName
+      lastName
+      assetID
+      systemID
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateNote = /* GraphQL */ `
+  subscription OnCreateNote {
+    onCreateNote {
       id
       taskOrAssetID
       comment
@@ -394,21 +543,24 @@ export const onCreateNote =/* GraphQL */
         firstName
         lastName
         systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
       createdAt
+      locale
+      _version
+      _deleted
+      _lastChangedAt
       updatedAt
     }
   }
 `;
-export const onUpdateNote =/* GraphQL */
-`
-  subscription OnUpdateNote(
-    $taskOrAssetID: String
-    $id: String
-  ) {
-    onUpdateNote(taskOrAssetID: $taskOrAssetID, id: $id) {
+export const onUpdateNote = /* GraphQL */ `
+  subscription OnUpdateNote {
+    onUpdateNote {
       id
       taskOrAssetID
       comment
@@ -420,21 +572,24 @@ export const onUpdateNote =/* GraphQL */
         firstName
         lastName
         systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
       createdAt
+      locale
+      _version
+      _deleted
+      _lastChangedAt
       updatedAt
     }
   }
 `;
-export const onDeleteNote =/* GraphQL */
-`
-  subscription OnDeleteNote(
-    $taskOrAssetID: String
-    $id: String
-  ) {
-    onDeleteNote(taskOrAssetID: $taskOrAssetID, id: $id) {
+export const onDeleteNote = /* GraphQL */ `
+  subscription OnDeleteNote {
+    onDeleteNote {
       id
       taskOrAssetID
       comment
@@ -446,16 +601,22 @@ export const onDeleteNote =/* GraphQL */
         firstName
         lastName
         systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
       createdAt
+      locale
+      _version
+      _deleted
+      _lastChangedAt
       updatedAt
     }
   }
 `;
-export const onCreateTap =/* GraphQL */
-`
+export const onCreateTap = /* GraphQL */ `
   subscription OnCreateTap {
     onCreateTap {
       id
@@ -465,15 +626,16 @@ export const onCreateTap =/* GraphQL */
         name
         description
         systemID
-        system {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         tagID
         assetType
         status
+        roomType
+        accountStatus
+        occupiedStatus
+        assignTo
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
@@ -485,16 +647,25 @@ export const onCreateTap =/* GraphQL */
         firstName
         lastName
         systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
+      tapDate
+      accountStatus
+      occupiedStatus
+      assignTo
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateTap =/* GraphQL */
-`
+export const onUpdateTap = /* GraphQL */ `
   subscription OnUpdateTap {
     onUpdateTap {
       id
@@ -504,15 +675,16 @@ export const onUpdateTap =/* GraphQL */
         name
         description
         systemID
-        system {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         tagID
         assetType
         status
+        roomType
+        accountStatus
+        occupiedStatus
+        assignTo
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
@@ -524,16 +696,25 @@ export const onUpdateTap =/* GraphQL */
         firstName
         lastName
         systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
+      tapDate
+      accountStatus
+      occupiedStatus
+      assignTo
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteTap =/* GraphQL */
-`
+export const onDeleteTap = /* GraphQL */ `
   subscription OnDeleteTap {
     onDeleteTap {
       id
@@ -543,15 +724,16 @@ export const onDeleteTap =/* GraphQL */
         name
         description
         systemID
-        system {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         tagID
         assetType
         status
+        roomType
+        accountStatus
+        occupiedStatus
+        assignTo
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
@@ -563,16 +745,25 @@ export const onDeleteTap =/* GraphQL */
         firstName
         lastName
         systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
+      tapDate
+      accountStatus
+      occupiedStatus
+      assignTo
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const onCreateUser =/* GraphQL */
-`
+export const onCreateUser = /* GraphQL */ `
   subscription OnCreateUser {
     onCreateUser {
       id
@@ -580,13 +771,15 @@ export const onCreateUser =/* GraphQL */
       firstName
       lastName
       systemID
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateUser =/* GraphQL */
-`
+export const onUpdateUser = /* GraphQL */ `
   subscription OnUpdateUser {
     onUpdateUser {
       id
@@ -594,13 +787,15 @@ export const onUpdateUser =/* GraphQL */
       firstName
       lastName
       systemID
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteUser =/* GraphQL */
-`
+export const onDeleteUser = /* GraphQL */ `
   subscription OnDeleteUser {
     onDeleteUser {
       id
@@ -608,6 +803,9 @@ export const onDeleteUser =/* GraphQL */
       firstName
       lastName
       systemID
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }

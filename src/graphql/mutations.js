@@ -1,8 +1,7 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createSystem =/* GraphQL */
-`
+export const createSystem = /* GraphQL */ `
   mutation CreateSystem(
     $input: CreateSystemInput!
     $condition: ModelSystemConditionInput
@@ -19,10 +18,37 @@ export const createSystem =/* GraphQL */
           tagID
           assetType
           status
+          roomType
+          accountStatus
+          occupiedStatus
+          assignTo
+          _version
+          _deleted
+          _lastChangedAt
           createdAt
           updatedAt
         }
         nextToken
+        startedAt
+      }
+      tasks {
+        items {
+          id
+          title
+          shortDescription
+          systemID
+          assetID
+          userID
+          status
+          createdAt
+          locale
+          _version
+          _deleted
+          _lastChangedAt
+          updatedAt
+        }
+        nextToken
+        startedAt
       }
       users {
         items {
@@ -31,18 +57,24 @@ export const createSystem =/* GraphQL */
           firstName
           lastName
           systemID
+          _version
+          _deleted
+          _lastChangedAt
           createdAt
           updatedAt
         }
         nextToken
+        startedAt
       }
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const updateSystem =/* GraphQL */
-`
+export const updateSystem = /* GraphQL */ `
   mutation UpdateSystem(
     $input: UpdateSystemInput!
     $condition: ModelSystemConditionInput
@@ -59,10 +91,37 @@ export const updateSystem =/* GraphQL */
           tagID
           assetType
           status
+          roomType
+          accountStatus
+          occupiedStatus
+          assignTo
+          _version
+          _deleted
+          _lastChangedAt
           createdAt
           updatedAt
         }
         nextToken
+        startedAt
+      }
+      tasks {
+        items {
+          id
+          title
+          shortDescription
+          systemID
+          assetID
+          userID
+          status
+          createdAt
+          locale
+          _version
+          _deleted
+          _lastChangedAt
+          updatedAt
+        }
+        nextToken
+        startedAt
       }
       users {
         items {
@@ -71,18 +130,24 @@ export const updateSystem =/* GraphQL */
           firstName
           lastName
           systemID
+          _version
+          _deleted
+          _lastChangedAt
           createdAt
           updatedAt
         }
         nextToken
+        startedAt
       }
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteSystem =/* GraphQL */
-`
+export const deleteSystem = /* GraphQL */ `
   mutation DeleteSystem(
     $input: DeleteSystemInput!
     $condition: ModelSystemConditionInput
@@ -99,10 +164,37 @@ export const deleteSystem =/* GraphQL */
           tagID
           assetType
           status
+          roomType
+          accountStatus
+          occupiedStatus
+          assignTo
+          _version
+          _deleted
+          _lastChangedAt
           createdAt
           updatedAt
         }
         nextToken
+        startedAt
+      }
+      tasks {
+        items {
+          id
+          title
+          shortDescription
+          systemID
+          assetID
+          userID
+          status
+          createdAt
+          locale
+          _version
+          _deleted
+          _lastChangedAt
+          updatedAt
+        }
+        nextToken
+        startedAt
       }
       users {
         items {
@@ -111,18 +203,24 @@ export const deleteSystem =/* GraphQL */
           firstName
           lastName
           systemID
+          _version
+          _deleted
+          _lastChangedAt
           createdAt
           updatedAt
         }
         nextToken
+        startedAt
       }
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const createAsset =/* GraphQL */
-`
+export const createAsset = /* GraphQL */ `
   mutation CreateAsset(
     $input: CreateAssetInput!
     $condition: ModelAssetConditionInput
@@ -132,28 +230,22 @@ export const createAsset =/* GraphQL */
       name
       description
       systemID
-      system {
-        id
-        name
-        assets {
-          nextToken
-        }
-        users {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       tagID
       assetType
       status
+      roomType
+      accountStatus
+      occupiedStatus
+      assignTo
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const updateAsset =/* GraphQL */
-`
+export const updateAsset = /* GraphQL */ `
   mutation UpdateAsset(
     $input: UpdateAssetInput!
     $condition: ModelAssetConditionInput
@@ -163,28 +255,22 @@ export const updateAsset =/* GraphQL */
       name
       description
       systemID
-      system {
-        id
-        name
-        assets {
-          nextToken
-        }
-        users {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       tagID
       assetType
       status
+      roomType
+      accountStatus
+      occupiedStatus
+      assignTo
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteAsset =/* GraphQL */
-`
+export const deleteAsset = /* GraphQL */ `
   mutation DeleteAsset(
     $input: DeleteAssetInput!
     $condition: ModelAssetConditionInput
@@ -194,28 +280,22 @@ export const deleteAsset =/* GraphQL */
       name
       description
       systemID
-      system {
-        id
-        name
-        assets {
-          nextToken
-        }
-        users {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       tagID
       assetType
       status
+      roomType
+      accountStatus
+      occupiedStatus
+      assignTo
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const createTask =/* GraphQL */
-`
+export const createTask = /* GraphQL */ `
   mutation CreateTask(
     $input: CreateTaskInput!
     $condition: ModelTaskConditionInput
@@ -232,23 +312,16 @@ export const createTask =/* GraphQL */
           image
           userID
           createdAt
+          locale
+          _version
+          _deleted
+          _lastChangedAt
           updatedAt
         }
         nextToken
+        startedAt
       }
       systemID
-      system {
-        id
-        name
-        assets {
-          nextToken
-        }
-        users {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       assetID
       asset {
         id
@@ -258,18 +331,40 @@ export const createTask =/* GraphQL */
         tagID
         assetType
         status
+        roomType
+        accountStatus
+        occupiedStatus
+        assignTo
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        userName
+        firstName
+        lastName
+        systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
       status
-      userID
       createdAt
+      locale
+      _version
+      _deleted
+      _lastChangedAt
       updatedAt
     }
   }
 `;
-export const updateTask =/* GraphQL */
-`
+export const updateTask = /* GraphQL */ `
   mutation UpdateTask(
     $input: UpdateTaskInput!
     $condition: ModelTaskConditionInput
@@ -286,50 +381,59 @@ export const updateTask =/* GraphQL */
           image
           userID
           createdAt
+          locale
+          _version
+          _deleted
+          _lastChangedAt
           updatedAt
         }
         nextToken
+        startedAt
       }
       systemID
-      system {
-        id
-        name
-        assets {
-          nextToken
-        }
-        users {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       assetID
       asset {
         id
         name
         description
         systemID
-        system {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         tagID
         assetType
         status
+        roomType
+        accountStatus
+        occupiedStatus
+        assignTo
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        userName
+        firstName
+        lastName
+        systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
       status
-      userID
       createdAt
+      locale
+      _version
+      _deleted
+      _lastChangedAt
       updatedAt
     }
   }
 `;
-export const deleteTask =/* GraphQL */
-`
+export const deleteTask = /* GraphQL */ `
   mutation DeleteTask(
     $input: DeleteTaskInput!
     $condition: ModelTaskConditionInput
@@ -346,49 +450,122 @@ export const deleteTask =/* GraphQL */
           image
           userID
           createdAt
+          locale
+          _version
+          _deleted
+          _lastChangedAt
           updatedAt
         }
         nextToken
+        startedAt
       }
       systemID
-      system {
-        id
-        name
-        assets {
-          nextToken
-        }
-        users {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       assetID
       asset {
         id
         name
         description
         systemID
-        system {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         tagID
         assetType
         status
+        roomType
+        accountStatus
+        occupiedStatus
+        assignTo
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        userName
+        firstName
+        lastName
+        systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
       status
       createdAt
+      locale
+      _version
+      _deleted
+      _lastChangedAt
       updatedAt
     }
   }
 `;
-export const createNote =/* GraphQL */
-`
+export const createGuest = /* GraphQL */ `
+  mutation CreateGuest(
+    $input: CreateGuestInput!
+    $condition: ModelGuestConditionInput
+  ) {
+    createGuest(input: $input, condition: $condition) {
+      id
+      number
+      firstName
+      lastName
+      assetID
+      systemID
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateGuest = /* GraphQL */ `
+  mutation UpdateGuest(
+    $input: UpdateGuestInput!
+    $condition: ModelGuestConditionInput
+  ) {
+    updateGuest(input: $input, condition: $condition) {
+      id
+      number
+      firstName
+      lastName
+      assetID
+      systemID
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteGuest = /* GraphQL */ `
+  mutation DeleteGuest(
+    $input: DeleteGuestInput!
+    $condition: ModelGuestConditionInput
+  ) {
+    deleteGuest(input: $input, condition: $condition) {
+      id
+      number
+      firstName
+      lastName
+      assetID
+      systemID
+      status
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createNote = /* GraphQL */ `
   mutation CreateNote(
     $input: CreateNoteInput!
     $condition: ModelNoteConditionInput
@@ -398,23 +575,29 @@ export const createNote =/* GraphQL */
       taskOrAssetID
       comment
       image
+      userID
       user {
         id
         userName
         firstName
         lastName
         systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
-      userID
       createdAt
+      locale
+      _version
+      _deleted
+      _lastChangedAt
       updatedAt
     }
   }
 `;
-export const updateNote =/* GraphQL */
-`
+export const updateNote = /* GraphQL */ `
   mutation UpdateNote(
     $input: UpdateNoteInput!
     $condition: ModelNoteConditionInput
@@ -431,16 +614,22 @@ export const updateNote =/* GraphQL */
         firstName
         lastName
         systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
       createdAt
+      locale
+      _version
+      _deleted
+      _lastChangedAt
       updatedAt
     }
   }
 `;
-export const deleteNote =/* GraphQL */
-`
+export const deleteNote = /* GraphQL */ `
   mutation DeleteNote(
     $input: DeleteNoteInput!
     $condition: ModelNoteConditionInput
@@ -457,16 +646,22 @@ export const deleteNote =/* GraphQL */
         firstName
         lastName
         systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
       createdAt
+      locale
+      _version
+      _deleted
+      _lastChangedAt
       updatedAt
     }
   }
 `;
-export const createTap =/* GraphQL */
-`
+export const createTap = /* GraphQL */ `
   mutation CreateTap(
     $input: CreateTapInput!
     $condition: ModelTapConditionInput
@@ -479,15 +674,16 @@ export const createTap =/* GraphQL */
         name
         description
         systemID
-        system {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         tagID
         assetType
         status
+        roomType
+        accountStatus
+        occupiedStatus
+        assignTo
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
@@ -499,16 +695,25 @@ export const createTap =/* GraphQL */
         firstName
         lastName
         systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
+      tapDate
+      accountStatus
+      occupiedStatus
+      assignTo
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const updateTap =/* GraphQL */
-`
+export const updateTap = /* GraphQL */ `
   mutation UpdateTap(
     $input: UpdateTapInput!
     $condition: ModelTapConditionInput
@@ -521,15 +726,16 @@ export const updateTap =/* GraphQL */
         name
         description
         systemID
-        system {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         tagID
         assetType
         status
+        roomType
+        accountStatus
+        occupiedStatus
+        assignTo
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
@@ -541,16 +747,25 @@ export const updateTap =/* GraphQL */
         firstName
         lastName
         systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
+      tapDate
+      accountStatus
+      occupiedStatus
+      assignTo
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteTap =/* GraphQL */
-`
+export const deleteTap = /* GraphQL */ `
   mutation DeleteTap(
     $input: DeleteTapInput!
     $condition: ModelTapConditionInput
@@ -563,15 +778,16 @@ export const deleteTap =/* GraphQL */
         name
         description
         systemID
-        system {
-          id
-          name
-          createdAt
-          updatedAt
-        }
         tagID
         assetType
         status
+        roomType
+        accountStatus
+        occupiedStatus
+        assignTo
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
@@ -583,16 +799,25 @@ export const deleteTap =/* GraphQL */
         firstName
         lastName
         systemID
+        _version
+        _deleted
+        _lastChangedAt
         createdAt
         updatedAt
       }
+      tapDate
+      accountStatus
+      occupiedStatus
+      assignTo
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const createUser =/* GraphQL */
-`
+export const createUser = /* GraphQL */ `
   mutation CreateUser(
     $input: CreateUserInput!
     $condition: ModelUserConditionInput
@@ -603,13 +828,15 @@ export const createUser =/* GraphQL */
       firstName
       lastName
       systemID
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const updateUser =/* GraphQL */
-`
+export const updateUser = /* GraphQL */ `
   mutation UpdateUser(
     $input: UpdateUserInput!
     $condition: ModelUserConditionInput
@@ -620,13 +847,15 @@ export const updateUser =/* GraphQL */
       firstName
       lastName
       systemID
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteUser =/* GraphQL */
-`
+export const deleteUser = /* GraphQL */ `
   mutation DeleteUser(
     $input: DeleteUserInput!
     $condition: ModelUserConditionInput
@@ -637,6 +866,9 @@ export const deleteUser =/* GraphQL */
       firstName
       lastName
       systemID
+      _version
+      _deleted
+      _lastChangedAt
       createdAt
       updatedAt
     }

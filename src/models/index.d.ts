@@ -48,6 +48,12 @@ export enum AttendantOccupiedStatus {
   OOO = "OOO"
 }
 
+export enum GuestStatus {
+  WAIT = "WAIT",
+  IN = "IN",
+  DONE = "DONE"
+}
+
 
 
 export declare class System {
@@ -114,6 +120,18 @@ export declare class User {
   readonly systemID: string;
   constructor(init: ModelInit<User>);
   static copyOf(source: User, mutator: (draft: MutableModel<User>) => MutableModel<User> | void): User;
+}
+
+export declare class Guest {
+  readonly id: string;
+  readonly number: string;
+  readonly firstName?: string;
+  readonly lastName?: string;
+  readonly assetID: string;
+  readonly systemID: string;
+  readonly status: GuestStatus | keyof typeof GuestStatus;
+  constructor(init: ModelInit<Guest>);
+  static copyOf(source: Guest, mutator: (draft: MutableModel<Guest>) => MutableModel<Guest> | void): Guest;
 }
 
 export declare class Tap {

@@ -46,6 +46,12 @@ enum AttendantOccupiedStatus {
   OOO
 }
 
+enum GuestStatus {
+  WAIT
+  IN
+  DONE
+}
+
 type System @model {
   id: ID!
   name: String!
@@ -81,6 +87,16 @@ type Task @model @key(name: "bySystem", fields: ["systemID", "assetID"]) {
   status: TaskStatus
   createdAt: AWSDateTime!
   locale: String!
+}
+
+type Guest @model @key(name: "bySystem", fields: ["systemID", "assetID"]) {
+  id: ID!
+  number: String!
+  firstName: String
+  lastName: String
+  assetID: ID!
+  systemID: ID!
+  status: GuestStatus!
 }
 
 type Note @model @key(name: "byTask", fields: ["taskOrAssetID"]) {

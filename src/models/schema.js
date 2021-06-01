@@ -447,6 +447,80 @@ export const schema = {
                 }
             ]
         },
+        "Guest": {
+            "name": "Guest",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "number": {
+                    "name": "number",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "firstName": {
+                    "name": "firstName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "lastName": {
+                    "name": "lastName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "assetID": {
+                    "name": "assetID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "systemID": {
+                    "name": "systemID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "status": {
+                    "name": "status",
+                    "isArray": false,
+                    "type": {
+                        "enum": "GuestStatus"
+                    },
+                    "isRequired": true,
+                    "attributes": []
+                }
+            },
+            "syncable": true,
+            "pluralName": "Guests",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "bySystem",
+                        "fields": [
+                            "systemID",
+                            "assetID"
+                        ]
+                    }
+                }
+            ]
+        },
         "Tap": {
             "name": "Tap",
             "fields": {
@@ -619,8 +693,16 @@ export const schema = {
                 "OOI",
                 "OOO"
             ]
+        },
+        "GuestStatus": {
+            "name": "GuestStatus",
+            "values": [
+                "WAIT",
+                "IN",
+                "DONE"
+            ]
         }
     },
     "nonModels": {},
-    "version": "e9ec401c59747b24a681b6ad760d94a4"
+    "version": "990147d4e11b1c1f57fc3539788042c1"
 };
