@@ -81,13 +81,15 @@ const Dashboard = (props) => {
             // </Row>
           }
           <Row>
-            <Col xl="4">
-              {
-                cognitoUser &&
-                <WelcomeComp user={cognitoUser.username}/>
-              }
-            </Col>
-            <Col xl="8">
+            {/*
+              <Col xl="4">
+                {
+                  cognitoUser &&
+                  <WelcomeComp user={cognitoUser.username}/>
+                }
+              </Col>
+              */}
+            <Col xl="12">
               {
                 cognitoUser &&
                 <CleaningTime systemID={cognitoUser.systemID}/>
