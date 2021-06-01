@@ -83,6 +83,12 @@ const SidebarContent = (props) => {
               <li><Link to="/tasks-addTask">{t('Add Task') }</Link></li>
           </ul>
         </li>
+        <li>
+          <Link to="/metrics" className="waves-effect">
+            <i className="bx bx-poll"></i>
+            <span>{t('Metrics')}</span>
+          </Link>
+        </li>
         {
           // <li>
           //   <Link to="/#" className="has-arrow waves-effect">

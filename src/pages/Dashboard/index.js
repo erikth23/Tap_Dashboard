@@ -35,13 +35,10 @@ import CleaningTime from "./CleaningTime";
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 
 
-const GET_CLEANING_TIME_API = "https://271kt734c3.execute-api.us-east-1.amazonaws.com/dev/GetCleaningTime"
-
 const Dashboard = (props) => {
 
   const [cognitoUser, setCognitoUser] = useState();
   const [subscriptions, setSubscriptions] = useState([]);
-  const [cleaningTimes, setCleaningTimes] = useState([]);
   const { t, i18n } = useTranslation();
 
   const changeLanguage = (lng) => {
@@ -57,20 +54,6 @@ const Dashboard = (props) => {
       })
     })
   }, [])
-
-  useEffect(() => {
-    if(cognitoUser && cognitoUser.systemID) {
-        getCleaningTimes()
-    }
-  }, [cognitoUser])
-
-  const getCleaningTimes = async () => {
-    await axios.post(GET_CLEANING_TIME_API, {systemID: cognitoUser.systemID}).then(res => {
-      setCleaningTimes(res.data)
-    }).catch(err => {
-      console.error(err)
-    })
-  }
 
   return (<React.Fragment>
       <div className="page-content">
@@ -106,8 +89,8 @@ const Dashboard = (props) => {
             </Col>
             <Col xl="8">
               {
-                cleaningTimes &&
-                <CleaningTime times={cleaningTimes}/>
+                cognitoUser &&
+                <CleaningTime systemID={cognitoUser.systemID}/>
               }
             </Col>
           </Row>

@@ -28,6 +28,8 @@ import Dashboard from "../pages/Dashboard/index";
 import Systems from "../pages/Systems/index";
 import AddUser from "../pages/Systems/addUser";
 
+//Metrics
+import Metrics from "../pages/Metrics/index";
 
 //Pages
 import PagesStarter from "../pages/Utility/pages-starter";
@@ -46,6 +48,7 @@ const userRoutes = [
 	{ path: "/systems", component: Systems},
 	{ path: "/systems-addUser", component: AddUser},
 	{ path: "/tasks-addTask", component: AddTask},
+	{ path: "/metrics", component: Metrics},
 
 	// this route should be at the end of all other routes
 	{ path: "/", exact: true, component: () => <Redirect to="/dashboard" /> }
