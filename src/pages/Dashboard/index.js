@@ -39,6 +39,7 @@ const Dashboard = (props) => {
 
   const [cognitoUser, setCognitoUser] = useState();
   const [subscriptions, setSubscriptions] = useState([]);
+  const [roomChosen, setRoomChosen] = useState('');
   const { t, i18n } = useTranslation();
 
   const changeLanguage = (lng) => {
@@ -92,7 +93,7 @@ const Dashboard = (props) => {
             <Col xl="12">
               {
                 cognitoUser &&
-                <CleaningTime systemID={cognitoUser.systemID}/>
+                <CleaningTime systemID={cognitoUser.systemID} roomChosen={roomChosen}/>
               }
             </Col>
           </Row>
@@ -114,7 +115,7 @@ const Dashboard = (props) => {
                   <div className="clearfix">
                     {
                        cognitoUser &&
-                        <Rooms systemID={cognitoUser.systemID}/>
+                        <Rooms systemID={cognitoUser.systemID} roomChosen={roomChosen} setRoomChosen={setRoomChosen}/>
                     }
                   </div>
                 </CardBody>

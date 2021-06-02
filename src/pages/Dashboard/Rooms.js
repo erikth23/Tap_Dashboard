@@ -20,7 +20,7 @@ const statusToClass = new Map([
   ]
 ])
 
-const Rooms = ({systemID}) => {
+const Rooms = ({systemID, roomChosen, setRoomChosen}) => {
 
   const [assets, setAssets] = useState([]);
 
@@ -47,7 +47,8 @@ const Rooms = ({systemID}) => {
   return (<React.Fragment>
     <div className="m-3">
       {
-        assets.sort((a, b) => parseInt(a.name) - parseInt(b.name)).map((room, key) => <button className={`btn-lg btn-room ${statusToClass.get(room.status)}`}>
+        assets.sort((a, b) => parseInt(a.name) - parseInt(b.name)).map((room, key) => <button className={`btn-lg btn-room ${statusToClass.get(room.status)}`}
+        onClick={() => setRoomChosen(room.name == roomChosen ? '' : room.name)}>
           {room.name}
         </button>)
       }

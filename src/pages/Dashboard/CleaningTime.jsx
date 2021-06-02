@@ -4,11 +4,10 @@ import ReactApexChart from 'react-apexcharts';
 
 import {useCleaningTimes} from "../../helpers/hooks";
 
-const CleaningTime = ({systemID}) => {
+const CleaningTime = ({systemID, roomChosen}) => {
   const {times, isError, isLoading} = useCleaningTimes(systemID)
   const [series, setSeries] = useState([]);
   const [options, setOptions] = useState({});
-  const [name, setName] = useState('');
   const [roomType, setRoomType] = useState('');
   const [roomTypes, setRoomTypes] = useState('');
   const [accountStatus, setAccountStatus] = useState('');
@@ -27,7 +26,7 @@ const CleaningTime = ({systemID}) => {
       var count = 0;
 
       times.filter(time =>
-        (name == '' || time.name == name) &&
+        (roomChosen == '' || time.name == roomChosen) &&
         (roomType == '' || time.roomType == roomType) &&
         (accountStatus == '' || time.accountStatus == accountStatus)
       ).forEach((time, i) => {
@@ -170,7 +169,7 @@ const CleaningTime = ({systemID}) => {
         }
       })
     }
-  }, [times, roomType, name, accountStatus])
+  }, [times, roomType, roomChosen, accountStatus])
 
   return (
     <div id = "chart" >
