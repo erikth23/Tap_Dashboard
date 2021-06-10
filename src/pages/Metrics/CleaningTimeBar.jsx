@@ -8,14 +8,25 @@ const CleaningTimeBar = ({systemID}) => {
   const {times, isError, isLoading} = useCleaningTimes(systemID)
   const [series, setSeries] = useState([]);
   const [options, setOptions] = useState({});
+  const [roomType, setRoomType] = useState('');
+  const [roomTypes, setRoomTypes] = useState('');
+  const [accountStatus, setAccountStatus] = useState('');
+  const [accountStatuses, setAccountStatuses] = useState([]);
+  const [typeButtonExpanded, setTypeButtonExpanded] = useState(false);
+  const [statusButtonExpanded, setStatusButtonExpanded] = useState(false);
 
   useEffect(() => {
     if(!isLoading) {
       const data = {};
       var max_ovr_diff = 0;
       var min_ovr_diff = 60;
+      const _roomTypes = [];
+      const _accountStatuses = [];
 
-      times.forEach((time, i) => {
+      times.filter(time =>
+        (roomType == '' || time.roomType == roomType) &&
+        (accountStatus == '' || time.accountStatus == accountStatus)
+      ).forEach((time, i) => {
         const start_date = new Date(time.startTime);
         const end_date = new Date(time.endTime);
         const one_week_ago = new Date(Date.now() - 604800000)
@@ -23,6 +34,14 @@ const CleaningTimeBar = ({systemID}) => {
 
         if(min_diff < 1 || min_diff > 60) {
           return;
+        }
+
+        if(_roomTypes.indexOf(time.roomType) == -1) {
+          _roomTypes.push(time.roomType);
+        }
+
+        if(time.accountStatus && _accountStatuses.indexOf(time.accountStatus) == -1) {
+          _accountStatuses.push(time.accountStatus)
         }
 
         if(start_date < one_week_ago) {
@@ -41,6 +60,8 @@ const CleaningTimeBar = ({systemID}) => {
           data[date].total_min += min_diff;
         }
       });
+      setRoomTypes(_roomTypes)
+      setAccountStatuses(_accountStatuses)
 
       var data_arr = [];
       for(var key in data) {
@@ -132,10 +153,64 @@ const CleaningTimeBar = ({systemID}) => {
         },
       })
     }
-  }, [times])
+  }, [times, roomType, accountStatus])
 
   return (
     <div id = "chart" >
+      <div className="d-flex">
+        <div className="d-flex mr-4">
+          <Dropdown
+            isOpen={typeButtonExpanded}
+            toggle={() => setTypeButtonExpanded(!typeButtonExpanded)}
+            className="mr-2"
+            >
+            <DropdownToggle className="btn btn-secondary" caret>
+              {roomType ? `${roomType} ` : "Room Type "}
+              <i className="mdi mdi-chevron-down"></i>
+            </DropdownToggle>
+            <DropdownMenu>
+              {
+                roomTypes && roomTypes.map((item, i) => (
+                    <DropdownItem key={i} onClick={() => {
+                        setTypeButtonExpanded(false)
+                        setRoomType(item)
+                      }}>{item}</DropdownItem>
+                ))
+              }
+            </DropdownMenu>
+          </Dropdown>
+          {
+            roomType != '' &&
+            <Button className="btn-danger " onClick={() => setRoomType('')}><i className="bx bx-x-circle"/></Button>
+          }
+        </div>
+        <div className='d-flex'>
+          <Dropdown
+            isOpen={statusButtonExpanded}
+            toggle={() => setStatusButtonExpanded(!statusButtonExpanded)}
+            className="mr-2"
+            >
+            <DropdownToggle className="btn btn-secondary" caret>
+              {accountStatus ? `${accountStatus} ` : "Account Status "}
+              <i className="mdi mdi-chevron-down"></i>
+            </DropdownToggle>
+            <DropdownMenu>
+              {
+                accountStatuses && accountStatuses.map((item, i) => (
+                    <DropdownItem key={i} onClick={() => {
+                        setStatusButtonExpanded(false)
+                        setAccountStatus(item)
+                      }}>{item}</DropdownItem>
+                ))
+              }
+            </DropdownMenu>
+          </Dropdown>
+          {
+            accountStatus != '' &&
+            <Button className="btn-danger " onClick={() => setAccountStatus('')}><i className="bx bx-x-circle"/></Button>
+          }
+        </div>
+      </div>
       <ReactApexChart options={options} series={series} type="line" height={350}/>
     </div>
   );
