@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import {
-  Badge,
   Button,
   Row,
   Col,
@@ -12,43 +11,33 @@ import {
   CardTitle,
   FormGroup,
   Spinner
-} from "reactstrap";
+} from 'reactstrap';
 import {BrowserRouter as Router, useHistory} from 'react-router-dom';
 import { AvForm, AvField } from "availity-reactstrap-validation";
-import { useTranslation } from 'react-i18next';
 import {API, Auth, DataStore} from 'aws-amplify';
 
-import {Asset, Task} from '../../models';
-
-import {useSystems, useTasks} from '../../helpers/hooks';
+import {Guest, Asset} from '../../models';
 
 const LOGEVENT_API = "https://ji7sxv0nt2.execute-api.us-east-1.amazonaws.com/default/LogEvent";
 
-const taskStatusArr = [
+const guestStatusArr = [
   {
-    value: 'NOTTAKEN',
-    label: 'Not Taken'
+    value: 'WAIT',
+    label: 'Waiting for Room'
   },
   {
-    value: 'INPROGRESS',
-    label: 'In Progress'
+    value: 'IN',
+    label: 'In The Room'
   },
   {
-    value: 'STUCK',
-    label: 'Stuck'
-  },
-  {
-    value: 'COMPLETED',
-    label: 'Completed'
+    value: 'DONE',
+    label: 'Checked Out'
   }]
 
-const AddTask = (props) => {
-
-  const [success, setSuccess] = useState(false);
+const Guests = (props) => {
   const [assets, setAssets] = useState([]);
   const [cognitoUser, setCognitoUser] = useState();
   const history = useHistory();
-  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     Auth.currentSession().then(data => setCognitoUser({
@@ -75,19 +64,18 @@ const AddTask = (props) => {
   const handleSubmit = async (event, error, values) => {
     const input = {
       systemID: cognitoUser.systemID,
-      title: values.title,
-      shortDescription: values.shortDescription,
-      locale: i18n.language,
+      number: values.number,
+      firstName: values.firstName,
+      lastName: values.lastName,
       status: values.stat,
-      assetID: values.assetID || assets[0].id,
-      userID: 'nouser',
+      assetID: values.assetID,
     }
 
     console.log(input);
 
     let result = null;
     try {
-      await DataStore.save(new Task(input))
+      await DataStore.save(new Guest(input))
       result = input;
     } catch (err) {
       result = err;
@@ -103,9 +91,8 @@ const AddTask = (props) => {
       event: result
     })
 
-    history.push('/tasks')
+    history.push('/guests')
   }
-
 
   if(!cognitoUser) {
     return (
@@ -118,15 +105,16 @@ const AddTask = (props) => {
   } else {
     const defaultValues = {
       systemID: cognitoUser.systemID,
-      title: '',
-      shortDescription: '',
-      status: 'NOTTAKEN',
+      number: '',
+      firstName: '',
+      lastName: '',
+      stat: 'WAIT',
       assetID: ''
     }
     return (<React.Fragment>
       <div className="page-content">
         <Container fluid="fluid">
-          <Breadcrumbs title={t('Tasks')} breadcrumbItem={t('Add Task')}/>
+          <Breadcrumbs title={'Tasks'} breadcrumbItem={'Add Task'}/>
           <Row>
             <Col>
               <Card>
@@ -134,26 +122,28 @@ const AddTask = (props) => {
                 <CardBody>
                   <AvForm onSubmit={handleSubmit} model={defaultValues}>
                     <AvField
-                      name="title"
-                      label="Title "
-                      placeholder="Title of the task"
+                      name="firstName"
+                      label="First Name"
+                      placeholder="First Name"
                       type="text"
-                      errorMessage="This field is required"
-                      validate={{
-                        required: {value: true}
-                      }}
                     />
                     <AvField
-                      name="shortDescription"
-                      label="Short Description "
-                      placeholder="Brief Description of the Task"
+                      name="lastName"
+                      label="Last Name"
+                      placeholder="Last Name"
                       type="text"
-                      errorMessage="This field is required"
+                    />
+                    <AvField
+                      name="number"
+                      label="Phone Number"
+                      placeholder="Phone Number of Guest"
+                      type="text"
+                      errorMessage="The Phone Number is Required"
                       validate={{
                         required: {value: true}
                       }}
                     />
-                    <AvField type='select' name='assetID' label='Asset for Task'>
+                    <AvField type='select' name='assetID' label='Guest Room'>
                       {
                         assets.map(asset => {
                           return <option value={asset.id}>{asset.name}</option>
@@ -161,7 +151,7 @@ const AddTask = (props) => {
                       }
                     </AvField>
                     <AvField type="select" name="stat" label="Status">
-                      {taskStatusArr.map(status => <option value={status.value}>{status.label}</option>)}
+                      {guestStatusArr.map(status => <option value={status.value}>{status.label}</option>)}
                     </AvField>
                     <FormGroup>
                       <div>
@@ -171,7 +161,6 @@ const AddTask = (props) => {
                         <Button type="reset" color="secondary">
                           Cancel
                         </Button>
-                        {success && <Badge pill="pill" className="badge-soft-success mr-1 ml-3">Success</Badge>}
                       </div>
                     </FormGroup>
                 </AvForm>
@@ -185,4 +174,4 @@ const AddTask = (props) => {
   }
 }
 
-export default AddTask;
+export default Guests

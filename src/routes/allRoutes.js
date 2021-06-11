@@ -31,6 +31,10 @@ import AddUser from "../pages/Systems/addUser";
 //Metrics
 import Metrics from "../pages/Metrics/index";
 
+//Guests
+import Guests from "../pages/Guests/addGuest";
+import GuestsList from "../pages/Guests/guestsList";
+
 //Pages
 import PagesStarter from "../pages/Utility/pages-starter";
 import PagesMaintenance from "../pages/Utility/pages-maintenance";
@@ -49,6 +53,8 @@ const userRoutes = [
 	{ path: "/systems-addUser", component: AddUser},
 	{ path: "/tasks-addTask", component: AddTask},
 	{ path: "/metrics", component: Metrics},
+	{ path: "/guests", component: GuestsList},
+	{ path: "/guests-addGuest", component: Guests},
 
 	// this route should be at the end of all other routes
 	{ path: "/", exact: true, component: () => <Redirect to="/dashboard" /> }
