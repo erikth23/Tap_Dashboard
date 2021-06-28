@@ -95,7 +95,7 @@ const GuestsList = (props) => {
   return (<React.Fragment>
       <div className="page-content">
         <Container fluid="fluid">
-          <Breadcrumbs title="Tasks" breadcrumbItem="Task List"/> {/* Render Breadcrumbs */}
+          <Breadcrumbs title="Guests" breadcrumbItem="Guest List"/> {/* Render Breadcrumbs */}
           <Row>
             <Col xl={12}>
               {guestStatusArr.map(status =>

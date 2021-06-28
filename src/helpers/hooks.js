@@ -21,7 +21,6 @@ export function useSystems(email) {
 
 export function useCleaningTimes(systemID) {
   let {data, error} = useSWR(`/getCleaningTime/${systemID}`, () => axios.post(GET_CLEANING_TIME_APIURL, {systemID: systemID}).then(res => {
-    console.log(res.data)
     return res.data
   }).catch(error => {
     console.log(error)

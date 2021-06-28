@@ -114,7 +114,7 @@ const Guests = (props) => {
     return (<React.Fragment>
       <div className="page-content">
         <Container fluid="fluid">
-          <Breadcrumbs title={'Tasks'} breadcrumbItem={'Add Task'}/>
+          <Breadcrumbs title={'Guests'} breadcrumbItem={'Add Guest'}/>
           <Row>
             <Col>
               <Card>
