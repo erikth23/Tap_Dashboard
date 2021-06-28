@@ -52,6 +52,12 @@ enum GuestStatus {
   DONE
 }
 
+type RoomWifi {
+  userName: String!
+  password: String!
+  notes: String
+}
+
 type System @model {
   id: ID!
   name: String!
@@ -72,6 +78,7 @@ type Asset @model @key(name: "bySystem", fields: ["systemID", "tagID"]) {
   accountStatus: AttendantAccountStatus
   occupiedStatus: AttendantOccupiedStatus
   assignTo: ID
+  wifi: RoomWifi
 }
 
 type Task @model @key(name: "bySystem", fields: ["systemID", "assetID"]) {

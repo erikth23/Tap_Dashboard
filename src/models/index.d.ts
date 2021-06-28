@@ -54,7 +54,12 @@ export enum GuestStatus {
   DONE = "DONE"
 }
 
-
+export declare class RoomWifi {
+  readonly userName: string;
+  readonly password: string;
+  readonly notes?: string;
+  constructor(init: ModelInit<RoomWifi>);
+}
 
 export declare class System {
   readonly id: string;
@@ -78,6 +83,7 @@ export declare class Asset {
   readonly accountStatus?: AttendantAccountStatus | keyof typeof AttendantAccountStatus;
   readonly occupiedStatus?: AttendantOccupiedStatus | keyof typeof AttendantOccupiedStatus;
   readonly assignTo?: string;
+  readonly wifi?: RoomWifi;
   constructor(init: ModelInit<Asset>);
   static copyOf(source: Asset, mutator: (draft: MutableModel<Asset>) => MutableModel<Asset> | void): Asset;
 }

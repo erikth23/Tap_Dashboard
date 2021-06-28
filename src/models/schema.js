@@ -156,6 +156,15 @@ export const schema = {
                     "type": "ID",
                     "isRequired": false,
                     "attributes": []
+                },
+                "wifi": {
+                    "name": "wifi",
+                    "isArray": false,
+                    "type": {
+                        "nonModel": "RoomWifi"
+                    },
+                    "isRequired": false,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -703,6 +712,33 @@ export const schema = {
             ]
         }
     },
-    "nonModels": {},
-    "version": "990147d4e11b1c1f57fc3539788042c1"
+    "nonModels": {
+        "RoomWifi": {
+            "name": "RoomWifi",
+            "fields": {
+                "userName": {
+                    "name": "userName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "password": {
+                    "name": "password",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "notes": {
+                    "name": "notes",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        }
+    },
+    "version": "fa3108326a63f1d802f9ad5b0c4a4b7c"
 };

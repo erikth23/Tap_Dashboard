@@ -168,6 +168,11 @@ export const syncAssets = /* GraphQL */ `
         accountStatus
         occupiedStatus
         assignTo
+        wifi {
+          userName
+          password
+          notes
+        }
         _version
         _deleted
         _lastChangedAt
@@ -193,6 +198,11 @@ export const getAsset = /* GraphQL */ `
       accountStatus
       occupiedStatus
       assignTo
+      wifi {
+        userName
+        password
+        notes
+      }
       _version
       _deleted
       _lastChangedAt
@@ -220,6 +230,11 @@ export const listAssets = /* GraphQL */ `
         accountStatus
         occupiedStatus
         assignTo
+        wifi {
+          userName
+          password
+          notes
+        }
         _version
         _deleted
         _lastChangedAt
@@ -335,6 +350,11 @@ export const getTask = /* GraphQL */ `
         accountStatus
         occupiedStatus
         assignTo
+        wifi {
+          userName
+          password
+          notes
+        }
         _version
         _deleted
         _lastChangedAt
@@ -690,6 +710,11 @@ export const getTap = /* GraphQL */ `
         accountStatus
         occupiedStatus
         assignTo
+        wifi {
+          userName
+          password
+          notes
+        }
         _version
         _deleted
         _lastChangedAt

@@ -237,6 +237,11 @@ export const createAsset = /* GraphQL */ `
       accountStatus
       occupiedStatus
       assignTo
+      wifi {
+        userName
+        password
+        notes
+      }
       _version
       _deleted
       _lastChangedAt
@@ -262,6 +267,11 @@ export const updateAsset = /* GraphQL */ `
       accountStatus
       occupiedStatus
       assignTo
+      wifi {
+        userName
+        password
+        notes
+      }
       _version
       _deleted
       _lastChangedAt
@@ -287,6 +297,11 @@ export const deleteAsset = /* GraphQL */ `
       accountStatus
       occupiedStatus
       assignTo
+      wifi {
+        userName
+        password
+        notes
+      }
       _version
       _deleted
       _lastChangedAt
@@ -335,6 +350,11 @@ export const createTask = /* GraphQL */ `
         accountStatus
         occupiedStatus
         assignTo
+        wifi {
+          userName
+          password
+          notes
+        }
         _version
         _deleted
         _lastChangedAt
@@ -404,6 +424,11 @@ export const updateTask = /* GraphQL */ `
         accountStatus
         occupiedStatus
         assignTo
+        wifi {
+          userName
+          password
+          notes
+        }
         _version
         _deleted
         _lastChangedAt
@@ -473,6 +498,11 @@ export const deleteTask = /* GraphQL */ `
         accountStatus
         occupiedStatus
         assignTo
+        wifi {
+          userName
+          password
+          notes
+        }
         _version
         _deleted
         _lastChangedAt
@@ -681,6 +711,11 @@ export const createTap = /* GraphQL */ `
         accountStatus
         occupiedStatus
         assignTo
+        wifi {
+          userName
+          password
+          notes
+        }
         _version
         _deleted
         _lastChangedAt
@@ -733,6 +768,11 @@ export const updateTap = /* GraphQL */ `
         accountStatus
         occupiedStatus
         assignTo
+        wifi {
+          userName
+          password
+          notes
+        }
         _version
         _deleted
         _lastChangedAt
@@ -785,6 +825,11 @@ export const deleteTap = /* GraphQL */ `
         accountStatus
         occupiedStatus
         assignTo
+        wifi {
+          userName
+          password
+          notes
+        }
         _version
         _deleted
         _lastChangedAt
