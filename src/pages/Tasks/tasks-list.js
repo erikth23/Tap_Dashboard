@@ -136,7 +136,8 @@ const TasksList = (props) => {
                       <table className="table table-nowrap table-centered mb-0">
                         <tbody>
                           {
-                            tasks && tasks.filter(task => task.status == status && (status != "COMPLETED" || getTimeDiff(task.updatedAt))).map(task => {
+                            tasks && tasks.filter(task => task.status == status && (status != "COMPLETED" || getTimeDiff(task.updatedAt)))
+                              .map(task => {
                               let date = new Date(task.createdAt);
                               const _title = !task.title.includes('{') ? task.title : (task.title.includes('=') ? JSON.parse(task.title.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))[i18n.language] : JSON.parse(task.title)[i18n.language])
                               return (<tr>

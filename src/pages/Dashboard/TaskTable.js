@@ -40,11 +40,20 @@ const TaskTable = ({systemID}) => {
 
   const getTasks = async () => {
     try {
+      console.log('getting new tasks')
       const _tasks = await DataStore.query(Task, c => c.systemID('eq', systemID))
       setTasks(_tasks)
     } catch (err) {
       console.error(err)
     }
+  }
+
+  const getTimeDiff = (updatedAt) => {
+    const today = new Date();
+    const timestamp = new Date(updatedAt);
+    const days = Math.round(Math.abs((timestamp - today)) / (24 * 60 * 60 * 1000));
+
+    return days < 1;
   }
 
   return (<React.Fragment>
@@ -65,7 +74,7 @@ const TaskTable = ({systemID}) => {
               </thead>
               <tbody>
                 {
-                  tasks && tasks.map((task) => {
+                  tasks && tasks.filter(task => task.status != "COMPLETED" || getTimeDiff(task.updatedAt)).map((task) => {
                     const _title = !task.title.includes('{') ? task.title : (task.title.includes('=') ? JSON.parse(task.title.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))[i18n.language] : JSON.parse(task.title)[i18n.language])
                     return (<tr>
                       <td>{_title}</td>
