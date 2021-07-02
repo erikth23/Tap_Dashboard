@@ -74,7 +74,8 @@ const CleaningTimeBar = ({systemID}) => {
           name: "Average Cleaning Time",
           type: "line",
           data: data_arr.map(item => {
-            const avg_diff = Math.round(item.total_min / item.total)
+            const total = item.total
+            const avg_diff = Math.round(item.total_min / total)
 
             if(avg_diff < min_ovr_diff) {
               min_ovr_diff = avg_diff
@@ -83,6 +84,15 @@ const CleaningTimeBar = ({systemID}) => {
             if(avg_diff > max_ovr_diff) {
               max_ovr_diff = avg_diff
             }
+
+            if(total < min_ovr_diff) {
+              min_ovr_diff = total
+            }
+
+            if(total > max_ovr_diff) {
+              max_ovr_diff = total
+            }
+
             return avg_diff;
           })
         },
