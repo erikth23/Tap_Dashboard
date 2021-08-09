@@ -141,7 +141,7 @@ const CleaningTime = ({systemID, roomChosen}) => {
           title: {
             text: 'Average Time(Minutes)'
           },
-          min: min_ovr_diff < _average ? min_ovr_diff - 5 : _average - 5,
+          min: Math.max(min_ovr_diff < _average ? min_ovr_diff - 5 : _average - 5, 0),
           max: max_ovr_diff > _average ? max_ovr_diff + 5 : _average + 5
         },
         legend: {

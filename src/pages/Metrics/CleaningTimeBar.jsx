@@ -151,7 +151,7 @@ const CleaningTimeBar = ({systemID}) => {
           title: {
             text: 'Average Time(Minutes)'
           },
-          min: min_ovr_diff - 5,
+          min: Math.max(min_ovr_diff - 5, 0),
           max: max_ovr_diff + 5
         },
         legend: {
