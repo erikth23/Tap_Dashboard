@@ -23,6 +23,8 @@ const statusToClass = new Map([
 ])
 
 const ONE_HALF_DAY = 43200000;
+const ONE_HOUR = 3600000;
+const ONE_MIN = 60000;
 
 const Rooms = ({systemID, roomChosen, setRoomChosen, setRoomPill}) => {
 
@@ -51,8 +53,11 @@ const Rooms = ({systemID, roomChosen, setRoomChosen, setRoomPill}) => {
   const isCleanedToday = (roomName) => {
     return times && times.find(time => {
       const start_time = new Date(time.startTime);
+      const end_time = new Date(time.endTime);
 
       return time.name === roomName &&
+      end_time - start_time > ONE_MIN &&
+      end_time - start_time < ONE_HOUR &&
       Date.now() - start_time < ONE_HALF_DAY
     })
   }
