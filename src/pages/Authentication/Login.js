@@ -11,7 +11,7 @@ import {
 
 // Redux
 import {connect} from 'react-redux';
-import {withRouter, Link, useHistory} from 'react-router-dom';
+import {withRouter, Link} from 'react-router-dom';
 
 // availity-reactstrap-validation
 import {AvForm, AvField} from 'availity-reactstrap-validation';
@@ -24,8 +24,6 @@ import profile from "../../assets/images/profile-img.png";
 import logo from "../../assets/images/logo.svg";
 
 const Login = (props) => {
-
-  let history = useHistory();
 
   // handleValidSubmit
   function handleValidSubmit(event, values) {

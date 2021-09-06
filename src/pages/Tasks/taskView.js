@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React, {useState, useEffect} from 'react';
 import {
-  Badge,
   Button,
   Card,
   CardBody,
@@ -43,7 +42,6 @@ const TaskView = ({setViewTask, systemID, _task, runUpdateTask, username }) => {
   const [updated, setUpdated] = useState(false);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState();
-  const [subscriptions, setSubscriptions] = useState([]);
 
   const [users, setUsers] = useState([]);
   const {i18n} = useTranslation();
@@ -137,7 +135,7 @@ const TaskView = ({setViewTask, systemID, _task, runUpdateTask, username }) => {
             </div>
             <div className='mt-3'>
               <h5>Task Status</h5>
-              <TaskDropdown initial={taskStatusArr.find(status => task.status == status.value).label} changeFunction={(res) => {
+              <TaskDropdown initial={taskStatusArr.find(status => task.status === status.value).label} changeFunction={(res) => {
                   setUpdated(true);
                   setTask({...task, status: res.value});
                 }} items={taskStatusArr}/>

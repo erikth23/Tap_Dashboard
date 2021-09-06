@@ -4,7 +4,7 @@ import {
   Container,
   Row
 } from "reactstrap";
-import { Auth, DataStore } from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 import { useTranslation } from 'react-i18next';
 
 import CleaningTimeBar from "./CleaningTimeBar";

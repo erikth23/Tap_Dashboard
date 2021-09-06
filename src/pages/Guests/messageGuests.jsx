@@ -9,12 +9,11 @@ import {
   Card,
   CardBody,
   CardTitle,
-  FormGroup,
-  Spinner
+  FormGroup
 } from 'reactstrap';
 import {BrowserRouter as Router, useHistory} from 'react-router-dom';
 import { AvForm, AvField } from "availity-reactstrap-validation";
-import {API, Auth, DataStore} from 'aws-amplify';
+import {Auth, DataStore} from 'aws-amplify';
 
 import {Asset, Guest} from '../../models';
 
@@ -95,12 +94,12 @@ const MessageGuests = (props) => {
                     <AvForm onSubmit={handleSubmit} model={defaultValues}>
                       <AvField type='select' name='guest' label='Guest'>
                         {
-                          guests.filter(guest => guest.status != 'DONE')
+                          guests.filter(guest => guest.status !== 'DONE')
                           .map(guest => {
-                            var assetName = guest.id == ALL ? ALL : assets.find(asset => asset.id == guest.assetID)
+                            var assetName = guest.id === ALL ? ALL : assets.find(asset => asset.id === guest.assetID)
                             if(!assetName) {
                               assetName = guest.name
-                            } else if(assetName != ALL) {
+                            } else if(assetName !== ALL) {
                               assetName = assetName.name
                             }
                             return <option value={guest.id}>{assetName}</option>

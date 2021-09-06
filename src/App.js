@@ -2,10 +2,10 @@ import React from 'react';
 
 import {Switch, BrowserRouter as Router, Route} from "react-router-dom";
 import {connect} from "react-redux";
-import {AmplifyAuthenticator, AmplifySignIn, AmplifySignOut, AmplifySignUp, AmplifyConfirmSignUp } from '@aws-amplify/ui-react';
+import {AmplifyAuthenticator, AmplifySignIn, AmplifySignUp, AmplifyConfirmSignUp } from '@aws-amplify/ui-react';
 
 // Import Routes all
-import {userRoutes, authRoutes} from "./routes/allRoutes";
+import {userRoutes} from "./routes/allRoutes";
 
 // Import all middleware
 import Authmiddleware from "./routes/middleware/Authmiddleware";
@@ -13,12 +13,9 @@ import Authmiddleware from "./routes/middleware/Authmiddleware";
 // layouts Format
 import VerticalLayout from "./components/VerticalLayout/";
 import HorizontalLayout from "./components/HorizontalLayout/";
-import NonAuthLayout from "./components/NonAuthLayout";
 
 // Import scss
 import "./assets/scss/theme.scss";
-
-import fakeBackend from './helpers/AuthType/fakeBackend';
 
 
 const App = (props) => {

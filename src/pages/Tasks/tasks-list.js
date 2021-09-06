@@ -8,20 +8,13 @@ import {
   Card,
   CardBody,
   CardTitle,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-  ButtonDropdown,
-  Button,
-  Spinner
+  Button
 } from "reactstrap";
-import {BrowserRouter as Router, useHistory} from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
 //Import Breadcrumb
 import Breadcrumbs from '../../components/Common/Breadcrumb';
-import {Auth, DataStore, SortDirection} from 'aws-amplify';
+import {Auth, DataStore} from 'aws-amplify';
 import {Task} from '../../models';
 
 import TaskView from './taskView';
@@ -41,8 +34,7 @@ const TasksList = (props) => {
   const [cognitoUser, setCognitoUser] = useState();
   const [tasks, setTasks] = useState([]);
   const [viewTask, setViewTask] = useState();
-  const history = useHistory();
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const commaRegexp = /, (?=\w{2,3}=)/g
   var today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -136,7 +128,7 @@ const TasksList = (props) => {
                       <table className="table table-nowrap table-centered mb-0">
                         <tbody>
                           {
-                            tasks && tasks.filter(task => task.status == status && (status != "COMPLETED" || getTimeDiff(task.updatedAt)))
+                            tasks && tasks.filter(task => task.status === status && (status !== "COMPLETED" || getTimeDiff(task.updatedAt)))
                               .map(task => {
                               let date = new Date(task.createdAt);
                               const _title = !task.title.includes('{') ? task.title : (task.title.includes('=') ? JSON.parse(task.title.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))[i18n.language] : JSON.parse(task.title)[i18n.language])

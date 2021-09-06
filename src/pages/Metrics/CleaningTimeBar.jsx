@@ -24,8 +24,8 @@ const CleaningTimeBar = ({systemID}) => {
       const _accountStatuses = [];
 
       times.filter(time =>
-        (roomType == '' || time.roomType == roomType) &&
-        (accountStatus == '' || time.accountStatus == accountStatus)
+        (roomType === '' || time.roomType === roomType) &&
+        (accountStatus === '' || time.accountStatus === accountStatus)
       ).forEach((time, i) => {
         const start_date = new Date(time.startTime);
         const end_date = new Date(time.endTime);
@@ -36,11 +36,11 @@ const CleaningTimeBar = ({systemID}) => {
           return;
         }
 
-        if(_roomTypes.indexOf(time.roomType) == -1) {
+        if(_roomTypes.indexOf(time.roomType) === -1) {
           _roomTypes.push(time.roomType);
         }
 
-        if(time.accountStatus && _accountStatuses.indexOf(time.accountStatus) == -1) {
+        if(time.accountStatus && _accountStatuses.indexOf(time.accountStatus) === -1) {
           _accountStatuses.push(time.accountStatus)
         }
 
@@ -190,7 +190,7 @@ const CleaningTimeBar = ({systemID}) => {
             </DropdownMenu>
           </Dropdown>
           {
-            roomType != '' &&
+            roomType !== '' &&
             <Button className="btn-danger " onClick={() => setRoomType('')}><i className="bx bx-x-circle"/></Button>
           }
         </div>
@@ -216,7 +216,7 @@ const CleaningTimeBar = ({systemID}) => {
             </DropdownMenu>
           </Dropdown>
           {
-            accountStatus != '' &&
+            accountStatus !== '' &&
             <Button className="btn-danger " onClick={() => setAccountStatus('')}><i className="bx bx-x-circle"/></Button>
           }
         </div>

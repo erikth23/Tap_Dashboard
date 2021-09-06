@@ -10,17 +10,14 @@ import {
   Card,
   CardBody,
   CardTitle,
-  FormGroup,
-  Spinner
+  FormGroup
 } from "reactstrap";
 import {BrowserRouter as Router, useHistory} from 'react-router-dom';
 import { AvForm, AvField } from "availity-reactstrap-validation";
 import { useTranslation } from 'react-i18next';
-import {API, Auth, DataStore} from 'aws-amplify';
+import {Auth, DataStore} from 'aws-amplify';
 
 import {Asset, Task} from '../../models';
-
-import {useSystems, useTasks} from '../../helpers/hooks';
 
 const LOGEVENT_API = "https://ji7sxv0nt2.execute-api.us-east-1.amazonaws.com/default/LogEvent";
 

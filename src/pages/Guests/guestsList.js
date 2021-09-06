@@ -1,6 +1,4 @@
-import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import {Link} from "react-router-dom";
 import {
   Row,
   Col,
@@ -8,21 +6,12 @@ import {
   Card,
   CardBody,
   CardTitle,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-  ButtonDropdown,
-  Button,
-  Spinner,
   Table
 } from "reactstrap";
-import {BrowserRouter as Router, useHistory} from "react-router-dom";
-import { useTranslation } from 'react-i18next';
 
 //Import Breadcrumb
 import Breadcrumbs from '../../components/Common/Breadcrumb';
-import {Auth, DataStore, SortDirection} from 'aws-amplify';
+import {Auth, DataStore} from 'aws-amplify';
 import {Asset, Guest} from '../../models';
 import UserItem from './userItem';
 
@@ -40,16 +29,12 @@ const guestStatusArr = [
     label: 'Checked Out'
   }]
 
-
-const LOGEVENT_API = "https://ji7sxv0nt2.execute-api.us-east-1.amazonaws.com/default/LogEvent";
-
 const GuestsList = (props) => {
 
   const [cognitoUser, setCognitoUser] = useState();
   const [guests, setGuests] = useState([]);
   const [assets, setAssets] = useState([]);
-  const history = useHistory();
-  const commaRegexp = /, (?=\w{2,3}=)/g
+  // const commaRegexp = /, (?=\w{2,3}=)/g
 
   useEffect(() => {
     Auth.currentSession().then(data => setCognitoUser({
@@ -106,7 +91,7 @@ const GuestsList = (props) => {
                       <Table className="table-dentered table-nowrap table-hover">
                         <tbody>
                           {
-                            guests && guests.filter(guest => guest.status == status.value).map(guest =>
+                            guests && guests.filter(guest => guest.status === status.value).map(guest =>
                               <UserItem guest={guest} guestStatusArr={guestStatusArr} assets={assets}/>
                             )
                           }

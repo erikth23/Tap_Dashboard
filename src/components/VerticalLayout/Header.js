@@ -1,31 +1,17 @@
 import React, {useState} from 'react';
 
 import {connect} from "react-redux";
-import {Row, Col} from "reactstrap";
 
 import {Link} from "react-router-dom";
 
-// Reactstrap
-import {Dropdown, DropdownToggle, DropdownMenu} from "reactstrap";
-
 // Import menuDropdown
 import LanguageDropdown from "../CommonForBoth/TopbarDropdown/LanguageDropdown";
-import NotificationDropdown from "../CommonForBoth/TopbarDropdown/NotificationDropdown";
 import ProfileMenu from "../CommonForBoth/TopbarDropdown/ProfileMenu";
 
-import megamenuImg from "../../assets/images/megamenu-img.png";
 import logo from "../../assets/images/logo.svg";
 import logoLightPng from "../../assets/images/logo-light.png";
 import logoLightSvg from "../../assets/images/logo-light.svg";
 import logoDark from "../../assets/images/logo-dark.png";
-
-// import images
-import github from "../../assets/images/brands/github.png";
-import bitbucket from "../../assets/images/brands/bitbucket.png";
-import dribbble from "../../assets/images/brands/dribbble.png";
-import dropbox from "../../assets/images/brands/dropbox.png";
-import mail_chimp from "../../assets/images/brands/mail_chimp.png";
-import slack from "../../assets/images/brands/slack.png";
 
 //i18n
 import { useTranslation } from 'react-i18next';
@@ -36,8 +22,6 @@ import {showRightSidebarAction, toggleLeftmenu, changeSidebarType} from "../../s
 const Header = (props) => {
 
   const [search, setsearch] = useState(false);
-  const [megaMenu, setmegaMenu] = useState(false);
-  const [socialDrp, setsocialDrp] = useState(false);
   const { t } = useTranslation();
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);

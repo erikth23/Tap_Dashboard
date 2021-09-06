@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Badge, Card, CardBody, CardTitle, Spinner} from 'reactstrap';
+import {Badge, Card, CardBody, CardTitle} from 'reactstrap';
 import {useTranslation} from 'react-i18next';
 import {DataStore} from 'aws-amplify';
 import {Task} from '../../models';
@@ -74,7 +74,7 @@ const TaskTable = ({systemID}) => {
               </thead>
               <tbody>
                 {
-                  tasks && tasks.filter(task => task.status != "COMPLETED" || getTimeDiff(task.updatedAt)).map((task) => {
+                  tasks && tasks.filter(task => task.status !== "COMPLETED" || getTimeDiff(task.updatedAt)).map((task) => {
                     const _title = !task.title.includes('{') ? task.title : (task.title.includes('=') ? JSON.parse(task.title.replace("{", "{\"").replaceAll(commaRegexp, "\",\"").replaceAll("=", "\":\"").replace("}", "\"}"))[i18n.language] : JSON.parse(task.title)[i18n.language])
                     return (<tr>
                       <td>{_title}</td>

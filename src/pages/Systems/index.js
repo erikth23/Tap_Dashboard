@@ -81,7 +81,7 @@ const Systems = (props) => {
                       </thead>
                       <tbody>
                         {
-                          chosenSystem.id && systems.find(system => system._id == chosenSystem.id).users.map(user => {
+                          chosenSystem.id && systems.find(system => system._id === chosenSystem.id).users.map(user => {
                             return (<tr>
                               <td>{user._user.firstName + ' ' + user._user.lastName}</td>
                               <td>{user._user.email}</td>

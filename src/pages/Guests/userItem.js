@@ -12,12 +12,12 @@ import {Guest} from '../../models';
 const UserItem = ({guest, guestStatusArr, assets}) => {
   const [dropToggle, setDropToggle] = useState(false);
 
-  const name = guest.firstName + ' ' + guest.lastName;
+  var name = guest.firstName + ' ' + guest.lastName;
   if(name.length < 2) {
     name = "No Name"
   }
 
-  const room = assets.find(asset => asset.id == guest.assetID);
+  const room = assets.find(asset => asset.id === guest.assetID);
   const roomName = room ? room.name : "";
 
   return(

@@ -9,12 +9,11 @@ import {
   Card,
   CardBody,
   CardTitle,
-  FormGroup,
-  Spinner
+  FormGroup
 } from 'reactstrap';
 import {BrowserRouter as Router, useHistory} from 'react-router-dom';
 import { AvForm, AvField } from "availity-reactstrap-validation";
-import {API, Auth, DataStore} from 'aws-amplify';
+import {Auth, DataStore} from 'aws-amplify';
 
 import {Guest, Asset} from '../../models';
 

@@ -1,10 +1,6 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 
-
-// Profile
-import UserProfile from "../pages/Authentication/user-profile";
-
 //Tasks
 import TasksList from "../pages/Tasks/tasks-list";
 import AddTask from "../pages/Tasks/addTask";
@@ -37,12 +33,8 @@ import GuestsList from "../pages/Guests/guestsList";
 import GuestMessage from "../pages/Guests/messageGuests";
 
 //Pages
-import PagesStarter from "../pages/Utility/pages-starter";
 import PagesMaintenance from "../pages/Utility/pages-maintenance";
 import PagesComingsoon from "../pages/Utility/pages-comingsoon";
-import PagesTimeline from "../pages/Utility/pages-timeline";
-import PagesFaqs from "../pages/Utility/pages-faqs";
-import PagesPricing from "../pages/Utility/pages-pricing";
 import Pages404 from "../pages/Utility/pages-404";
 import Pages500 from "../pages/Utility/pages-500";
 
