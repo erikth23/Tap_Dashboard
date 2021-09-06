@@ -1,32 +1,17 @@
-import axios from 'axios'
 import React, {useState, useEffect} from 'react';
 import {
+  Badge,
   Container,
   Row,
   Col,
-  Button,
   Card,
   CardBody,
   CardTitle,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-  ButtonDropdown,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Media,
-  Spinner,
-  Table
 } from "reactstrap";
-import {Link} from "react-router-dom";
-import { Auth, DataStore } from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 import { useTranslation } from 'react-i18next';
 
 // Pages Components
-import WelcomeComp from "./WelcomeComp";
 import Rooms from "./Rooms";
 import TaskTable from "./TaskTable";
 import CleaningTime from "./CleaningTime";
@@ -38,8 +23,8 @@ import Breadcrumbs from '../../components/Common/Breadcrumb';
 const Dashboard = (props) => {
 
   const [cognitoUser, setCognitoUser] = useState();
-  const [subscriptions, setSubscriptions] = useState([]);
   const [roomChosen, setRoomChosen] = useState('');
+  const [roomPill, setRoomPill] = useState(false);
   const { t, i18n } = useTranslation();
 
   const changeLanguage = (lng) => {
@@ -48,13 +33,21 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     Auth.currentSession().then(data => {
-      changeLanguage(data.idToken.payload["locale"] == "Spanish" ? "sp" : "en")
+      changeLanguage(data.idToken.payload["locale"] === "Spanish" ? "sp" : "en")
       setCognitoUser({
         username: data.idToken.payload["cognito:username"],
         systemID: data.idToken.payload["custom:systemID"]
       })
     })
   }, [])
+
+  useEffect(() => {
+    if(roomPill) {
+      setTimeout(() => {
+        setRoomPill(false)
+      }, 2500)
+    }
+  }, [roomPill])
 
   return (<React.Fragment>
       <div className="page-content">
@@ -102,6 +95,7 @@ const Dashboard = (props) => {
               <Card>
                 <CardTitle className="mt-4 ml-4 float-sm-left">
                   Rooms
+                  {roomPill && <Badge pill="pill" className="badge-soft-success mr-1 ml-3">Success</Badge>}
                   <div className="float-sm-right mr-4">
                     <div className="btn-group btn-group-md">
                       <button className="btn btn-dark">Occupied</button>
@@ -115,7 +109,10 @@ const Dashboard = (props) => {
                   <div className="clearfix">
                     {
                        cognitoUser &&
-                        <Rooms systemID={cognitoUser.systemID} roomChosen={roomChosen} setRoomChosen={setRoomChosen}/>
+                        <Rooms systemID={cognitoUser.systemID}
+                          roomChosen={roomChosen}
+                          setRoomChosen={setRoomChosen}
+                          setRoomPill={setRoomPill}/>
                     }
                   </div>
                 </CardBody>

@@ -61,3 +61,17 @@ margin-right: 15px;
 .btn-room {
   width: 8vw;
 }
+
+.context-menu {
+  font-size: 14px;
+  background-color: #fff;
+  border-radius: 2px;
+  padding: 5px;
+  width: 150px;
+  height: auto;
+  margin: 0;
+/* use absolute positioning  */
+  position: absolute;
+  list-style: none;
+  box-shadow: 0 0 20px 0 #ccc;
+}

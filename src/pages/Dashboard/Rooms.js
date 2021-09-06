@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {Spinner} from 'reactstrap';
 import { DataStore } from 'aws-amplify';
+
+import Menu from '../../components/Menu';
 
 import {Asset} from '../../models'
 import {useCleaningTimes} from "../../helpers/hooks";
@@ -23,9 +24,9 @@ const statusToClass = new Map([
 
 const ONE_HALF_DAY = 43200000;
 
-const Rooms = ({systemID, roomChosen, setRoomChosen}) => {
+const Rooms = ({systemID, roomChosen, setRoomChosen, setRoomPill}) => {
 
-  const {times, isError, isLoading} = useCleaningTimes(systemID)
+  const {times} = useCleaningTimes(systemID)
   const [assets, setAssets] = useState([]);
 
   useEffect(() => {
@@ -51,17 +52,19 @@ const Rooms = ({systemID, roomChosen, setRoomChosen}) => {
     return times && times.find(time => {
       const start_time = new Date(time.startTime);
 
-      return time.name == roomName &&
+      return time.name === roomName &&
       Date.now() - start_time < ONE_HALF_DAY
     })
   }
 
 
   return (<React.Fragment>
+    <Menu setRoomPill={setRoomPill}/>
     <div className="m-3">
       {
         assets.sort((a, b) => parseInt(a.name) - parseInt(b.name)).map((room, key) => <button className={`btn-lg btn-room ${isCleanedToday(room.name) ? 'btn-' : 'btn-outline-'}${statusToClass.get(room.status)}`}
-        onClick={() => setRoomChosen(room.name == roomChosen ? '' : room.name)}>
+        onClick={() => setRoomChosen(room.name === roomChosen ? '' : room.name)}
+        value={`asset@${room.id}`}>
           {room.name}
         </button>)
       }
