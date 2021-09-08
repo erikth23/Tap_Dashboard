@@ -22,9 +22,8 @@ const statusToClass = new Map([
   ]
 ])
 
-const ONE_HALF_DAY = 43200000;
-const ONE_HOUR = 3600000;
-const ONE_MIN = 60000;
+const STAY = "STAY";
+const STAY_N = "STAY_N";
 
 const Rooms = ({systemID, roomChosen, setRoomChosen, setRoomPill}) => {
 
@@ -50,16 +49,8 @@ const Rooms = ({systemID, roomChosen, setRoomChosen, setRoomPill}) => {
     }
   }
 
-  const isCleanedToday = (roomName) => {
-    return times && times.find(time => {
-      const start_time = new Date(time.startTime);
-      const end_time = new Date(time.endTime);
-
-      return time.name === roomName &&
-      end_time - start_time > ONE_MIN &&
-      end_time - start_time < ONE_HOUR &&
-      Date.now() - start_time < ONE_HALF_DAY
-    })
+  const isStay = (acctStatus) => {
+    return acctStatus === STAY || acctStatus === STAY_N
   }
 
 
@@ -67,7 +58,7 @@ const Rooms = ({systemID, roomChosen, setRoomChosen, setRoomPill}) => {
     <Menu setRoomPill={setRoomPill}/>
     <div className="m-3">
       {
-        assets.sort((a, b) => parseInt(a.name) - parseInt(b.name)).map((room, key) => <button className={`btn-lg btn-room ${isCleanedToday(room.name) ? 'btn-' : 'btn-outline-'}${statusToClass.get(room.status)}`}
+        assets.sort((a, b) => parseInt(a.name) - parseInt(b.name)).map((room, key) => <button className={`btn-lg btn-room ${isStay(room.accountStatus) ? 'btn-' : 'btn-outline-'}${statusToClass.get(room.status)}`}
         onClick={() => setRoomChosen(room.name === roomChosen ? '' : room.name)}
         value={`asset@${room.id}`}>
           {room.name}

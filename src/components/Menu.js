@@ -17,7 +17,39 @@ const Menu = ({setRoomPill}) => {
               updated.accountStatus = "STAY"
             }));
             setRoomPill(true)
-          }}>Mark S/O</li>
+          }}>Stay</li>
+        <li className={'btn-sm btn-link'} onClick={async () => {
+            const asset = await DataStore.query(Asset, assetID);
+
+            await DataStore.save(Asset.copyOf(asset, updated => {
+              updated.accountStatus = "STAY_N"
+            }));
+            setRoomPill(true)
+          }}>Stay No Clean</li>
+        <li className={'btn-sm btn-link'} onClick={async () => {
+            const asset = await DataStore.query(Asset, assetID);
+
+            await DataStore.save(Asset.copyOf(asset, updated => {
+              updated.accountStatus = "CO"
+            }));
+            setRoomPill(true)
+          }}>C/O</li>
+        <li className={'btn-sm btn-link'} onClick={async () => {
+            const asset = await DataStore.query(Asset, assetID);
+
+            await DataStore.save(Asset.copyOf(asset, updated => {
+              updated.accountStatus = "CO_N"
+            }));
+            setRoomPill(true)
+          }}>C/O No Clean</li>
+        <li className={'btn-sm btn-link'} onClick={async () => {
+            const asset = await DataStore.query(Asset, assetID);
+
+            await DataStore.save(Asset.copyOf(asset, updated => {
+              updated.accountStatus = null
+            }));
+            setRoomPill(true)
+          }}>Remove Status</li>
       </ul>
     );
   }
