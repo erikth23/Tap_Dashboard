@@ -40,7 +40,9 @@ const AttendantAccountStatus = {
   "CO": "CO",
   "OOI": "OOI",
   "OOO": "OOO",
-  "NEW": "NEW"
+  "NEW": "NEW",
+  "STAY_N": "STAY_N",
+  "CO_N": "CO_N"
 };
 
 const AttendantOccupiedStatus = {

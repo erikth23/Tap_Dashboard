@@ -37,6 +37,8 @@ enum AttendantAccountStatus {
   OOI
   OOO
   NEW
+  STAY_N
+  CO_N
 }
 
 enum AttendantOccupiedStatus {

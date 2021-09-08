@@ -691,7 +691,9 @@ export const schema = {
                 "CO",
                 "OOI",
                 "OOO",
-                "NEW"
+                "NEW",
+                "STAY_N",
+                "CO_N"
             ]
         },
         "AttendantOccupiedStatus": {
