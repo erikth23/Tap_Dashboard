@@ -11,35 +11,35 @@ const Menu = ({setRoomPill}) => {
     return (
       <ul className="context-menu" style={{ top: anchorPoint.y, left: anchorPoint.x }}>
         <li className={'btn-sm btn-link'} onClick={async () => {
-            // const asset = await DataStore.query(Asset, assetID);
-            //
-            // await DataStore.save(Asset.copyOf(asset, updated => {
-            //   updated.accountStatus = "STAY"
-            // }));
+            const asset = await DataStore.query(Asset, assetID);
+
+            await DataStore.save(Asset.copyOf(asset, updated => {
+              updated.accountStatus = "STAY"
+            }));
             setRoomPill(true)
           }}>Stay</li>
         <li className={'btn-sm btn-link'} onClick={async () => {
-            // const asset = await DataStore.query(Asset, assetID);
-            //
-            // await DataStore.save(Asset.copyOf(asset, updated => {
-            //   updated.accountStatus = "STAY_N"
-            // }));
+            const asset = await DataStore.query(Asset, assetID);
+
+            await DataStore.save(Asset.copyOf(asset, updated => {
+              updated.accountStatus = "STAY_N"
+            }));
             setRoomPill(true)
           }}>Stay No Clean</li>
         <li className={'btn-sm btn-link'} onClick={async () => {
-            // const asset = await DataStore.query(Asset, assetID);
-            //
-            // await DataStore.save(Asset.copyOf(asset, updated => {
-            //   updated.accountStatus = "CO"
-            // }));
+            const asset = await DataStore.query(Asset, assetID);
+
+            await DataStore.save(Asset.copyOf(asset, updated => {
+              updated.accountStatus = "CO"
+            }));
             setRoomPill(true)
           }}>C/O</li>
         <li className={'btn-sm btn-link'} onClick={async () => {
-            // const asset = await DataStore.query(Asset, assetID);
-            //
-            // await DataStore.save(Asset.copyOf(asset, updated => {
-            //   updated.accountStatus = "CO_N"
-            // }));
+            const asset = await DataStore.query(Asset, assetID);
+
+            await DataStore.save(Asset.copyOf(asset, updated => {
+              updated.accountStatus = "CO_N"
+            }));
             setRoomPill(true)
           }}>C/O No Clean</li>
         <li className={'btn-sm btn-link'} onClick={async () => {
