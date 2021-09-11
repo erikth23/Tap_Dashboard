@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from "reactstrap";
 import ReactApexChart from 'react-apexcharts';
+import {DataStore} from 'aws-amplify';
 
-import {useCleaningTimes} from "../../helpers/hooks";
+import {Clean} from '../../models';
+
+const ONE_WEEK_AGO = new Date(Date.now() - 604800000)
 
 const CleaningTimeBar = ({systemID}) => {
-  const {times, isError, isLoading} = useCleaningTimes(systemID)
   const [series, setSeries] = useState([]);
   const [options, setOptions] = useState({});
   const [roomType, setRoomType] = useState('');
@@ -16,154 +18,151 @@ const CleaningTimeBar = ({systemID}) => {
   const [statusButtonExpanded, setStatusButtonExpanded] = useState(false);
 
   useEffect(() => {
-    if(!isLoading) {
-      const data = {};
-      var max_ovr_diff = 0;
-      var min_ovr_diff = 60;
-      const _roomTypes = [];
-      const _accountStatuses = [];
+      getCleaningData();
+  })
 
-      times.filter(time =>
-        (roomType === '' || time.roomType === roomType) &&
-        (accountStatus === '' || time.accountStatus === accountStatus)
-      ).forEach((time, i) => {
-        const start_date = new Date(time.startTime);
-        const end_date = new Date(time.endTime);
-        const one_week_ago = new Date(Date.now() - 604800000)
-        const min_diff = Math.round(Math.abs(end_date - start_date)) / (60 * 1000)
+  const getCleaningData = async () => {
+    const data = {};
+    var max_ovr_diff = 0;
+    var min_ovr_diff = 60;
+    var _average = 0;
+    var count = 0;
 
-        if(min_diff < 1 || min_diff > 60) {
+    try {
+      const cleans = await DataStore.query(Clean);
+
+      cleans.forEach(clean => {
+        const startTime = new Date(clean.startTime);
+        const endTime = new Date(clean.endTime)
+        const timeDiff = (Math.round(Math.abs(endTime - startTime)) / (60 * 1000)) / clean.timeDiv;
+
+        if(timeDiff < 1 || timeDiff > 90) {
           return;
         }
 
-        if(_roomTypes.indexOf(time.roomType) === -1) {
-          _roomTypes.push(time.roomType);
-        }
+        count++;
+        _average = (_average * (count - 1) + timeDiff) / count;
 
-        if(time.accountStatus && _accountStatuses.indexOf(time.accountStatus) === -1) {
-          _accountStatuses.push(time.accountStatus)
-        }
-
-        if(start_date < one_week_ago) {
+        if(startTime < ONE_WEEK_AGO) {
           return;
         }
 
-        const date = start_date.getDate();
+        const date = startTime.getDate();
         if(!data[date]) {
           data[date] = {
-            total_min: min_diff,
+            total_min: timeDiff,
             total: 1,
-            day: start_date
+            day: startTime
           }
         } else {
           data[date].total += 1;
-          data[date].total_min += min_diff;
+          data[date].total_min += timeDiff;
         }
       });
-      setRoomTypes(_roomTypes)
-      setAccountStatuses(_accountStatuses)
-
-      var data_arr = [];
-      for(var key in data) {
-        data_arr.push(data[key])
-      }
-      data_arr = data_arr.sort((a, b) => a.day - b.day)
-
-      setSeries([
-        {
-          name: "Average Cleaning Time",
-          type: "line",
-          data: data_arr.map(item => {
-            const total = item.total
-            const avg_diff = Math.round(item.total_min / total)
-
-            if(avg_diff < min_ovr_diff) {
-              min_ovr_diff = avg_diff
-            }
-
-            if(avg_diff > max_ovr_diff) {
-              max_ovr_diff = avg_diff
-            }
-
-            if(total < min_ovr_diff) {
-              min_ovr_diff = total
-            }
-
-            if(total > max_ovr_diff) {
-              max_ovr_diff = total
-            }
-
-            return avg_diff;
-          })
-        },
-        {
-          name: "Total Rooms Cleaned",
-          type: "column",
-          data: data_arr.map(item => item.total)
-        }
-      ])
-
-      setOptions({
-        chart: {
-          height: 350,
-          type: 'line',
-          dropShadow: {
-            enabled: true,
-            color: '#000',
-            top: 18,
-            left: 7,
-            blur: 10,
-            opacity: 0.2
-          },
-          toolbar: {
-            show: false
-          }
-        },
-        colors: ['#77B6EA', ''],
-        dataLabels: {
-          enabled: true,
-        },
-        stroke: {
-          curve: 'straight'
-        },
-        title: {
-          text: 'Average Cleaning Time',
-          align: 'left'
-        },
-        grid: {
-          borderColor: '#e7e7e7',
-          row: {
-            colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-            opacity: 0.5
-          },
-        },
-        markers: {
-          size: 1
-        },
-        xaxis: {
-          categories: data_arr.map(item => `${item.day.getMonth() + 1}/${item.day.getDate()}`),
-          title: {
-            text: 'Day'
-          }
-        },
-        yaxis:
-        {
-          title: {
-            text: 'Average Time(Minutes)'
-          },
-          min: Math.max(min_ovr_diff - 5, 0),
-          max: max_ovr_diff + 5
-        },
-        legend: {
-          position: 'top',
-          horizontalAlign: 'right',
-          floating: true,
-          offsetY: -25,
-          offsetX: -5
-        },
-      })
+    } catch (err) {
+      console.error("Unable to get cleaning data", err)
     }
-  }, [times, roomType, accountStatus])
+
+    var data_arr = [];
+    for(var key in data) {
+      data_arr.push(data[key])
+    }
+    data_arr = data_arr.sort((a, b) => a.day - b.day)
+
+    setSeries([
+      {
+        name: "Average Cleaning Time",
+        type: "line",
+        data: data_arr.map(item => {
+          const total = item.total
+          const avg_diff = Math.round(item.total_min / total)
+
+          if(avg_diff < min_ovr_diff) {
+            min_ovr_diff = avg_diff
+          }
+
+          if(avg_diff > max_ovr_diff) {
+            max_ovr_diff = avg_diff
+          }
+
+          if(total < min_ovr_diff) {
+            min_ovr_diff = total
+          }
+
+          if(total > max_ovr_diff) {
+            max_ovr_diff = total
+          }
+
+          return avg_diff;
+        })
+      },
+      {
+        name: "Total Rooms Cleaned",
+        type: "column",
+        data: data_arr.map(item => item.total)
+      }
+    ])
+
+    setOptions({
+      chart: {
+        height: 350,
+        type: 'line',
+        dropShadow: {
+          enabled: true,
+          color: '#000',
+          top: 18,
+          left: 7,
+          blur: 10,
+          opacity: 0.2
+        },
+        toolbar: {
+          show: false
+        }
+      },
+      colors: ['#77B6EA', ''],
+      dataLabels: {
+        enabled: true,
+      },
+      stroke: {
+        curve: 'straight'
+      },
+      title: {
+        text: 'Average Cleaning Time',
+        align: 'left'
+      },
+      grid: {
+        borderColor: '#e7e7e7',
+        row: {
+          colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+          opacity: 0.5
+        },
+      },
+      markers: {
+        size: 1
+      },
+      xaxis: {
+        categories: data_arr.map(item => `${item.day.getMonth() + 1}/${item.day.getDate()}`),
+        title: {
+          text: 'Day'
+        }
+      },
+      yaxis:
+      {
+        title: {
+          text: 'Average Time(Minutes)'
+        },
+        min: Math.max(min_ovr_diff - 5, 0),
+        max: max_ovr_diff + 5
+      },
+      legend: {
+        position: 'top',
+        horizontalAlign: 'right',
+        floating: true,
+        offsetY: -25,
+        offsetX: -5
+      },
+    })
+  }
 
   return (
     <div id = "chart" >

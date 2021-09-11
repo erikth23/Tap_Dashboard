@@ -9,13 +9,10 @@ import {useCleaningTimes} from "../../helpers/hooks";
 const ROOM = 'ROOM'
 const statusToClass = new Map([
   [
-    'READY', 'success'
-  ],
-  [
     'OCCUPIED', 'dark'
   ],
   [
-    'CLEAN', 'warning'
+    'CLEAN', 'success'
   ],
   [
     'DIRTY', 'danger'
@@ -59,7 +56,7 @@ const Rooms = ({systemID, roomChosen, setRoomChosen, setRoomPill}) => {
     <div className="m-3">
       {
         assets.sort((a, b) => parseInt(a.name) - parseInt(b.name)).map((room, key) => <button className={`btn-lg btn-room ${isStay(room.accountStatus) ? 'btn-' : 'btn-outline-'}${statusToClass.get(room.status)}`}
-        onClick={() => setRoomChosen(room.name === roomChosen ? '' : room.name)}
+        onClick={() => setRoomChosen(room.id === roomChosen ? '' : room.id)}
         value={`asset@${room.id}`}>
           {room.name}
         </button>)
