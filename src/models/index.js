@@ -58,7 +58,7 @@ const GuestStatus = {
   "DONE": "DONE"
 };
 
-const { System, Asset, Task, Note, User, Guest, Tap, RoomWifi } = initSchema(schema);
+const { System, Asset, Task, Note, User, Guest, Tap, Clean, RoomWifi } = initSchema(schema);
 
 export {
   System,
@@ -68,6 +68,7 @@ export {
   User,
   Guest,
   Tap,
+  Clean,
   AssetType,
   AssetStatus,
   TaskStatus,

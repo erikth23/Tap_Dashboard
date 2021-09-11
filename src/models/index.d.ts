@@ -153,6 +153,23 @@ export declare class Tap {
   readonly accountStatus?: AttendantAccountStatus | keyof typeof AttendantAccountStatus;
   readonly occupiedStatus?: AttendantOccupiedStatus | keyof typeof AttendantOccupiedStatus;
   readonly assignTo?: string;
+  readonly timeDiv?: number;
   constructor(init: ModelInit<Tap>);
   static copyOf(source: Tap, mutator: (draft: MutableModel<Tap>) => MutableModel<Tap> | void): Tap;
+}
+
+export declare class Clean {
+  readonly id: string;
+  readonly assetID: string;
+  readonly asset?: Asset;
+  readonly userID: string;
+  readonly user?: User;
+  readonly startTime?: string;
+  readonly endTime: string;
+  readonly accountStatus?: AttendantAccountStatus | keyof typeof AttendantAccountStatus;
+  readonly occupiedStatus?: AttendantOccupiedStatus | keyof typeof AttendantOccupiedStatus;
+  readonly assignTo?: string;
+  readonly timeDiv?: number;
+  constructor(init: ModelInit<Clean>);
+  static copyOf(source: Clean, mutator: (draft: MutableModel<Clean>) => MutableModel<Clean> | void): Clean;
 }

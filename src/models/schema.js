@@ -620,6 +620,13 @@ export const schema = {
                     "type": "ID",
                     "isRequired": false,
                     "attributes": []
+                },
+                "timeDiv": {
+                    "name": "timeDiv",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -636,6 +643,121 @@ export const schema = {
                         "fields": [
                             "assetID",
                             "purpose"
+                        ]
+                    }
+                }
+            ]
+        },
+        "Clean": {
+            "name": "Clean",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "assetID": {
+                    "name": "assetID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "asset": {
+                    "name": "asset",
+                    "isArray": false,
+                    "type": {
+                        "model": "Asset"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": "id"
+                    }
+                },
+                "userID": {
+                    "name": "userID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "user": {
+                    "name": "user",
+                    "isArray": false,
+                    "type": {
+                        "model": "User"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": "id"
+                    }
+                },
+                "startTime": {
+                    "name": "startTime",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "endTime": {
+                    "name": "endTime",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "accountStatus": {
+                    "name": "accountStatus",
+                    "isArray": false,
+                    "type": {
+                        "enum": "AttendantAccountStatus"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "occupiedStatus": {
+                    "name": "occupiedStatus",
+                    "isArray": false,
+                    "type": {
+                        "enum": "AttendantOccupiedStatus"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "assignTo": {
+                    "name": "assignTo",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "timeDiv": {
+                    "name": "timeDiv",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            },
+            "syncable": true,
+            "pluralName": "Cleans",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byAsset",
+                        "fields": [
+                            "assetID"
                         ]
                     }
                 }
@@ -742,5 +864,5 @@ export const schema = {
             }
         }
     },
-    "version": "fa3108326a63f1d802f9ad5b0c4a4b7c"
+    "version": "c1c52fc07e8cdf7b9ebef7a0dc746451"
 };

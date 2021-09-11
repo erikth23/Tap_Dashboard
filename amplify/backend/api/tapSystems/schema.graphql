@@ -130,6 +130,21 @@ type Tap @model @key(name: "byAsset", fields: ["assetID", "purpose"]){
   accountStatus: AttendantAccountStatus
   occupiedStatus: AttendantOccupiedStatus
   assignTo: ID
+  timeDiv: Int
+}
+
+type Clean @model @key(name: "byAsset", fields: ["assetID"]){
+  id: ID!
+  assetID: ID!
+  asset: Asset @connection(fields: ["userID"])
+  userID: ID!
+  user: User @connection(fields: ["userID"])
+  startTime: AWSDateTime
+  endTime: AWSDateTime!
+  accountStatus: AttendantAccountStatus
+  occupiedStatus: AttendantOccupiedStatus
+  assignTo: ID
+  timeDiv: Int
 }
 
 type User @model @key(name: "bySystem", fields: ["systemID", "userName"]){
