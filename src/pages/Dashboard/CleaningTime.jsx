@@ -3,7 +3,7 @@ import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from "re
 import ReactApexChart from 'react-apexcharts';
 import {DataStore} from 'aws-amplify';
 
-import {Clean} from '../../models';
+import {Asset, Clean} from '../../models';
 
 const ONE_WEEK_AGO = new Date(Date.now() - 604800000)
 
@@ -19,10 +19,11 @@ const CleaningTime = ({systemID, roomChosen}) => {
 
   useEffect(() => {
       getCleaningData();
-  }, [])
+  }, [roomChosen])
 
   const getCleaningData = async () => {
     const data = {};
+    const _accountStatuses = [];
     var max_ovr_diff = 0;
     var min_ovr_diff = 60;
     var _average = 0;
@@ -30,11 +31,12 @@ const CleaningTime = ({systemID, roomChosen}) => {
 
     try {
       const cleans = await DataStore.query(Clean);
-      console.log(cleans);
 
       cleans.filter(clean =>
-        (roomChosen === '' || clean.assetID === roomChosen)
-      ).forEach(clean => {
+        (roomChosen === '' || clean.assetID === roomChosen) &&
+        (accountStatus === '' || clean.accountStatus === accountStatus)
+      ).forEach(async clean => {
+
         const startTime = new Date(clean.startTime);
         const endTime = new Date(clean.endTime)
         const timeDiff = (Math.round(Math.abs(endTime - startTime)) / (60 * 1000)) / clean.timeDiv;
