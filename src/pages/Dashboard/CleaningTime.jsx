@@ -23,7 +23,7 @@ const CleaningTime = ({systemID, roomChosen}) => {
     })
 
     return () => {subscription.unsubscribe()}
-  })
+  }, [])
 
   useEffect(() => {
       getCleaningData();
