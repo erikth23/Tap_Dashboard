@@ -18,6 +18,14 @@ const CleaningTime = ({systemID, roomChosen}) => {
   const [statusButtonExpanded, setStatusButtonExpanded] = useState(false);
 
   useEffect(() => {
+    const subscription = DataStore.observe(Clean).subscribe(() => {
+      getCleaningData();
+    })
+
+    return () => {subscription.unsubscribe()}
+  })
+
+  useEffect(() => {
       getCleaningData();
   }, [roomChosen])
 

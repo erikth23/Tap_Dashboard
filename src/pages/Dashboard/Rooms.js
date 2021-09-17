@@ -35,7 +35,7 @@ const Rooms = ({systemID, roomChosen, setRoomChosen, setRoomPill}) => {
     })
 
     return () => {subscription.unsubscribe()}
-  }, [systemID])
+  }, [])
 
   const getAssets = async () => {
     try {
