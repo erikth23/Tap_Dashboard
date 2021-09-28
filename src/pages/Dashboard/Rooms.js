@@ -55,11 +55,14 @@ const Rooms = ({systemID, roomChosen, setRoomChosen, setRoomPill}) => {
     <Menu setRoomPill={setRoomPill}/>
     <div className="m-3">
       {
-        assets.sort((a, b) => parseInt(a.name) - parseInt(b.name)).map((room, key) => <button className={`btn-lg btn-room ${isStay(room.accountStatus) ? 'btn-' : 'btn-outline-'}${statusToClass.get(room.status)}`}
-        onClick={() => setRoomChosen(room.id === roomChosen ? '' : room.id)}
-        value={`asset@${room.id}`}>
-          {room.name}
-        </button>)
+        assets.sort((a, b) => parseInt(a.name) - parseInt(b.name)).map((room, key) =>
+          <button className={`btn-lg btn-room ${isStay(room.accountStatus) ? 'btn-' : 'btn-outline-'}${statusToClass.get(room.status)}`}
+            onClick={() => setRoomChosen(room.id === roomChosen ? '' : room.id)}
+            value={`asset@${room.id}`}>
+            {room.inProgress && <i className="bx bx-loader bx-spin font-size-16 align-middle mr-2"></i>}
+            {room.name}
+          </button>
+        )
       }
     </div>
   </React.Fragment>)
