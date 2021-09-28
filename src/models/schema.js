@@ -165,6 +165,13 @@ export const schema = {
                     },
                     "isRequired": false,
                     "attributes": []
+                },
+                "inProgress": {
+                    "name": "inProgress",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -864,5 +871,5 @@ export const schema = {
             }
         }
     },
-    "version": "c1c52fc07e8cdf7b9ebef7a0dc746451"
+    "version": "3acf4ab676363ad1a2c41c40ffa9dfca"
 };

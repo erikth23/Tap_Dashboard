@@ -81,6 +81,7 @@ type Asset @model @key(name: "bySystem", fields: ["systemID", "tagID"]) {
   occupiedStatus: AttendantOccupiedStatus
   assignTo: ID
   wifi: RoomWifi
+  inProgress: Boolean
 }
 
 type Task @model @key(name: "bySystem", fields: ["systemID", "assetID"]) {

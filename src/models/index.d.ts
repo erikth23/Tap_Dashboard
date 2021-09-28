@@ -86,6 +86,7 @@ export declare class Asset {
   readonly occupiedStatus?: AttendantOccupiedStatus | keyof typeof AttendantOccupiedStatus;
   readonly assignTo?: string;
   readonly wifi?: RoomWifi;
+  readonly inProgress?: boolean;
   constructor(init: ModelInit<Asset>);
   static copyOf(source: Asset, mutator: (draft: MutableModel<Asset>) => MutableModel<Asset> | void): Asset;
 }
