@@ -19,17 +19,15 @@ const CleaningTimeBar = ({systemID}) => {
 
   useEffect(() => {
       getCleaningData();
-  })
+  }, [])
 
   const getCleaningData = async () => {
     const data = {};
     var max_ovr_diff = 0;
     var min_ovr_diff = 60;
-    var _average = 0;
-    var count = 0;
 
     try {
-      const cleans = await DataStore.query(Clean);
+      const cleans = await DataStore.query(Clean, c => c.startTime("gt", ONE_WEEK_AGO.toISOString()));
 
       cleans.forEach(clean => {
         const startTime = new Date(clean.startTime);
@@ -37,13 +35,6 @@ const CleaningTimeBar = ({systemID}) => {
         const timeDiff = (Math.round(Math.abs(endTime - startTime)) / (60 * 1000)) / clean.timeDiv;
 
         if(timeDiff < 1 || timeDiff > 90) {
-          return;
-        }
-
-        count++;
-        _average = (_average * (count - 1) + timeDiff) / count;
-
-        if(startTime < ONE_WEEK_AGO) {
           return;
         }
 
